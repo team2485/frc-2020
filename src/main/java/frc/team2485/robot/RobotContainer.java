@@ -5,20 +5,18 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.subsystems;
+package frc.team2485.robot;
 
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
+public class RobotContainer {
 
-public class ExampleSubsystem extends SubsystemBase {
-  /**
-   * Creates a new ExampleSubsystem.
-   */
-  public ExampleSubsystem() {
-
+  public RobotContainer() {
+    configureButtonBindings();
   }
 
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
+  private void configureButtonBindings() {
   }
+
+//  public Command getAutonomousCommand() {
+//    return m_autoCommand;
+//  }
 }

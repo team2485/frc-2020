@@ -25,3 +25,7 @@ pluginManagement {
         }
     }
 }
+
+
+rootProject.name='frc-2020'
+include 'WarlordsLib'
