@@ -18,21 +18,18 @@ public class RobotContainer {
   private Drivetrain drivetrain;
 
   public RobotContainer() {
+    drivetrain = new Drivetrain();
     configureButtonBindings();
   }
 
 
   private void configureButtonBindings() {
 
-    drivetrain = new Drivetrain();
-
   }
 
   public void configureCommands(){
-
     drivetrain.setDefaultCommand(new RunCommand(() ->
     drivetrain.curvatureDrive(xbox.getTriggerAxis(GenericHID.Hand.kRight)-xbox.getTriggerAxis(GenericHID.Hand.kLeft), xbox.getX(GenericHID.Hand.kLeft), xbox.getXButton())));
-
   }
 
 
