@@ -36,10 +36,7 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public void curvatureDrive(double throttle, double steering, boolean isQuickTurn) {
-
         drive.curvatureDrive(throttle, steering, isQuickTurn);
-
-
     }
 
 }
