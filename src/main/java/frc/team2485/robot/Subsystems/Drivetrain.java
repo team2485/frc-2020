@@ -44,6 +44,10 @@ public class Drivetrain extends SubsystemBase {
 
         m_drive = new WL_DifferentialDrive(m_sparkLeft1Master, m_sparkRight1Master);
 
+        resetEncoders(0,0);
+
+        m_encoderRight.getEncoder().setInverted(true);
+
         SmartDashboard.putData(this);
 
         SendableRegistry.add(m_drive, "DifferentialDrive");
@@ -51,6 +55,17 @@ public class Drivetrain extends SubsystemBase {
 
     public void curvatureDrive(double throttle, double steering, boolean isQuickTurn) {
         m_drive.curvatureDrive(throttle, steering, isQuickTurn);
+    }
+
+    @Override
+    public void periodic() {
+        SmartDashboard.putNumber("Left encoder", m_encoderLeft.getPosition());
+        SmartDashboard.putNumber("Right encoder", m_encoderRight.getPosition());
+    }
+
+    public void resetEncoders(double posLeft, double posRight) {
+        m_encoderRight.setPosition(posLeft);
+        m_encoderLeft.setPosition(posRight);
     }
 
 }

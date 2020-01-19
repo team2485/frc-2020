@@ -9,6 +9,7 @@ package frc.team2485.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.team2485.WarlordsLib.oi.Deadband;
 import frc.team2485.WarlordsLib.oi.WL_XboxController;
@@ -42,8 +43,13 @@ public class RobotContainer {
                         Deadband.cubicScaledDeadband(
                                 m_jack.getX(GenericHID.Hand.kLeft),
                                 Constants.OI.XBOX_DEADBAND),
-                        m_jack.getXButton()))
+                        m_jack.getXButton()),
+                m_drivetrain)
         );
+    }
+
+    public void resetAll() {
+        m_drivetrain.resetEncoders(0,0);
     }
 
     public Command getAutonomousCommand() {
