@@ -41,5 +41,7 @@ public final class Constants {
         public static final int SPARK_RIGHT_ENCODER = 14;
 
         public static final int ENCODER_CPR = 250;
+
+        public static final double WHEEL_RADIUS = 3;
     }
 }

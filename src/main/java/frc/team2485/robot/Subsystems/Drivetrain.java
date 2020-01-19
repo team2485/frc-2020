@@ -39,17 +39,18 @@ public class Drivetrain extends SubsystemBase {
         m_sparkLeft1Master.setFollowers(m_sparkLeft2, m_sparkLeft3);
         m_sparkRight1Master.setFollowers(m_sparkRight2, m_sparkRight3);
 
-        m_encoderLeft = new SparkMaxAlternateEncoderWrapper(Constants.Drivetrain.SPARK_LEFT_ENCODER, Constants.Drivetrain.ENCODER_CPR);
-        m_encoderRight = new SparkMaxAlternateEncoderWrapper(Constants.Drivetrain.SPARK_RIGHT_ENCODER, Constants.Drivetrain.ENCODER_CPR);
-
         m_drive = new WL_DifferentialDrive(m_sparkLeft1Master, m_sparkRight1Master);
 
-        resetEncoders(0,0);
+        // 4x encoding so * 4
+        m_encoderLeft = new SparkMaxAlternateEncoderWrapper(Constants.Drivetrain.SPARK_LEFT_ENCODER, Constants.Drivetrain.ENCODER_CPR * 4 );
+        m_encoderRight = new SparkMaxAlternateEncoderWrapper(Constants.Drivetrain.SPARK_RIGHT_ENCODER, Constants.Drivetrain.ENCODER_CPR * 4);
 
-        m_encoderRight.getEncoder().setInverted(true);
+        m_encoderRight.setInverted(true);
+
+        m_encoderLeft.setDistancePerRevolution(2 * Math.PI * Constants.Drivetrain.WHEEL_RADIUS);
+        m_encoderRight.setDistancePerRevolution(2 * Math.PI * Constants.Drivetrain.WHEEL_RADIUS);
 
         SmartDashboard.putData(this);
-
         SendableRegistry.add(m_drive, "DifferentialDrive");
     }
 
@@ -57,15 +58,24 @@ public class Drivetrain extends SubsystemBase {
         m_drive.curvatureDrive(throttle, steering, isQuickTurn);
     }
 
-    @Override
-    public void periodic() {
-        SmartDashboard.putNumber("Left encoder", m_encoderLeft.getPosition());
-        SmartDashboard.putNumber("Right encoder", m_encoderRight.getPosition());
-    }
-
+    /**
+     * Reset encoders
+     * @param posLeft left encoder position
+     * @param posRight right encoder position
+     */
     public void resetEncoders(double posLeft, double posRight) {
         m_encoderRight.setPosition(posLeft);
         m_encoderLeft.setPosition(posRight);
     }
+
+    @Override
+    public void periodic() {
+        SmartDashboard.putNumber("Left encoder", m_encoderLeft.getPosition());
+        SmartDashboard.putNumber("Right encoder", m_encoderRight.getPosition());
+        SmartDashboard.putNumber("Left encoder vel", m_encoderRight.getVelocity());
+        SmartDashboard.putNumber("Right encoder vel", m_encoderRight.getVelocity());
+    }
+
+
 
 }
