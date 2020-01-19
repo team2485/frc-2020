@@ -8,32 +8,48 @@
 package frc.team2485.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import frc.team2485.WarlordsLib.oi.Deadband;
 import frc.team2485.WarlordsLib.oi.WL_XboxController;
-import frc.team2485.robot.Subsystems.Drivetrain;
+import frc.team2485.robot.subsystems.Drivetrain;
 
 public class RobotContainer {
 
-  private WL_XboxController xbox;
-  private Drivetrain drivetrain;
+    private WL_XboxController m_jack;
 
-  public RobotContainer() {
-    drivetrain = new Drivetrain();
-    configureButtonBindings();
-  }
+    private Drivetrain m_drivetrain;
 
+    private Command m_autoCommand;
 
-  private void configureButtonBindings() {
+    public RobotContainer() {
 
-  }
+        m_drivetrain = new Drivetrain();
 
-  public void configureCommands(){
-    drivetrain.setDefaultCommand(new RunCommand(() ->
-    drivetrain.curvatureDrive(xbox.getTriggerAxis(GenericHID.Hand.kRight)-xbox.getTriggerAxis(GenericHID.Hand.kLeft), xbox.getX(GenericHID.Hand.kLeft), xbox.getXButton())));
-  }
+        m_jack = new WL_XboxController(Constants.OI.JACK_PORT);
 
+        configureCommands();
+    }
 
-//  public Command getAutonomousCommand() {
-//    return m_autoCommand;
-//  }
+    private void configureCommands() {
+
+        m_drivetrain.setDefaultCommand(new RunCommand(() ->
+                m_drivetrain.curvatureDrive(
+                        Deadband.cubicScaledDeadband(
+                                m_jack.getTriggerAxis(GenericHID.Hand.kRight)
+                                        - m_jack.getTriggerAxis(GenericHID.Hand.kLeft),
+                                Constants.OI.XBOX_DEADBAND),
+                        Deadband.cubicScaledDeadband(
+                                m_jack.getX(GenericHID.Hand.kLeft),
+                                Constants.OI.XBOX_DEADBAND),
+                        m_jack.getXButton()))
+        );
+    }
+
+    public Command getAutonomousCommand() {
+        // temporary!
+        m_autoCommand = new RunCommand(() -> { });
+
+        return m_autoCommand;
+    }
 }

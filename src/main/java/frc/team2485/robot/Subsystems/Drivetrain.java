@@ -1,42 +1,45 @@
-package frc.team2485.robot.Subsystems;
+package frc.team2485.robot.subsystems;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team2485.WarlordsLib.WL_DifferentialDrive;
 import frc.team2485.WarlordsLib.motorcontrol.WL_SparkMax;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-
+import frc.team2485.robot.Constants;
 
 
 public class Drivetrain extends SubsystemBase {
 
-    private DifferentialDrive drive;
+    private DifferentialDrive m_drive;
 
+    private WL_SparkMax m_sparkLeft1Master;
+    private WL_SparkMax m_sparkLeft2;
+    private WL_SparkMax m_sparkLeft3;
 
-    private WL_SparkMax _sparkLeft1Master;
-    private WL_SparkMax _sparkLeft2;
-    private WL_SparkMax _sparkLeft3;
-
-    private WL_SparkMax _sparkRight1Master;
-    private WL_SparkMax _sparkRight2;
-    private WL_SparkMax _sparkRight3;
+    private WL_SparkMax m_sparkRight1Master;
+    private WL_SparkMax m_sparkRight2;
+    private WL_SparkMax m_sparkRight3;
 
     public Drivetrain() {
-        this._sparkLeft1Master = new WL_SparkMax(0);
-        this._sparkLeft2 = new WL_SparkMax(0);
-        this._sparkLeft3 = new WL_SparkMax(0);
+        this.m_sparkLeft1Master = new WL_SparkMax(Constants.Drivetrain.SPARK_LEFT_PORT_MASTER);
+        this.m_sparkLeft2 = new WL_SparkMax(Constants.Drivetrain.SPARK_LEFT_PORT_SLAVE_2);
+        this.m_sparkLeft3 = new WL_SparkMax(Constants.Drivetrain.SPARK_LEFT_PORT_SLAVE_3);
 
-        this._sparkRight1Master = new WL_SparkMax(0);
-        this._sparkRight2 = new WL_SparkMax(0);
-        this._sparkRight3 = new WL_SparkMax(0);
+        this.m_sparkRight1Master = new WL_SparkMax(Constants.Drivetrain.SPARK_RIGHT_PORT_MASTER);
+        this.m_sparkRight2 = new WL_SparkMax(Constants.Drivetrain.SPARK_RIGHT_PORT_SLAVE_2);
+        this.m_sparkRight3 = new WL_SparkMax(Constants.Drivetrain.SPARK_RIGHT_PORT_SLAVE_3);
 
-        _sparkLeft1Master.setFollowers(_sparkLeft2, _sparkLeft3);
-        _sparkRight1Master.setFollowers(_sparkRight2, _sparkRight3);
+        m_sparkLeft1Master.setFollowers(m_sparkLeft2, m_sparkLeft3);
+        m_sparkRight1Master.setFollowers(m_sparkRight2, m_sparkRight3);
 
-        drive = new WL_DifferentialDrive(_sparkLeft1Master, _sparkRight1Master);
+        m_drive = new WL_DifferentialDrive(m_sparkLeft1Master, m_sparkRight1Master);
+
+        SmartDashboard.putData(this);
+
     }
 
     public void curvatureDrive(double throttle, double steering, boolean isQuickTurn) {
-        drive.curvatureDrive(throttle, steering, isQuickTurn);
+        m_drive.curvatureDrive(throttle, steering, isQuickTurn);
     }
 
 }
