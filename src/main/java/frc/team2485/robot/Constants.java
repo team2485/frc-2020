@@ -29,9 +29,6 @@ public final class Constants {
 
     public static final class Drivetrain {
 
-        /**
-         * Encoder Spark Max should always be the master. Arrange the numbers accordingly.
-         */
         public static final int SPARK_LEFT_PORT_MASTER = 10;
         public static final int SPARK_LEFT_PORT_SLAVE_2 = 11;
         public static final int SPARK_LEFT_PORT_SLAVE_3 = 12;
@@ -39,5 +36,14 @@ public final class Constants {
         public static final int SPARK_RIGHT_PORT_MASTER = 14;
         public static final int SPARK_RIGHT_PORT_SLAVE_2 = 15;
         public static final int SPARK_RIGHT_PORT_SLAVE_3 = 16;
+
+        public static final int SPARK_LEFT_ENCODER = 10;
+        public static final int SPARK_RIGHT_ENCODER = 14;
+
+        public static final int ENCODER_CPR = 250;
+
+        public static final double WHEEL_RADIUS = 3;
+
+        public static final int CURRENT_LIMIT = 18;
     }
 }
