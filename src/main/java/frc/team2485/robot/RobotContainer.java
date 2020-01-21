@@ -8,6 +8,7 @@
 package frc.team2485.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -33,28 +34,28 @@ public class RobotContainer {
     }
 
     private void configureCommands() {
-
-        m_drivetrain.setDefaultCommand(new RunCommand(() ->
-                m_drivetrain.curvatureDrive(
-                        Deadband.cubicScaledDeadband(
-                                m_jack.getTriggerAxis(GenericHID.Hand.kRight)
-                                        - m_jack.getTriggerAxis(GenericHID.Hand.kLeft),
-                                Constants.OI.XBOX_DEADBAND),
-                        Deadband.cubicScaledDeadband(
-                                m_jack.getX(GenericHID.Hand.kLeft),
-                                Constants.OI.XBOX_DEADBAND),
-                        m_jack.getXButton()),
-                m_drivetrain)
+        m_drivetrain.setDefaultCommand(new RunCommand(() -> {
+                    m_drivetrain.curvatureDrive(
+                            Deadband.cubicScaledDeadband(
+                                    m_jack.getTriggerAxis(GenericHID.Hand.kRight)
+                                            - m_jack.getTriggerAxis(GenericHID.Hand.kLeft),
+                                    Constants.OI.XBOX_DEADBAND),
+                            Deadband.cubicScaledDeadband(
+                                    m_jack.getX(GenericHID.Hand.kLeft),
+                                    Constants.OI.XBOX_DEADBAND),
+                            m_jack.getXButton());
+                }, m_drivetrain)
         );
     }
 
     public void resetAll() {
-        m_drivetrain.resetEncoders(0,0);
+        m_drivetrain.resetEncoders(0, 0);
     }
 
     public Command getAutonomousCommand() {
         // temporary!
-        m_autoCommand = new RunCommand(() -> { });
+        m_autoCommand = new RunCommand(() -> {
+        });
 
         return m_autoCommand;
     }

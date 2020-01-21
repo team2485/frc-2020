@@ -43,5 +43,7 @@ public final class Constants {
         public static final int ENCODER_CPR = 250;
 
         public static final double WHEEL_RADIUS = 3;
+
+        public static final int CURRENT_LIMIT = 18;
     }
 }

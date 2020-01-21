@@ -36,6 +36,9 @@ public class Drivetrain extends SubsystemBase {
         this.m_sparkRight2 = new WL_SparkMax(Constants.Drivetrain.SPARK_RIGHT_PORT_SLAVE_2);
         this.m_sparkRight3 = new WL_SparkMax(Constants.Drivetrain.SPARK_RIGHT_PORT_SLAVE_3);
 
+        this.m_sparkLeft1Master.setSmartCurrentLimit(Constants.Drivetrain.CURRENT_LIMIT);
+        this.m_sparkRight1Master.setSmartCurrentLimit(Constants.Drivetrain.CURRENT_LIMIT);
+
         m_sparkLeft1Master.setFollowers(m_sparkLeft2, m_sparkLeft3);
         m_sparkRight1Master.setFollowers(m_sparkRight2, m_sparkRight3);
 
@@ -70,10 +73,6 @@ public class Drivetrain extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Left encoder", m_encoderLeft.getPosition());
-        SmartDashboard.putNumber("Right encoder", m_encoderRight.getPosition());
-        SmartDashboard.putNumber("Left encoder vel", m_encoderRight.getVelocity());
-        SmartDashboard.putNumber("Right encoder vel", m_encoderRight.getVelocity());
     }
 
 
