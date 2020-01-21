@@ -14,7 +14,7 @@ public final class Constants {
     /**
      * Constants specific to operator interface
      */
-    public static final class OI {
+    public static final class OIConstants {
 
         /**
          * Jack's XBOX port
@@ -27,7 +27,7 @@ public final class Constants {
         public static final double XBOX_DEADBAND = 0.2;
     }
 
-    public static final class Drivetrain {
+    public static final class DrivetrainConstants {
 
         public static final int SPARK_LEFT_PORT_MASTER = 10;
         public static final int SPARK_LEFT_PORT_SLAVE_2 = 11;
@@ -45,5 +45,12 @@ public final class Constants {
         public static final double WHEEL_RADIUS = 3;
 
         public static final int CURRENT_LIMIT = 18;
+    }
+
+    public static final class TurretConstants {
+
+        public static final int TALON_PORT = 20;
+
+        public static final int ENCODER_CPR = 1026;
     }
 }

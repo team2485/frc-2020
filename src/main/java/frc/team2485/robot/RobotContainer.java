@@ -10,25 +10,27 @@ package frc.team2485.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.team2485.WarlordsLib.oi.Deadband;
 import frc.team2485.WarlordsLib.oi.WL_XboxController;
 import frc.team2485.robot.subsystems.Drivetrain;
+import frc.team2485.robot.subsystems.Turret;
 
 public class RobotContainer {
 
     private WL_XboxController m_jack;
 
     private Drivetrain m_drivetrain;
+    private Turret m_turret;
 
     private Command m_autoCommand;
 
     public RobotContainer() {
 
         m_drivetrain = new Drivetrain();
+        m_turret = new Turret();
 
-        m_jack = new WL_XboxController(Constants.OI.JACK_PORT);
+        m_jack = new WL_XboxController(Constants.OIConstants.JACK_PORT);
 
         configureCommands();
     }
@@ -39,10 +41,10 @@ public class RobotContainer {
                             Deadband.cubicScaledDeadband(
                                     m_jack.getTriggerAxis(GenericHID.Hand.kRight)
                                             - m_jack.getTriggerAxis(GenericHID.Hand.kLeft),
-                                    Constants.OI.XBOX_DEADBAND),
+                                    Constants.OIConstants.XBOX_DEADBAND),
                             Deadband.cubicScaledDeadband(
                                     m_jack.getX(GenericHID.Hand.kLeft),
-                                    Constants.OI.XBOX_DEADBAND),
+                                    Constants.OIConstants.XBOX_DEADBAND),
                             m_jack.getXButton());
                 }, m_drivetrain)
         );

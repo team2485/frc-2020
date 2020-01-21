@@ -1,7 +1,5 @@
 package frc.team2485.robot.subsystems;
 
-import com.revrobotics.AlternateEncoderType;
-import com.revrobotics.CANEncoder;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -28,16 +26,16 @@ public class Drivetrain extends SubsystemBase {
     private SparkMaxAlternateEncoderWrapper m_encoderRight;
 
     public Drivetrain() {
-        this.m_sparkLeft1Master = new WL_SparkMax(Constants.Drivetrain.SPARK_LEFT_PORT_MASTER);
-        this.m_sparkLeft2 = new WL_SparkMax(Constants.Drivetrain.SPARK_LEFT_PORT_SLAVE_2);
-        this.m_sparkLeft3 = new WL_SparkMax(Constants.Drivetrain.SPARK_LEFT_PORT_SLAVE_3);
+        this.m_sparkLeft1Master = new WL_SparkMax(Constants.DrivetrainConstants.SPARK_LEFT_PORT_MASTER);
+        this.m_sparkLeft2 = new WL_SparkMax(Constants.DrivetrainConstants.SPARK_LEFT_PORT_SLAVE_2);
+        this.m_sparkLeft3 = new WL_SparkMax(Constants.DrivetrainConstants.SPARK_LEFT_PORT_SLAVE_3);
 
-        this.m_sparkRight1Master = new WL_SparkMax(Constants.Drivetrain.SPARK_RIGHT_PORT_MASTER);
-        this.m_sparkRight2 = new WL_SparkMax(Constants.Drivetrain.SPARK_RIGHT_PORT_SLAVE_2);
-        this.m_sparkRight3 = new WL_SparkMax(Constants.Drivetrain.SPARK_RIGHT_PORT_SLAVE_3);
+        this.m_sparkRight1Master = new WL_SparkMax(Constants.DrivetrainConstants.SPARK_RIGHT_PORT_MASTER);
+        this.m_sparkRight2 = new WL_SparkMax(Constants.DrivetrainConstants.SPARK_RIGHT_PORT_SLAVE_2);
+        this.m_sparkRight3 = new WL_SparkMax(Constants.DrivetrainConstants.SPARK_RIGHT_PORT_SLAVE_3);
 
-        this.m_sparkLeft1Master.setSmartCurrentLimit(Constants.Drivetrain.CURRENT_LIMIT);
-        this.m_sparkRight1Master.setSmartCurrentLimit(Constants.Drivetrain.CURRENT_LIMIT);
+        this.m_sparkLeft1Master.setSmartCurrentLimit(Constants.DrivetrainConstants.CURRENT_LIMIT);
+        this.m_sparkRight1Master.setSmartCurrentLimit(Constants.DrivetrainConstants.CURRENT_LIMIT);
 
         this.m_sparkLeft1Master.setFollowers(m_sparkLeft2, m_sparkLeft3);
         this.m_sparkRight1Master.setFollowers(m_sparkRight2, m_sparkRight3);
@@ -45,13 +43,13 @@ public class Drivetrain extends SubsystemBase {
         this.m_drive = new WL_DifferentialDrive(m_sparkLeft1Master, m_sparkRight1Master);
 
         // 4x encoding so * 4
-        this.m_encoderLeft = new SparkMaxAlternateEncoderWrapper(Constants.Drivetrain.SPARK_LEFT_ENCODER, Constants.Drivetrain.ENCODER_CPR * 4 );
-        this.m_encoderRight = new SparkMaxAlternateEncoderWrapper(Constants.Drivetrain.SPARK_RIGHT_ENCODER, Constants.Drivetrain.ENCODER_CPR * 4);
+        this.m_encoderLeft = new SparkMaxAlternateEncoderWrapper(Constants.DrivetrainConstants.SPARK_LEFT_ENCODER, Constants.DrivetrainConstants.ENCODER_CPR * 4 );
+        this.m_encoderRight = new SparkMaxAlternateEncoderWrapper(Constants.DrivetrainConstants.SPARK_RIGHT_ENCODER, Constants.DrivetrainConstants.ENCODER_CPR * 4);
 
         this.m_encoderRight.setInverted(true);
 
-        this.m_encoderLeft.setDistancePerRevolution(2 * Math.PI * Constants.Drivetrain.WHEEL_RADIUS);
-        this.m_encoderRight.setDistancePerRevolution(2 * Math.PI * Constants.Drivetrain.WHEEL_RADIUS);
+        this.m_encoderLeft.setDistancePerRevolution(2 * Math.PI * Constants.DrivetrainConstants.WHEEL_RADIUS);
+        this.m_encoderRight.setDistancePerRevolution(2 * Math.PI * Constants.DrivetrainConstants.WHEEL_RADIUS);
 
         SmartDashboard.putData(this);
         SendableRegistry.add(this.m_drive, "DifferentialDrive");
