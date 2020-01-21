@@ -39,22 +39,22 @@ public class Drivetrain extends SubsystemBase {
         this.m_sparkLeft1Master.setSmartCurrentLimit(Constants.Drivetrain.CURRENT_LIMIT);
         this.m_sparkRight1Master.setSmartCurrentLimit(Constants.Drivetrain.CURRENT_LIMIT);
 
-        m_sparkLeft1Master.setFollowers(m_sparkLeft2, m_sparkLeft3);
-        m_sparkRight1Master.setFollowers(m_sparkRight2, m_sparkRight3);
+        this.m_sparkLeft1Master.setFollowers(m_sparkLeft2, m_sparkLeft3);
+        this.m_sparkRight1Master.setFollowers(m_sparkRight2, m_sparkRight3);
 
-        m_drive = new WL_DifferentialDrive(m_sparkLeft1Master, m_sparkRight1Master);
+        this.m_drive = new WL_DifferentialDrive(m_sparkLeft1Master, m_sparkRight1Master);
 
         // 4x encoding so * 4
-        m_encoderLeft = new SparkMaxAlternateEncoderWrapper(Constants.Drivetrain.SPARK_LEFT_ENCODER, Constants.Drivetrain.ENCODER_CPR * 4 );
-        m_encoderRight = new SparkMaxAlternateEncoderWrapper(Constants.Drivetrain.SPARK_RIGHT_ENCODER, Constants.Drivetrain.ENCODER_CPR * 4);
+        this.m_encoderLeft = new SparkMaxAlternateEncoderWrapper(Constants.Drivetrain.SPARK_LEFT_ENCODER, Constants.Drivetrain.ENCODER_CPR * 4 );
+        this.m_encoderRight = new SparkMaxAlternateEncoderWrapper(Constants.Drivetrain.SPARK_RIGHT_ENCODER, Constants.Drivetrain.ENCODER_CPR * 4);
 
-        m_encoderRight.setInverted(true);
+        this.m_encoderRight.setInverted(true);
 
-        m_encoderLeft.setDistancePerRevolution(2 * Math.PI * Constants.Drivetrain.WHEEL_RADIUS);
-        m_encoderRight.setDistancePerRevolution(2 * Math.PI * Constants.Drivetrain.WHEEL_RADIUS);
+        this.m_encoderLeft.setDistancePerRevolution(2 * Math.PI * Constants.Drivetrain.WHEEL_RADIUS);
+        this.m_encoderRight.setDistancePerRevolution(2 * Math.PI * Constants.Drivetrain.WHEEL_RADIUS);
 
         SmartDashboard.putData(this);
-        SendableRegistry.add(m_drive, "DifferentialDrive");
+        SendableRegistry.add(this.m_drive, "DifferentialDrive");
     }
 
     public void curvatureDrive(double throttle, double steering, boolean isQuickTurn) {
