@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team2485.WarlordsLib.Limelight;
 import frc.team2485.WarlordsLib.motorcontrol.PIDTalonSRX;
-import frc.team2485.WarlordsLib.sensors.TalonSRXEncoderWrapper;
+import frc.team2485.WarlordsLib.sensors.TalonSRXEncoder;
 import frc.team2485.robot.Constants;
 
 public class Turret extends SubsystemBase {
@@ -15,14 +15,14 @@ public class Turret extends SubsystemBase {
 
     private Limelight m_limelight;
 
-    private TalonSRXEncoderWrapper m_encoder;
+    private TalonSRXEncoder m_encoder;
 
     public Turret() {
         m_talon = new PIDTalonSRX(Constants.Turret.TALON_PORT, ControlMode.MotionProfile);
 
         m_talon.enableVoltageCompensation();
 
-        m_encoder = new TalonSRXEncoderWrapper(m_talon, TalonSRXEncoderWrapper.TalonSRXEncoderType.ABSOLUTE, Constants.Turret.ENCODER_CPR);
+        m_encoder = new TalonSRXEncoder(m_talon, TalonSRXEncoder.TalonSRXEncoderType.ABSOLUTE, Constants.Turret.ENCODER_CPR);
         m_encoder.setDistancePerRevolution(360);
 
         m_limelight = new Limelight();
