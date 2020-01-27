@@ -36,7 +36,7 @@ public class Turret extends SubsystemBase {
     }
 
     public void setPositionPID(double position) {
-        m_talon.setReference(position);
+        m_talon.runPID(position);
     }
 
     /**
@@ -44,7 +44,7 @@ public class Turret extends SubsystemBase {
      * @param position position to set to.
      */
     public void setEncoderPosition(double position) {
-        m_encoder.setPosition(position);
+        m_encoder.resetPosition(position);
     }
 
     /**
