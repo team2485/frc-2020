@@ -61,6 +61,6 @@ public final class Constants {
         /**
          * Full speed in degrees per 20 milliseconds
          */
-        public static final double TURRET_SPEED = 10.0 * 0.02;
+        public static final double TURRET_SPEED = 360.0 * 0.02;
     }
 }

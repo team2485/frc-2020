@@ -6,8 +6,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team2485.WarlordsLib.Limelight;
 import frc.team2485.WarlordsLib.motorcontrol.PIDTalonSRX;
+import frc.team2485.WarlordsLib.robotConfigs.RobotConfigs;
 import frc.team2485.WarlordsLib.sensors.TalonSRXEncoder;
 import frc.team2485.robot.Constants;
+import frc.team2485.robot.lib.ArmabotEncoderWrapper;
 
 public class Turret extends SubsystemBase {
 
@@ -15,15 +17,17 @@ public class Turret extends SubsystemBase {
 
     private Limelight m_limelight;
 
-    private TalonSRXEncoder m_encoder;
+    private ArmabotEncoderWrapper m_encoder;
 
     public Turret() {
         m_talon = new PIDTalonSRX(Constants.Turret.TALON_PORT, ControlMode.MotionProfile);
 
         m_talon.enableVoltageCompensation();
 
-        m_encoder = new TalonSRXEncoder(m_talon, TalonSRXEncoder.TalonSRXEncoderType.ABSOLUTE, Constants.Turret.ENCODER_CPR);
-//        m_encoder.setDistancePerRevolution(36);
+//        m_encoder = new TalonSRXEncoder(m_talon, TalonSRXEncoder.TalonSRXEncoderType.ABSOLUTE, Constants.Turret.ENCODER_CPR);
+        m_encoder = new ArmabotEncoderWrapper(m_talon);
+        m_encoder.setDistancePerRevolution(360);
+        RobotConfigs.getInstance().addConfigurable("Turret encoder", m_encoder);
 
         m_limelight = new Limelight();
 
@@ -52,7 +56,7 @@ public class Turret extends SubsystemBase {
      * @return encoder position in radians
      */
     public double getEncoderPosition() {
-        return m_encoder.getPosition();
+        return m_encoder.getPosition() % m_encoder.getDistancePerRevolution();
     }
 
     public Limelight getLimelight() {
@@ -61,6 +65,6 @@ public class Turret extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Turret Encoder Position", 360*(this.getEncoderPosition()%1));
+        SmartDashboard.putNumber("Turret Encoder Position", (this.getEncoderPosition()));
     }
 }

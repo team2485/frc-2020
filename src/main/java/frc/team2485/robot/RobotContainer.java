@@ -7,15 +7,18 @@
 
 package frc.team2485.robot;
 
+import com.ctre.phoenix.sensors.PigeonIMU;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.team2485.WarlordsLib.oi.Deadband;
 import frc.team2485.WarlordsLib.oi.WL_XboxController;
 import frc.team2485.robot.commands.TurretLimelightAlign;
+import frc.team2485.robot.commands.TurretPositionAlign;
 import frc.team2485.robot.subsystems.Drivetrain;
 import frc.team2485.robot.subsystems.Turret;
 
@@ -27,6 +30,8 @@ public class RobotContainer {
     //    private Drivetrain m_drivetrain;
     private Turret m_turret;
 
+    private PigeonIMU pigeon;
+
     private Command m_autoCommand;
 
     public RobotContainer() {
@@ -36,6 +41,8 @@ public class RobotContainer {
 
         m_jack = new WL_XboxController(Constants.OI.JACK_PORT);
         m_suraj = new WL_XboxController(Constants.OI.SURAJ_PORT);
+
+        pigeon = new PigeonIMU(0);
 
         configureCommands();
     }
@@ -82,20 +89,29 @@ public class RobotContainer {
         );
 
 //        // Field Centric Control
-//        m_suraj.getJoystickButton(XboxController.Button.kX).whenPressed(
+        m_suraj.getJoystickButton(XboxController.Button.kX).whenPressed(
 //                new RunCommand(() -> {
 //                    m_turret.setPositionPID(
 //                            m_turret.getEncoderPosition()
-//                                    + m_drivetrain.getHeading()
+////                                    + m_drivetrain.getHeading()
 //                                    + Constants.Turret.TURRET_SPEED * Deadband.cubicScaledDeadband(
 //                                    m_suraj.getX(GenericHID.Hand.kLeft),
 //                                    Constants.OI.XBOX_DEADBAND)
 //                    );
 //                })
-//        );
+                new TurretPositionAlign(m_turret, () -> {
+//                    return m_turret.getEncoderPosition()
+//                            return         Constants.Turret.TURRET_SPEED * Deadband.cubicScaledDeadband(
+//                                    m_suraj.getX(GenericHID.Hand.kLeft),
+//                                    Constants.OI.XBOX_DEADBAND);
+                    return SmartDashboard.getNumber("angle setpoint", 180);
+                })
+        );
+
+        SmartDashboard.putNumber("angle setpoint", 180);
 
 
-        SmartDashboard.putData("Zero encoder", new RunCommand(()-> {
+        SmartDashboard.putData("Zero encoder", new InstantCommand(()-> {
             m_turret.setEncoderPosition(0);
         }));
     }
