@@ -54,9 +54,9 @@ public final class Constants {
 
     public static final class Turret {
 
-        public static final int TALON_PORT = 20;
+        public static final int TALON_PORT = 1;
 
-        public static final int ENCODER_CPR = 1026;
+        public static final int ENCODER_CPR = 4096;
 
         /**
          * Full speed in degrees per 20 milliseconds

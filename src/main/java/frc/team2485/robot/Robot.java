@@ -56,7 +56,7 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
 
-    m_robotContainer.resetAll();
+//    m_robotContainer.resetAll();
   }
 
   @Override

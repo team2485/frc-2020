@@ -2,6 +2,7 @@ package frc.team2485.robot.lib;
 
 import com.ctre.phoenix.motorcontrol.SensorCollection;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team2485.WarlordsLib.sensors.EncoderWrapper;
 import frc.team2485.WarlordsLib.sensors.TalonSRXEncoder;
 
@@ -11,13 +12,15 @@ public class ArmabotTurretEncoder extends SensorCollection implements EncoderWra
 
     private double distancePerRevolution = 1;
 
+    private double offset = 0;
+
     public ArmabotTurretEncoder(TalonSRX motorController) {
         super(motorController);
     }
 
     @Override
     public double getPosition() {
-        return this.distancePerRevolution * ((this.getPulseWidthRiseToFallUs() - 1024) / 8) / PULSES_PER_REVOLUTION;
+        return offset + (this.distancePerRevolution * ((this.getPulseWidthRiseToFallUs() - 1024) / 8) / PULSES_PER_REVOLUTION);
     }
 
     /**
@@ -27,7 +30,8 @@ public class ArmabotTurretEncoder extends SensorCollection implements EncoderWra
      */
     @Override
     public void resetPosition(double position) {
-        this.setPulseWidthPosition((int) (position * PULSES_PER_REVOLUTION / this.distancePerRevolution), 0);
+//        this.setPulseWidthPosition((int) (position * PULSES_PER_REVOLUTION / this.distancePerRevolution), 0);
+        this.offset = position + this.getPosition();
     }
 
     /**

@@ -20,13 +20,15 @@ public class TurretLimelightAlign extends CommandBase {
 
         m_controller = new WL_PIDController();
 
+        m_controller.setTolerance(1);
+
         SendableRegistry.add(m_controller, "Limelight Turret Controller");
         RobotConfigs.getInstance().addConfigurable("Limelight Turret Controller", m_controller);
     }
 
     @Override
     public void execute() {
-        double output = m_controller.calculate(m_turret.getLimelight().getTargetHorizontalOffset(0));
+        double output = -m_controller.calculate(m_turret.getLimelight().getTargetHorizontalOffset(0));
         m_turret.setPWM(output);
     }
 

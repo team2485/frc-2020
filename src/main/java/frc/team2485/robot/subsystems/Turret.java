@@ -23,7 +23,7 @@ public class Turret extends SubsystemBase {
         m_talon.enableVoltageCompensation();
 
         m_encoder = new TalonSRXEncoder(m_talon, TalonSRXEncoder.TalonSRXEncoderType.ABSOLUTE, Constants.Turret.ENCODER_CPR);
-        m_encoder.setDistancePerRevolution(360);
+//        m_encoder.setDistancePerRevolution(36);
 
         m_limelight = new Limelight();
 
@@ -61,6 +61,6 @@ public class Turret extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Turret Encoder Position", this.getEncoderPosition());
+        SmartDashboard.putNumber("Turret Encoder Position", 360*(this.getEncoderPosition()%1));
     }
 }
