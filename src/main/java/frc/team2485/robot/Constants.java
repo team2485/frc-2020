@@ -46,4 +46,18 @@ public final class Constants {
 
         public static final int CURRENT_LIMIT = 18;
     }
+
+    public static final class Magazine {
+        //replace ports with real values
+        public static final int TALON_LOW_PORT = 0;
+        public static final int TALON_HIGH_PORT = 0;
+
+        public static final int NUM_BALLS_MAX = 5;
+        public static final int NUM_BALLS_BELT_ONE = 2;
+        //Replace below with actual number
+        public static final double INDEX_BY_ONE_POS = 0.7;
+        //replace below with actual number
+        public static final double TALON_LOW_PWM = 0.2;
+        public static final double TALON_HIGH_PWM = 0.3;
+    }
 }
