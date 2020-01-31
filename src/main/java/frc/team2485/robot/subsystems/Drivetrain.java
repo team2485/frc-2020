@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team2485.WarlordsLib.WL_DifferentialDrive;
 import frc.team2485.WarlordsLib.motorcontrol.WL_SparkMax;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.team2485.WarlordsLib.sensors.SparkMaxAlternateEncoder;
 import frc.team2485.WarlordsLib.sensors.SparkMaxAlternateEncoderWrapper;
 import frc.team2485.robot.Constants;
 
@@ -24,8 +25,8 @@ public class Drivetrain extends SubsystemBase {
     private WL_SparkMax m_sparkRight2;
     private WL_SparkMax m_sparkRight3;
 
-    private SparkMaxAlternateEncoderWrapper m_encoderLeft;
-    private SparkMaxAlternateEncoderWrapper m_encoderRight;
+    private SparkMaxAlternateEncoder m_encoderLeft;
+    private SparkMaxAlternateEncoder m_encoderRight;
 
     public Drivetrain() {
         this.m_sparkLeft1Master = new WL_SparkMax(Constants.Drivetrain.SPARK_LEFT_PORT_MASTER);

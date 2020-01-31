@@ -51,6 +51,7 @@ public final class Constants {
         //replace ports with real values
         public static final int TALON_LOW_PORT = 0;
         public static final int TALON_HIGH_PORT = 0;
+        public static final int SPARK_OUTTAKE_PORT = 0;
 
         public static final int NUM_BALLS_MAX = 5;
         public static final int NUM_BALLS_BELT_ONE = 2;
