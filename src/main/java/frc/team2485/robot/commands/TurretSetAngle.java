@@ -38,7 +38,7 @@ public class TurretSetAngle extends CommandBase {
 
     @Override
     public void execute() {
-        this.m_isAtTarget = m_turret.calculatePosition(m_headingSetpoint.getAsDouble());
+        this.m_isAtTarget = m_turret.usePositionPID(m_headingSetpoint.getAsDouble());
     }
 
     public boolean isM_isAtTarget() {

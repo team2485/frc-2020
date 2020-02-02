@@ -77,12 +77,12 @@ public class Turret extends SubsystemBase {
         System.out.println(m_encoderOffset);
     }
 
-    public boolean calculatePosition(double setpoint) {
+    public boolean usePositionPID(double setpoint) {
         this.setPWM(anglePID.calculate(this.getEncoderPosition(), MathUtil.clamp(setpoint, minAngle, maxAngle)));
         return anglePID.atSetpoint();
     }
 
-    public boolean angleAtSetpoint() {
+    public boolean positionPIDAtSetpoint() {
         return anglePID.atSetpoint();
     }
 
@@ -96,6 +96,14 @@ public class Turret extends SubsystemBase {
 
     public Limelight getLimelight() {
         return this.m_limelight;
+    }
+
+    public double getMinAngle() {
+        return this.minAngle;
+    }
+
+    public double getMaxAngle() {
+        return this.maxAngle;
     }
 
     @Override

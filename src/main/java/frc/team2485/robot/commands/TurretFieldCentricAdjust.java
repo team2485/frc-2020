@@ -38,11 +38,8 @@ public class TurretFieldCentricAdjust extends CommandBase {
 
     @Override
     public void execute() {
-//        if (m_headingIncrement.getAsDouble() == 0) {
-//            resetSetpoint();
-//        }
         m_setpoint += m_headingIncrement.getAsDouble();
-        MathUtil.clamp(m_setpoint, -175, 175);
-        m_turret.calculatePosition(m_setpoint - m_headingSource.getAsDouble());
+        m_setpoint = MathUtil.clamp(m_setpoint, m_turret.getMinAngle(), m_turret.getMaxAngle());
+        m_turret.usePositionPID(m_setpoint - m_headingSource.getAsDouble());
     }
 }
