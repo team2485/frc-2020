@@ -13,6 +13,10 @@ public class TurretLimelightAlign extends CommandBase {
 
     private Turret m_turret;
 
+    /**
+     * Aligns turret based on limelight.
+     * @param turret
+     */
     public TurretLimelightAlign(Turret turret) {
         addRequirements(turret);
 
@@ -32,8 +36,8 @@ public class TurretLimelightAlign extends CommandBase {
         m_turret.setPWM(output);
     }
 
-    @Override
-    public boolean isFinished() {
-        return m_controller.atSetpoint() || !m_turret.getLimelight().hasValidTarget();
-    }
+//    @Override
+//    public boolean isFinished() {
+//        return m_controller.atSetpoint() || !m_turret.getLimelight().hasValidTarget();
+//    }
 }

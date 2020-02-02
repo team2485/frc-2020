@@ -75,10 +75,11 @@ public class Drivetrain extends SubsystemBase {
     }
 
     public double getHeading() {
-        return m_pigeon.getFusedHeading();
+        return - m_pigeon.getFusedHeading();
     }
 
     @Override
     public void periodic() {
+        SmartDashboard.putNumber("Pigeon Heading", m_pigeon.getFusedHeading());
     }
 }

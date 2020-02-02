@@ -12,14 +12,14 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team2485.WarlordsLib.oi.Deadband;
 import frc.team2485.WarlordsLib.oi.WL_XboxController;
+import frc.team2485.robot.commands.TurretFieldCentricAdjust;
+import frc.team2485.robot.commands.TurretSetAngle;
 import frc.team2485.robot.commands.TurretLimelightAlign;
-import frc.team2485.robot.commands.TurretPositionAlign;
-import frc.team2485.robot.subsystems.Drivetrain;
 import frc.team2485.robot.subsystems.Turret;
 
 public class RobotContainer {
@@ -30,6 +30,7 @@ public class RobotContainer {
     //    private Drivetrain m_drivetrain;
     private Turret m_turret;
 
+    //Temporary
     private PigeonIMU pigeon;
 
     private Command m_autoCommand;
@@ -62,58 +63,49 @@ public class RobotContainer {
 //        );
 
         m_turret.setDefaultCommand(
-//                new ConditionalCommand(
-//                        new TurretLimelightAlign(m_turret),
-//                        null, // Turret odometry align
-//                        () -> m_turret.getLimelight().hasValidTarget()
-//                )
-                new RunCommand(() -> {
-                    m_turret.setPWM(
-                            Deadband.cubicScaledDeadband(
-                                    m_suraj.getX(GenericHID.Hand.kLeft),
-                                    Constants.OI.XBOX_DEADBAND)
-                    );
-                }, m_turret)
+                new RunCommand(() ->
+                        m_turret.setPWM(
+                                Deadband.cubicScaledDeadband(
+                                        m_suraj.getX(GenericHID.Hand.kLeft),
+                                        Constants.OI.XBOX_DEADBAND)
+                        )
+                        , m_turret)
         );
 
-        // Manual control
-        m_suraj.getJoystickButton(XboxController.Button.kY).whenPressed(
-//                new RunCommand(() -> {
-//                    m_turret.setPWM(
-//                            Deadband.cubicScaledDeadband(
-//                                    m_suraj.getX(GenericHID.Hand.kLeft),
-//                                    Constants.OI.XBOX_DEADBAND)
-//                    );
-//                })
+        m_suraj.getJoystickButton(XboxController.Button.kY).whenHeld(
                 new TurretLimelightAlign(m_turret)
         );
 
-//        // Field Centric Control
-        m_suraj.getJoystickButton(XboxController.Button.kX).whenPressed(
-//                new RunCommand(() -> {
-//                    m_turret.setPositionPID(
-//                            m_turret.getEncoderPosition()
-////                                    + m_drivetrain.getHeading()
-//                                    + Constants.Turret.TURRET_SPEED * Deadband.cubicScaledDeadband(
-//                                    m_suraj.getX(GenericHID.Hand.kLeft),
-//                                    Constants.OI.XBOX_DEADBAND)
-//                    );
-//                })
-                new TurretPositionAlign(m_turret, () -> {
-//                    return m_turret.getEncoderPosition()
-//                            return         Constants.Turret.TURRET_SPEED * Deadband.cubicScaledDeadband(
-//                                    m_suraj.getX(GenericHID.Hand.kLeft),
-//                                    Constants.OI.XBOX_DEADBAND);
-                    return SmartDashboard.getNumber("angle setpoint", 180);
-                })
+        // Field Centric Control
+        m_suraj.getJoystickButton(XboxController.Button.kX).whenHeld(
+                new TurretFieldCentricAdjust(m_turret,
+                        () -> {
+                            return Constants.Turret.TURRET_SPEED * Deadband.cubicScaledDeadband(
+                                    m_suraj.getX(GenericHID.Hand.kLeft),
+                                    Constants.OI.XBOX_DEADBAND);
+                        },
+                        () -> {
+                            SmartDashboard.putNumber("Pigeon heading", pigeon.getFusedHeading());
+                            return - pigeon.getFusedHeading();
+                        }
+                )
         );
 
-        SmartDashboard.putNumber("angle setpoint", 180);
+        // Seek
+        m_suraj.getJoystickButton(XboxController.Button.kA).whenPressed(
+                new SequentialCommandGroup(
+                        new TurretSetAngle(m_turret, Constants.Turret.MIN_POSITION + Constants.Turret.BUFFER_ZONE_SIZE, true),
+                        new TurretSetAngle(m_turret, Constants.Turret.MAX_POSITION - Constants.Turret.BUFFER_ZONE_SIZE, true)
+                )
+        );
 
+        SmartDashboard.putData("Zero Turret", new InstantCommand(() ->
+                m_turret.setEncoderPosition(0)
+        ));
 
-        SmartDashboard.putData("Zero encoder", new InstantCommand(()-> {
-            m_turret.setEncoderPosition(0);
-        }));
+        SmartDashboard.putData("Zero Pigeon", new InstantCommand(() ->
+                pigeon.setFusedHeading(0)
+        ));
     }
 
 //    public void resetAll() {

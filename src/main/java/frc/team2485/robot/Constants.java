@@ -62,5 +62,11 @@ public final class Constants {
          * Full speed in degrees per 20 milliseconds
          */
         public static final double TURRET_SPEED = 360.0 * 0.02;
+
+        public static final double MIN_POSITION = -175;
+
+        public static final double MAX_POSITION = 175;
+
+        public static final double BUFFER_ZONE_SIZE = 10;
     }
 }
