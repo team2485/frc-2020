@@ -11,10 +11,7 @@ import com.ctre.phoenix.sensors.PigeonIMU;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.*;
 import frc.team2485.WarlordsLib.oi.Deadband;
 import frc.team2485.WarlordsLib.oi.WL_XboxController;
 import frc.team2485.robot.commands.TurretFieldCentricAdjust;
@@ -106,15 +103,27 @@ public class RobotContainer {
         SmartDashboard.putData("Zero Pigeon", new InstantCommand(() ->
                 pigeon.setFusedHeading(0)
         ));
+
     }
 
-//    public void resetAll() {
-//        m_drivetrain.resetEncoders(0, 0);
-//    }
+    public void configTestModeCommands() {
+        if (Constants.TUNING_MODE) {
+            configTurretTuningCommands();
+        }
+    }
+
+    private void configTurretTuningCommands() {
+        SmartDashboard.putNumber("Turret Setpoint", 0);
+
+        SmartDashboard.putData("Run Turret", new TurretSetAngle(m_turret, () -> {
+            return SmartDashboard.getNumber("Turret Setpoint", 0);
+        }));
+    }
 
     public Command getAutonomousCommand() {
         // temporary!
         m_autoCommand = new RunCommand(() -> {
+
         });
 
         return m_autoCommand;

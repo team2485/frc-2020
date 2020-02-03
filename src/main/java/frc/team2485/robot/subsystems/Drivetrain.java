@@ -56,8 +56,8 @@ public class Drivetrain extends SubsystemBase {
 
         this.m_pigeon = new PigeonIMU(0);
 
-        SmartDashboard.putData(this);
         SendableRegistry.add(this.m_drive, "DifferentialDrive");
+        SmartDashboard.putData(this);
     }
 
     public void curvatureDrive(double throttle, double steering, boolean isQuickTurn) {
@@ -81,5 +81,7 @@ public class Drivetrain extends SubsystemBase {
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Pigeon Heading", m_pigeon.getFusedHeading());
+        SmartDashboard.putNumber("Left Drive Encoder", m_encoderLeft.getPosition());
+        SmartDashboard.putNumber("Right Drive Encoder", m_encoderRight.getPosition());
     }
 }

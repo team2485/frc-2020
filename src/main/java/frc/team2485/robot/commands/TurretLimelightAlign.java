@@ -35,9 +35,4 @@ public class TurretLimelightAlign extends CommandBase {
         double output = -m_controller.calculate(m_turret.getLimelight().getTargetHorizontalOffset(0));
         m_turret.setPWM(output);
     }
-
-//    @Override
-//    public boolean isFinished() {
-//        return m_controller.atSetpoint() || !m_turret.getLimelight().hasValidTarget();
-//    }
 }

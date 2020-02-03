@@ -11,6 +11,8 @@ public final class Constants {
 
     public static final String CONFIGS_FILE = "/home/lvuser/constants.csv";
 
+    public static final boolean TUNING_MODE = true;
+
     /**
      * Constants specific to operator interface
      */
@@ -56,17 +58,17 @@ public final class Constants {
 
         public static final int TALON_PORT = 1;
 
+        /**
+         * counts per revolution of the encoder
+         */
         public static final int ENCODER_CPR = 4096;
 
-        /**
-         * Full speed in degrees per 20 milliseconds
-         */
-        public static final double TURRET_SPEED = 360.0 * 0.02;
+        public static final double TURRET_SPEED = 360.0 * 0.02; // degrees per ~20 milliseconds
 
-        public static final double MIN_POSITION = -175;
+        public static final double MIN_POSITION = -175; // degrees
+        public static final double MAX_POSITION = 175; // degrees
+        public static final double BUFFER_ZONE_SIZE = 10; // degrees
 
-        public static final double MAX_POSITION = 175;
-
-        public static final double BUFFER_ZONE_SIZE = 10;
+        public static final double TURRET_PID_TOLERANCE = 2; // degrees
     }
 }
