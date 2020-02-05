@@ -87,21 +87,21 @@ public class RobotContainer {
                         () -> {
                             double p = -pigeon.getFusedHeading();
 
-                            p += 180;
+//                            p += 180;
 
-                            while (p < 0) {
-                                p += 360;
-                            }
-
-                            p %= 360;
-
-
-                            p -= 180;
+//                            while (p < 0) {
+//                                p += 360;
+//                            }
+//
+//                            p %= 360;
+//
+//
+//                            p -= 180;
 
                             SmartDashboard.putNumber("Pigeon heading", p);
 
 
-                            return p ;
+                            return p;
                         }
                 )
         );
@@ -114,7 +114,7 @@ public class RobotContainer {
                         new SequentialCommandGroup(
                                 new TurretSetAngle(m_turret, Constants.Turret.MIN_POSITION + Constants.Turret.BUFFER_ZONE_SIZE, true),
                                 new TurretSetAngle(m_turret, Constants.Turret.MAX_POSITION - Constants.Turret.BUFFER_ZONE_SIZE, true)
-                        ).withInterrupt(()->m_turret.getLimelight().hasValidTarget()),
+                        ).withInterrupt(() -> m_turret.getLimelight().hasValidTarget()),
                         () -> m_turret.getLimelight().hasValidTarget()));
 
         m_suraj.getJoystickButton(XboxController.Button.kBack).whenPressed(new InstantCommand(() -> {
@@ -138,19 +138,18 @@ public class RobotContainer {
         ));
 
         if (Constants.DEBUG_MODE) {
-            configTurretTuningCommands();
+
         }
 
-
+        if (Constants.Turret.DEBUG_MODE) configTurretTuningCommands();
     }
 
 
     private void configTurretTuningCommands() {
-
         SmartDashboard.putNumber("Turret Setpoint", 0);
-
-        SmartDashboard.putData("Turret PID Command", new TurretSetAngle(m_turret, () -> SmartDashboard.getNumber("Turret Setpoint", 0)));
-
+        SmartDashboard.putData("Turret PID Command", new TurretSetAngle(m_turret, () ->
+                SmartDashboard.getNumber("Turret Setpoint", 0)
+        ));
     }
 
     public Command getAutonomousCommand() {
