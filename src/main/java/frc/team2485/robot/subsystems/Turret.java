@@ -92,8 +92,16 @@ public class Turret extends SubsystemBase {
         return this.m_maxAngle;
     }
 
+    public void resetPID() {
+        this.m_talon.resetPID();
+    }
+
+
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Turret Encoder Position", (this.getEncoderPosition()));
+        SmartDashboard.putNumber("Turret Supply Currentokai", m_talon.getSupplyCurrent());
+
+        SmartDashboard.putNumber("Turret Stator Currentokai", m_talon.getStatorCurrent());
     }
 }

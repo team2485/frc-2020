@@ -11,7 +11,7 @@ public final class Constants {
 
     public static final String CONFIGS_FILE = "/home/lvuser/constants.csv";
 
-    public static final boolean TUNING_MODE = true;
+    public static final boolean DEBUG_MODE = true;
 
     /**
      * Constants specific to operator interface
@@ -55,6 +55,8 @@ public final class Constants {
     }
 
     public static final class Turret {
+
+        public static final boolean DEBUG_MODE = true;
 
         public static final int TALON_PORT = 1;
 
