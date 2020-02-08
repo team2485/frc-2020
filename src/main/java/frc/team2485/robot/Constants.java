@@ -36,6 +36,8 @@ public final class Constants {
 
     public static final class Drivetrain {
 
+        public static final boolean TUNING_MODE = false;
+
         public static final int SPARK_LEFT_PORT_MASTER = 10;
         public static final int SPARK_LEFT_PORT_SLAVE_2 = 11;
         public static final int SPARK_LEFT_PORT_SLAVE_3 = 12;
@@ -56,7 +58,7 @@ public final class Constants {
 
     public static final class Turret {
 
-        public static final boolean DEBUG_MODE = true;
+        public static final boolean TUNING_MODE = false;
 
         public static final int TALON_PORT = 1;
 
@@ -67,8 +69,12 @@ public final class Constants {
 
         public static final double TURRET_SPEED = 360.0 * 0.02; // degrees per ~20 milliseconds
 
-        public static final double MIN_POSITION = -175; // degrees
-        public static final double MAX_POSITION = 175; // degrees
+        public static final double MIN_POSITION = -160; // degrees
+        public static final double MAX_POSITION = 160; // degrees
+
+        /**
+         * In manual mode the max pwm will linearly clamp starting at the buffer zone size before the min or max positions.
+         */
         public static final double BUFFER_ZONE_SIZE = 10; // degrees
 
         public static final double TURRET_PID_TOLERANCE = 2; // degrees

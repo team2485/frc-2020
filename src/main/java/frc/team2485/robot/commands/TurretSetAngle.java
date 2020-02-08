@@ -30,6 +30,12 @@ public class TurretSetAngle extends CommandBase {
         this.m_finishWhenAligned = false;
     }
 
+    /**
+     * Set angle at a particular heading
+     * @param turret turret subsystem reference
+     * @param target angle target
+     * @param finishWhenAligned finish this command when it ultimately aligns.
+     */
     public TurretSetAngle(Turret turret, double target, boolean finishWhenAligned) {
         this(turret, () -> target);
 
@@ -46,16 +52,15 @@ public class TurretSetAngle extends CommandBase {
         this.m_isAtTarget = m_turret.runPID(m_angleSetpoint.getAsDouble());
     }
 
-    public boolean isM_isAtTarget() {
+    public boolean isAtTarget() {
         return this.m_isAtTarget;
     }
 
     @Override
     public boolean isFinished() {
         if (m_finishWhenAligned) {
-            return this.isM_isAtTarget();
+            return this.isAtTarget();
         }
-
         return false;
     }
 }

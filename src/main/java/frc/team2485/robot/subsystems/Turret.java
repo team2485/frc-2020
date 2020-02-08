@@ -25,7 +25,7 @@ public class Turret extends SubsystemBase {
         m_talon.enableVoltageCompensation();
         m_talon.setFeedbackDeviceType(FeedbackDevice.CTRE_MagEncoder_Relative);
         m_talon.setSelectedSensorPosition(m_talon.getSensorCollection().getPulseWidthPosition());
-        m_talon.setConversionFactor(360.0 / Constants.Turret.ENCODER_CPR);
+        m_talon.setDistancePerPulse(360.0 / Constants.Turret.ENCODER_CPR); // convert to degrees
         m_talon.setTolerance(Constants.Turret.TURRET_PID_TOLERANCE);
 
         m_limelight = new Limelight();
@@ -42,6 +42,10 @@ public class Turret extends SubsystemBase {
         SmartDashboard.putData(this);
     }
 
+    /**
+     * Set PWM of turret motor, clamped based on proximity to limits.
+     * @param pwm pwm to set.
+     */
     public void setPWM(double pwm) {
         double output = 0;
 
@@ -56,18 +60,36 @@ public class Turret extends SubsystemBase {
     }
 
     /**
+     * Sets PWM of turret motor, without hard stop checks.
+     * DON'T USE THIS UNLESS YOU'RE ABSOLUTELY SURE WHAT YOU'RE DOING!
+     * @param pwm pwm value to set
+     */
+    public void setUnclampedPWM(double pwm) {
+        m_talon.set(pwm);
+    }
+
+    /**
      * Reset the encoder position to a given position
      * @param position position to set to.
      */
-    public void setEncoderPosition(double position) {
+    public void resetEncoderPosition(double position) {
         m_talon.setEncoderPosition(position);
     }
 
+    /**
+     * Set a position using the turret's talon's pid.
+     * @param setpoint position to set (degrees)
+     * @return true if pid is at target within threshold.
+     */
     public boolean runPID(double setpoint) {
         m_talon.runPID(MathUtil.clamp(setpoint, this.m_minAngle, this.m_maxAngle));
         return m_talon.atTarget();
     }
 
+    /**
+     * Whether the turret's talon's pid is at target based on threhold.
+     * @return true if pid is at target within threshold.
+     */
     public boolean atPIDTarget() {
         return m_talon.atTarget();
     }
@@ -96,12 +118,8 @@ public class Turret extends SubsystemBase {
         this.m_talon.resetPID();
     }
 
-
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Turret Encoder Position", (this.getEncoderPosition()));
-        SmartDashboard.putNumber("Turret Supply Currentokai", m_talon.getSupplyCurrent());
-
-        SmartDashboard.putNumber("Turret Stator Currentokai", m_talon.getStatorCurrent());
     }
 }
