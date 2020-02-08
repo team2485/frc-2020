@@ -12,12 +12,11 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
-import frc.team2485.WarlordsLib.Limelight;
+import frc.team2485.WarlordsLib.SmartDashboardHelper;
 import frc.team2485.WarlordsLib.oi.Deadband;
 import frc.team2485.WarlordsLib.oi.WL_XboxController;
 import frc.team2485.robot.commands.TurretFieldCentricAdjust;
 import frc.team2485.robot.commands.TurretSetAngle;
-import frc.team2485.robot.commands.TurretLimelightAlign;
 import frc.team2485.robot.subsystems.Turret;
 
 public class RobotContainer {
@@ -60,6 +59,7 @@ public class RobotContainer {
 //                }, m_drivetrain)
 //        );
 
+        // Turret manual control
         m_turret.setDefaultCommand(
                 new RunCommand(() ->
                         m_turret.setPWM(
@@ -70,6 +70,7 @@ public class RobotContainer {
                         , m_turret)
         );
 
+        // Limelight align
         m_suraj.getJoystickButton(XboxController.Button.kY).whenHeld(
                 new TurretSetAngle(m_turret, () -> {
                     return m_turret.getEncoderPosition() + m_turret.getLimelight().getTargetHorizontalOffset(0);
@@ -85,70 +86,54 @@ public class RobotContainer {
                                     Constants.OI.XBOX_DEADBAND);
                         },
                         () -> {
-                            double p = -pigeon.getFusedHeading();
-
-//                            p += 180;
-
-//                            while (p < 0) {
-//                                p += 360;
-//                            }
-//
-//                            p %= 360;
-//
-//
-//                            p -= 180;
-
-                            SmartDashboard.putNumber("Pigeon heading", p);
 
 
-                            return p;
+                            SmartDashboard.putNumber("Pigeon Heading", -pigeon.getFusedHeading());
+                            return -pigeon.getFusedHeading();
                         }
                 )
         );
 
+
+        m_suraj.getJoystickButton(XboxController.Button.kBumperLeft).whenPressed(new ConditionalCommand(
+                new TurretSetAngle(m_turret, m_turret.getMinAngle(), true),
+                new TurretSetAngle(m_turret, m_turret.getMaxAngle(), true),
+                () -> m_turret.getEncoderPosition() > 0
+        ));
+
         // Seek
         m_suraj.getJoystickButton(XboxController.Button.kA).whileHeld(
-                new ConditionalCommand(new TurretSetAngle(m_turret, () -> {
-                    return m_turret.getEncoderPosition() + m_turret.getLimelight().getTargetHorizontalOffset(0);
-                }),
+                new ConditionalCommand(
+                        new TurretSetAngle(m_turret, () -> {
+                            return m_turret.getEncoderPosition() + m_turret.getLimelight().getTargetHorizontalOffset(0);
+                        }),
                         new SequentialCommandGroup(
                                 new TurretSetAngle(m_turret, Constants.Turret.MIN_POSITION + Constants.Turret.BUFFER_ZONE_SIZE, true),
                                 new TurretSetAngle(m_turret, Constants.Turret.MAX_POSITION - Constants.Turret.BUFFER_ZONE_SIZE, true)
                         ).withInterrupt(() -> m_turret.getLimelight().hasValidTarget()),
-                        () -> m_turret.getLimelight().hasValidTarget()));
+                        () -> m_turret.getLimelight().hasValidTarget())
+        );
 
         m_suraj.getJoystickButton(XboxController.Button.kBack).whenPressed(new InstantCommand(() -> {
-            m_turret.getLimelight().setLedMode(Limelight.LedMode.OFF);
+            m_turret.getLimelight().toggleLed();
         }));
 
-        m_suraj.getJoystickButton(XboxController.Button.kStart).whenPressed(new InstantCommand(() -> {
-            m_turret.getLimelight().setLedMode(Limelight.LedMode.ON);
-        }));
-
-        m_suraj.getJoystickButton(XboxController.Button.kBumperRight).whenPressed(new InstantCommand(() -> {
-            m_turret.getLimelight().setLedMode(Limelight.LedMode.BLINK);
-        }));
 
         SmartDashboard.putData("Zero Turret", new InstantCommand(() ->
-                m_turret.setEncoderPosition(0)
+                m_turret.resetEncoderPosition(0)
         ));
 
         SmartDashboard.putData("Zero Pigeon", new InstantCommand(() ->
                 pigeon.setFusedHeading(0)
         ));
 
-        if (Constants.DEBUG_MODE) {
-
-        }
-
-        if (Constants.Turret.DEBUG_MODE) configTurretTuningCommands();
+        if (Constants.Turret.TUNING_MODE) configTurretTuningCommands();
     }
 
 
     private void configTurretTuningCommands() {
-        SmartDashboard.putNumber("Turret Setpoint", 0);
         SmartDashboard.putData("Turret PID Command", new TurretSetAngle(m_turret, () ->
-                SmartDashboard.getNumber("Turret Setpoint", 0)
+                SmartDashboardHelper.getNumber("Turret Setpoint", 0)
         ));
     }
 
