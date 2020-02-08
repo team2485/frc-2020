@@ -9,6 +9,7 @@ package frc.team2485.robot;
 
 import com.ctre.phoenix.sensors.PigeonIMU;
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.Spark;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
@@ -26,6 +27,8 @@ public class RobotContainer {
 
     //    private Drivetrain m_drivetrain;
     private Turret m_turret;
+
+    private Spark led = new Spark(0);
 
     //Temporary
     private PigeonIMU pigeon;
@@ -128,6 +131,9 @@ public class RobotContainer {
         ));
 
         if (Constants.Turret.TUNING_MODE) configTurretTuningCommands();
+
+        if (m_turret.atPIDTarget()) led.set(.77);
+        else led.set(-.25);
     }
 
 
