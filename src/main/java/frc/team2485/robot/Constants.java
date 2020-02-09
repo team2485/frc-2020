@@ -46,4 +46,20 @@ public final class Constants {
 
         public static final int CURRENT_LIMIT = 18;
     }
+
+    public static final class IntakeArm {
+
+        public static final int SPARK_PORT = 20;
+
+        public static final int ENCODER_DIO_PORT = 0;
+
+        public static final double ENCODER_PULSES_PER_REVOLUTION = 174.9;
+
+        public static final double TOP_POSITION_DEGREES = 0;
+
+        public static final double BOTTOM_POSITION_DEGREES = 90; //temp
+
+        public static final double SPEED = 1;
+
+    }
 }

@@ -8,25 +8,30 @@
 package frc.team2485.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.team2485.WarlordsLib.oi.Deadband;
 import frc.team2485.WarlordsLib.oi.WL_XboxController;
+import frc.team2485.robot.commands.IntakeArmMove;
 import frc.team2485.robot.subsystems.Drivetrain;
+import frc.team2485.robot.subsystems.IntakeArm;
 
 public class RobotContainer {
 
     private WL_XboxController m_jack;
 
     private Drivetrain m_drivetrain;
+    private IntakeArm m_intakeArm;
 
     private Command m_autoCommand;
 
     public RobotContainer() {
 
-        m_drivetrain = new Drivetrain();
+//        m_drivetrain = new Drivetrain();
+        m_intakeArm = new IntakeArm();
 
         m_jack = new WL_XboxController(Constants.OI.JACK_PORT);
 
@@ -34,18 +39,21 @@ public class RobotContainer {
     }
 
     private void configureCommands() {
-        m_drivetrain.setDefaultCommand(new RunCommand(() -> {
-                    m_drivetrain.curvatureDrive(
-                            Deadband.cubicScaledDeadband(
-                                    m_jack.getTriggerAxis(GenericHID.Hand.kRight)
-                                            - m_jack.getTriggerAxis(GenericHID.Hand.kLeft),
-                                    Constants.OI.XBOX_DEADBAND),
-                            Deadband.cubicScaledDeadband(
-                                    m_jack.getX(GenericHID.Hand.kLeft),
-                                    Constants.OI.XBOX_DEADBAND),
-                            m_jack.getXButton());
-                }, m_drivetrain)
-        );
+//        m_drivetrain.setDefaultCommand(new RunCommand(() -> {
+//                    m_drivetrain.curvatureDrive(
+//                            Deadband.cubicScaledDeadband(
+//                                    m_jack.getTriggerAxis(GenericHID.Hand.kRight)
+//                                            - m_jack.getTriggerAxis(GenericHID.Hand.kLeft),
+//                                    Constants.OI.XBOX_DEADBAND),
+//                            Deadband.cubicScaledDeadband(
+//                                    m_jack.getX(GenericHID.Hand.kLeft),
+//                                    Constants.OI.XBOX_DEADBAND),
+//                            m_jack.getXButton());
+//                }, m_drivetrain)
+//        );
+
+        m_jack.getJoystickButton(XboxController.Button.kA).whenHeld(new IntakeArmMove(m_intakeArm, IntakeArmMove.IntakeArmPosition.BOTTOM, Constants.IntakeArm.SPEED));
+        m_jack.getJoystickButton(XboxController.Button.kB).whenHeld(new IntakeArmMove(m_intakeArm, IntakeArmMove.IntakeArmPosition.TOP, Constants.IntakeArm.SPEED));
     }
 
     public void resetAll() {
