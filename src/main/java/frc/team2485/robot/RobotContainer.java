@@ -95,7 +95,7 @@ public class RobotContainer {
         );
 
 
-        m_suraj.getJoystickButton(XboxController.Button.kBumperLeft).whenPressed(new ConditionalCommand(
+        m_suraj.getJoystickButton(XboxController.Button.kBumperLeft).whenHeld(new ConditionalCommand(
                 new TurretSetAngle(m_turret, m_turret.getMinAngle(), true),
                 new TurretSetAngle(m_turret, m_turret.getMaxAngle(), true),
                 () -> m_turret.getEncoderPosition() > 0
