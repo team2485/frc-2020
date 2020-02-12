@@ -22,6 +22,13 @@ public final class Constants {
         public static final int JACK_PORT = 0;
 
         /**
+         * Suraj's XBOX port
+         */
+        public static final int SURAJ_PORT = 0;
+
+
+
+        /**
          * Deadband threshold for all Xbox controllers.
          */
         public static final double XBOX_DEADBAND = 0.2;
@@ -51,14 +58,20 @@ public final class Constants {
         //replace ports with real values
         public static final int TALON_LOW_PORT = 0;
         public static final int TALON_HIGH_PORT = 0;
-        public static final int SPARK_OUTTAKE_PORT = 0;
 
-        public static final int NUM_BALLS_MAX = 5;
-        public static final int NUM_BALLS_BELT_ONE = 2;
+        public static final int ENTRANCE_IR_PORT = 0;
+        public static final int TRANSFER_IR_PORT = 0;
+        public static final int EXIT_IR_PORT = 0;
+
+        public static final int HIGH_MAGAZINE_BALL_CAPACITY = 4;
+
+        public static final double ENCODER_VELOCITY_DEADBAND = 0.1;
+
         //Replace below with actual number
         public static final double INDEX_BY_ONE_POS = 0.7;
         //replace below with actual number
-        public static final double TALON_LOW_PWM = 0.2;
-        public static final double TALON_HIGH_PWM = 0.3;
+        public static final double LOW_BELT_PWM = 0.2;
+        public static final double FAST_OUTTAKE_PWM = 0.5;
+        public static final double NORMAL_OUTTAKE_TIMEOUT = 0.2;
     }
 }
