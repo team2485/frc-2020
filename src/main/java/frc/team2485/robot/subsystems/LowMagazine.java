@@ -20,10 +20,16 @@ public class LowMagazine extends SubsystemBase implements AbstractMagazinePart {
 
     private WL_PIDController m_positionController;
 
+    /**
+     * the number of balls currently contained in the low belt
+     */
     private int m_numBalls;
 
     private boolean m_entranceIRLastVal, m_transferIRLastVal, m_exitIRLastVal;
 
+    /**
+     * Low magazine subystem, controlling the intake rollers and low belt.
+     */
     public LowMagazine() {
         m_talon = new PIDTalonSRX(Constants.Magazine.TALON_LOW_PORT, ControlMode.Current);
 
@@ -48,10 +54,18 @@ public class LowMagazine extends SubsystemBase implements AbstractMagazinePart {
         tab.addBoolean("Transfer IR", this::getTransferIR);
     }
 
+    /**
+     * Sets talon to a specific PWM
+     * @param pwm PWM to set the talon to
+     */
     public void setPWM(double pwm) {
         m_talon.set(pwm);
     }
 
+    /**
+     * Sets the talon to a specific current using PID control
+     * @param current current to set the PID to
+     */
     public void setCurrent(double current) {
         m_talon.runPID(current);
     }
@@ -62,9 +76,12 @@ public class LowMagazine extends SubsystemBase implements AbstractMagazinePart {
         return m_positionController.atSetpoint();
     }
 
-    @Override
+    /**
+     *
+     * @return belt encoder position
+     */
     public double getEncoderPosition() {
-        return Deadband.deadband(m_talon.getSensorCollection().getQuadraturePosition(), Constants.Magazine.ENCODER_VELOCITY_DEADBAND);
+        return m_talon.getSensorCollection().getQuadraturePosition();
     }
 
     @Override
@@ -72,22 +89,41 @@ public class LowMagazine extends SubsystemBase implements AbstractMagazinePart {
         return m_positionController.atSetpoint();
     }
 
+    /**
+     *
+     * @return belt encoder velocity
+     */
     public double getEncoderVelocity() {
-        return m_talon.getSensorCollection().getQuadraturePosition();
+        return Deadband.deadband(m_talon.getSensorCollection().getQuadraturePosition(), Constants.Magazine.ENCODER_VELOCITY_DEADBAND);
     }
 
+    /**
+     *
+     * @return boolean value of beam break sensor at start of low belt
+     */
     public boolean getEntranceIR() {
         return m_entranceIR.get();
     }
 
+    /**
+     *
+     * @return value of beam break sensor at intersection of low and high belts
+     */
     public boolean getTransferIR() {
         return m_transferIR.get();
     }
 
+    /**
+     *
+     * @return boolean number of balls currently in the high belt
+     */
     public int getNumBalls() {
         return m_numBalls;
     }
 
+    /**
+     * Periodic method updating the number of balls in the low belt using beam break sensors.
+     */
     @Override
     public void periodic() {
         if (!getEntranceIR() && getEntranceIR() != m_entranceIRLastVal) {
