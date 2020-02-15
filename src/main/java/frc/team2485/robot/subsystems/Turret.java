@@ -7,11 +7,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.team2485.WarlordsLib.Limelight;
+import frc.team2485.WarlordsLib.Tunable;
 import frc.team2485.WarlordsLib.motorcontrol.PIDTalonSRX;
 import frc.team2485.WarlordsLib.robotConfigs.RobotConfigs;
 import frc.team2485.robot.Constants;
 
-public class Turret extends SubsystemBase {
+public class Turret extends SubsystemBase implements Tunable {
 
     private PIDTalonSRX m_talon;
 
@@ -121,5 +122,12 @@ public class Turret extends SubsystemBase {
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Turret Encoder Position", (this.getEncoderPosition()));
+    }
+
+    @Override
+    public void tunePeriodic(boolean enabled) {
+        if (enabled) {
+            m_talon.runPID();
+        }
     }
 }

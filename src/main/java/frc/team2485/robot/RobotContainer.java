@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.team2485.WarlordsLib.SmartDashboardHelper;
+import frc.team2485.WarlordsLib.Tunable;
 import frc.team2485.WarlordsLib.oi.Deadband;
 import frc.team2485.WarlordsLib.oi.WL_XboxController;
 import frc.team2485.robot.commands.TurretFieldCentricAdjust;
@@ -144,5 +145,9 @@ public class RobotContainer {
         });
 
         return m_autoCommand;
+    }
+
+    public void tunePeriodic(boolean enable) {
+        m_turret.tunePeriodic(enable);
     }
 }
