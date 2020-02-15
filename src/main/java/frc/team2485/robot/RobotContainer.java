@@ -28,6 +28,7 @@ public class RobotContainer {
     //    private Drivetrain m_drivetrain;
     private Turret m_turret;
 
+    // declaration/initialization of led strip as Spark object
     private Spark led = new Spark(0);
 
     //Temporary
@@ -132,6 +133,7 @@ public class RobotContainer {
 
         if (Constants.Turret.TUNING_MODE) configTurretTuningCommands();
 
+        // if turret is aligned with target, led is green, otherwise blinking red
         if (m_turret.atPIDTarget()) led.set(.77);
         else led.set(-.25);
         // additional pattern could be added for shooting: led.set(.33)
