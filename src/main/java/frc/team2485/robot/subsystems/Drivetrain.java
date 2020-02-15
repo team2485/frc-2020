@@ -2,17 +2,18 @@ package frc.team2485.robot.subsystems;
 
 import com.revrobotics.AlternateEncoderType;
 import com.revrobotics.CANEncoder;
+import com.revrobotics.SparkMax;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.team2485.WarlordsLib.WL_DifferentialDrive;
+import frc.team2485.WarlordsLib.Tunable;
 import frc.team2485.WarlordsLib.motorcontrol.WL_SparkMax;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.team2485.WarlordsLib.sensors.SparkMaxAlternateEncoderWrapper;
+import frc.team2485.WarlordsLib.sensors.SparkMaxAlternateEncoder;
 import frc.team2485.robot.Constants;
 
 
-public class Drivetrain extends SubsystemBase {
+public class Drivetrain extends SubsystemBase implements Tunable {
 
     private DifferentialDrive m_drive;
 
@@ -24,8 +25,8 @@ public class Drivetrain extends SubsystemBase {
     private WL_SparkMax m_sparkRight2;
     private WL_SparkMax m_sparkRight3;
 
-    private SparkMaxAlternateEncoderWrapper m_encoderLeft;
-    private SparkMaxAlternateEncoderWrapper m_encoderRight;
+    private SparkMaxAlternateEncoder m_encoderLeft;
+    private SparkMaxAlternateEncoder m_encoderRight;
 
     public Drivetrain() {
         this.m_sparkLeft1Master = new WL_SparkMax(Constants.Drivetrain.SPARK_LEFT_PORT_MASTER);
@@ -42,11 +43,11 @@ public class Drivetrain extends SubsystemBase {
         this.m_sparkLeft1Master.setFollowers(m_sparkLeft2, m_sparkLeft3);
         this.m_sparkRight1Master.setFollowers(m_sparkRight2, m_sparkRight3);
 
-        this.m_drive = new WL_DifferentialDrive(m_sparkLeft1Master, m_sparkRight1Master);
+        this.m_drive = new DifferentialDrive(m_sparkLeft1Master, m_sparkRight1Master);
 
         // 4x encoding so * 4
-        this.m_encoderLeft = new SparkMaxAlternateEncoderWrapper(Constants.Drivetrain.SPARK_LEFT_ENCODER, Constants.Drivetrain.ENCODER_CPR * 4 );
-        this.m_encoderRight = new SparkMaxAlternateEncoderWrapper(Constants.Drivetrain.SPARK_RIGHT_ENCODER, Constants.Drivetrain.ENCODER_CPR * 4);
+        this.m_encoderLeft = new SparkMaxAlternateEncoder(Constants.Drivetrain.SPARK_LEFT_ENCODER, Constants.Drivetrain.ENCODER_CPR * 4 );
+        this.m_encoderRight = new SparkMaxAlternateEncoder(Constants.Drivetrain.SPARK_RIGHT_ENCODER, Constants.Drivetrain.ENCODER_CPR * 4);
 
         this.m_encoderRight.setInverted(true);
 
@@ -75,6 +76,9 @@ public class Drivetrain extends SubsystemBase {
     public void periodic() {
     }
 
+    @Override
+    public void tunePeriodic(boolean enable) {
 
+    }
 
 }
