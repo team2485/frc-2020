@@ -67,4 +67,11 @@ public class RobotContainer {
 
         return m_autoCommand;
     }
+
+    public void tunePeriodic(boolean enable) {
+        m_intakeArm.tunePeriodic(enable);
+        if (!enable) {
+            m_intakeArm.setPWM(-Deadband.linearScaledDeadband(m_jack.getY(GenericHID.Hand.kLeft), Constants.OI.XBOX_DEADBAND));
+        }
+    }
 }
