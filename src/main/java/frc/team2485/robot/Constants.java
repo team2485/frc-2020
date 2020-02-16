@@ -55,6 +55,10 @@ public final class Constants {
     }
 
     public static final class Magazine {
+
+        public static final int TALON_LOW_MAX_CURRENT = 60;
+        public static final int TALON_HIGH_MAX_CURRENT = 60;
+
         //replace ports with real values
         public static final int TALON_LOW_PORT = 0;
         public static final int TALON_HIGH_PORT = 0;

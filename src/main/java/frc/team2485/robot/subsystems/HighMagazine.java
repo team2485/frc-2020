@@ -6,17 +6,19 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.team2485.WarlordsLib.Tunable;
 import frc.team2485.WarlordsLib.control.WL_PIDController;
 import frc.team2485.WarlordsLib.motorcontrol.PIDTalonSRX;
+import frc.team2485.WarlordsLib.motorcontrol.currentmanagement.CurrentTalonSRX;
 import frc.team2485.WarlordsLib.oi.Deadband;
 import frc.team2485.WarlordsLib.robotConfigs.RobotConfigs;
 import frc.team2485.robot.Constants;
 
 import java.util.function.BooleanSupplier;
 
-public class HighMagazine extends SubsystemBase implements AbstractMagazinePart {
+public class HighMagazine extends SubsystemBase implements AbstractMagazinePart, Tunable {
 
-    private PIDTalonSRX m_talon;
+    private CurrentTalonSRX m_talon;
 
     private WL_PIDController m_positionController;
 
@@ -37,7 +39,7 @@ public class HighMagazine extends SubsystemBase implements AbstractMagazinePart 
      *                   the low and high belts, provided through the LowMagazine subsystem.
      */
     public HighMagazine(BooleanSupplier transferIR)  {
-        m_talon = new PIDTalonSRX(Constants.Magazine.TALON_HIGH_PORT, ControlMode.Current);
+        m_talon = new CurrentTalonSRX(Constants.Magazine.TALON_HIGH_PORT, Constants.Magazine.TALON_HIGH_MAX_CURRENT);
 
         m_exitIR = new DigitalInput(Constants.Magazine.EXIT_IR_PORT);
 
@@ -63,7 +65,7 @@ public class HighMagazine extends SubsystemBase implements AbstractMagazinePart 
      * @param pwm PWM to set the talon to
      */
     public void setPWM(double pwm) {
-        m_talon.set(pwm);
+        m_talon.setPWM(pwm);
     }
 
     /**
@@ -71,12 +73,12 @@ public class HighMagazine extends SubsystemBase implements AbstractMagazinePart 
      * @param current current to set the PID to
      */
     public void setCurrent(double current) {
-        m_talon.runPID(current);
+        m_talon.setCurrent(current);
     }
 
     @Override
     public boolean setPosition(double position) {
-        m_talon.runPID(m_positionController.calculate(getEncoderPosition(), position));
+        setPWM(m_positionController.calculate(getEncoderPosition(), position));
         return m_positionController.atSetpoint();
     }
 
@@ -150,5 +152,30 @@ public class HighMagazine extends SubsystemBase implements AbstractMagazinePart 
 
         m_exitIRLastVal = getExitIR();
         m_transferIRLastVal = getTransferIR();
+    }
+
+    /**
+     * Should run periodically and run the motor to tune when enabled
+     *
+     * @param enable use this parameter to only enable the motor when this is true.
+     */
+    @Override
+    public void tunePeriodic(boolean enable) {
+        if (enable) {
+            m_talon.runPID();
+//            m_positionController.calculate(getEncoderPosition());
+        } else {
+            this.setPWM(0);
+        }
+    }
+
+    /**
+     * Set the raw PWM of the subsystem motor. This is for setting the PWM WITHOUT using any current-based pwm.
+     *
+     * @param pwm value between -1 and 1
+     */
+    @Override
+    public void setRawPWM(double pwm) {
+        m_talon.set(pwm);
     }
 }
