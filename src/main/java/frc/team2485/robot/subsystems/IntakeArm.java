@@ -3,13 +3,14 @@ package frc.team2485.robot.subsystems;
 import edu.wpi.first.wpilibj.Counter;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team2485.WarlordsLib.Tunable;
+import frc.team2485.WarlordsLib.motorcontrol.PIDTalonSRX;
 import frc.team2485.WarlordsLib.motorcontrol.WL_TalonSRX;
 import frc.team2485.WarlordsLib.motorcontrol.currentmanagement.CurrentTalonSRX;
 import frc.team2485.robot.Constants;
 
-public class IntakeArm extends SubsystemBase implements Tunable {
+public class IntakeArm extends SubsystemBase {
 
-    private CurrentTalonSRX m_talon;
+    private WL_TalonSRX m_talon;
 
     /**
      * FPGA-run counter to count encoder pulses.
@@ -29,7 +30,7 @@ public class IntakeArm extends SubsystemBase implements Tunable {
     public IntakeArm() {
         super();
 
-        this.m_talon = new CurrentTalonSRX(Constants.IntakeArm.SPARK_PORT, Constants.IntakeArm.MAX_CURRENT);
+        this.m_talon = new WL_TalonSRX(Constants.IntakeArm.SPARK_PORT);
 
         this.m_encoderCounter = new Counter(Constants.IntakeArm.ENCODER_DIO_PORT);
 
@@ -41,7 +42,7 @@ public class IntakeArm extends SubsystemBase implements Tunable {
     }
 
     public void setPWM(double pwm) {
-        m_talon.setPWM(pwm);
+        m_talon.set(pwm);
         m_lastPWM = pwm;
     }
 
@@ -102,29 +103,5 @@ public class IntakeArm extends SubsystemBase implements Tunable {
         } else {
             updateEncoderCounts();
         }
-    }
-
-    /**
-     * Should run periodically and run the motor to tune when enabled
-     *
-     * @param enable use this parameter to only enable the motor when this is true.
-     */
-    @Override
-    public void tunePeriodic(boolean enable) {
-        if (enable) {
-            m_talon.runPID();
-        } else {
-            m_talon.set(0);
-        }
-    }
-
-    /**
-     * Set the raw PWM of the subsystem motor. This is for setting the PWM WITHOUT using any current-based pwm.
-     *
-     * @param pwm value between -1 and 1
-     */
-    @Override
-    public void setRawPWM(double pwm) {
-        m_talon.set(pwm);
     }
 }
