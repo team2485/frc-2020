@@ -8,19 +8,30 @@
 package frc.team2485.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import frc.team2485.WarlordsLib.Limelight;
 import frc.team2485.WarlordsLib.oi.Deadband;
 import frc.team2485.WarlordsLib.oi.WL_XboxController;
+import frc.team2485.robot.commands.shooter.Shoot;
 import frc.team2485.robot.subsystems.Drivetrain;
+import frc.team2485.robot.subsystems.shooter.Feeder;
+import frc.team2485.robot.subsystems.shooter.Flywheels;
+import frc.team2485.robot.subsystems.shooter.Hood;
 
 public class RobotContainer {
 
     private WL_XboxController m_jack;
+    private WL_XboxController m_suraj;
 
     private Drivetrain m_drivetrain;
+
+    private Feeder m_feeder;
+    private Flywheels m_flywheels;
+    private Hood m_hood;
+    private Limelight m_limelight;
 
     private Command m_autoCommand;
 
@@ -28,7 +39,13 @@ public class RobotContainer {
 
         m_drivetrain = new Drivetrain();
 
+        m_feeder = new Feeder();
+        m_flywheels = new Flywheels();
+        m_hood = new Hood(m_flywheels.getHoodEncoder());
+        m_limelight = new Limelight();
+
         m_jack = new WL_XboxController(Constants.OI.JACK_PORT);
+        m_suraj = new WL_XboxController(Constants.OI.SURAJ_PORT);
 
         configureCommands();
     }
@@ -46,6 +63,12 @@ public class RobotContainer {
                             m_jack.getXButton());
                 }, m_drivetrain)
         );
+
+        m_suraj.getJoystickAxisButton(XboxController.Axis.kLeftTrigger, Constants.OI.SURAJ_LTRIGGER_THRESHOLD).whenHeld(
+                new Shoot(m_flywheels, m_hood, m_limelight, ()-> {
+                    return - m_suraj.getY(GenericHID.Hand.kRight);
+                } ));
+
     }
 
     public void resetAll() {
