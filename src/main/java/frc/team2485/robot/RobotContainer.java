@@ -16,14 +16,12 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.team2485.WarlordsLib.oi.Deadband;
 import frc.team2485.WarlordsLib.oi.WL_XboxController;
 import frc.team2485.robot.commands.IntakeArmMove;
-import frc.team2485.robot.subsystems.Drivetrain;
 import frc.team2485.robot.subsystems.IntakeArm;
 
 public class RobotContainer {
 
     private WL_XboxController m_jack;
 
-    private Drivetrain m_drivetrain;
     private IntakeArm m_intakeArm;
 
     private Command m_autoCommand;
@@ -54,10 +52,6 @@ public class RobotContainer {
 
         m_jack.getJoystickButton(XboxController.Button.kA).whenHeld(new IntakeArmMove(m_intakeArm, IntakeArmMove.IntakeArmPosition.BOTTOM, Constants.IntakeArm.SPEED));
         m_jack.getJoystickButton(XboxController.Button.kB).whenHeld(new IntakeArmMove(m_intakeArm, IntakeArmMove.IntakeArmPosition.TOP, Constants.IntakeArm.SPEED));
-    }
-
-    public void resetAll() {
-        m_drivetrain.resetEncoders(0, 0);
     }
 
     public Command getAutonomousCommand() {
