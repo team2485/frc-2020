@@ -32,9 +32,6 @@ public class SetFlywheels extends CommandBase {
         m_pidController.setSetpoint(m_velocity);
     }
 
-    public void execute() {
-        m_flywheels.setCurrent(m_pidController.calculate(m_flywheels.getLeftEncoderVelocity()), m_spinFactor);
-    }
 
 
 }

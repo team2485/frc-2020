@@ -23,10 +23,10 @@ public class SetHood extends CommandBase {
     public void initialize() {
         m_pidController.setSetpoint(m_angle);
     }
-
-    public void execute() {
-        m_hood.setCurrent(m_pidController.calculate(m_hood.getEncoderPosition()));
-    }
+//
+//    public void execute() {
+//        m_hood.setCurrent(m_pidController.calculate(m_hood.getEncoderPosition()));
+//    }
 
     public boolean isFinished() {
         return m_pidController.atSetpoint();

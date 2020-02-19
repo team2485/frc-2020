@@ -1,5 +1,6 @@
 package frc.team2485.robot.subsystems.shooter;
 
+import com.revrobotics.CANEncoder;
 import com.revrobotics.ControlType;
 import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -34,6 +35,9 @@ public class Feeder extends SubsystemBase {
 
     public double getEncoderVelocity() {
         return m_spark.getEncoder().getVelocity();
+    }
+    public CANEncoder getHoodEncoder() {
+        return m_spark.getAlternateEncoder();
     }
 
     @Override

@@ -78,6 +78,11 @@ public class RobotContainer {
                             m_jack.getY(GenericHID.Hand.kRight), 0.1) );}));
 
 
+        m_jack.getJoystickButton(XboxController.Button.kB).whenHeld(
+                new RunCommand(()-> {
+                    m_hood.setPWM(Deadband.linearScaledDeadband(m_jack.getY(GenericHID.Hand.kRight), 0.1));
+                })
+        );
 
 
 
@@ -94,4 +99,6 @@ public class RobotContainer {
 
         return m_autoCommand;
     }
+
+
 }
