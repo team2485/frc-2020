@@ -55,16 +55,16 @@ public final class Constants {
     }
 
     public static final class Shooter {
-        public static final int SPARK_PIVOT_PORT = 0;
+        public static final int SPARK_PIVOT_PORT = 32;
         public static final double SPARK_PIVOT_MAX_CURRENT = 0;
 
-        public static final int SPARK_FLYWHEEL_LEFT_PORT = 0;
+        public static final int SPARK_FLYWHEEL_LEFT_PORT = 30;
         public static final double SPARK_FLYWHEEL_LEFT_MAX_CURRENT = 0;
 
-        public static final int SPARK_FLYWHEEL_RIGHT_PORT = 0;
+        public static final int SPARK_FLYWHEEL_RIGHT_PORT = 31;
         public static final double SPARK_FLYWHEEL_RIGHT_MAX_CURRENT = 0;
 
-        public static final int SPARK_FEEDER_PORT = 0;
+        public static final int SPARK_FEEDER_PORT = 33;
         public static final double SPARK_FEEDER_MAX_CURRENT = 0;
 
         public static final double POWER_CELL_MASS = 0.141748; //kg

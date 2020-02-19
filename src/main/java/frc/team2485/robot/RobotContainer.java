@@ -9,6 +9,7 @@ package frc.team2485.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -68,6 +69,17 @@ public class RobotContainer {
                 new Shoot(m_flywheels, m_hood, m_limelight, ()-> {
                     return - m_suraj.getY(GenericHID.Hand.kRight);
                 } ));
+
+        m_jack.getJoystickButton(XboxController.Button.kA).whenHeld(
+                new RunCommand(()->
+                {m_feeder.setPwM(Deadband.linearScaledDeadband(
+                        m_jack.getY(GenericHID.Hand.kRight), 0.1));
+                    SmartDashboard.putNumber("JOYSTICK PWM SETPOINT",Deadband.linearScaledDeadband(
+                            m_jack.getY(GenericHID.Hand.kRight), 0.1) );}));
+
+
+
+
 
     }
 
