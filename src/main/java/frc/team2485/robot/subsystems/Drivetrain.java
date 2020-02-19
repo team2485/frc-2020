@@ -24,8 +24,14 @@ public class Drivetrain extends SubsystemBase {
     private WL_SparkMax m_sparkRight2;
     private WL_SparkMax m_sparkRight3;
 
-    private SparkMaxAlternateEncoderWrapper m_encoderLeft;
-    private SparkMaxAlternateEncoderWrapper m_encoderRight;
+    private static SparkMaxAlternateEncoderWrapper m_encoderLeft;
+    private static SparkMaxAlternateEncoderWrapper m_encoderRight;
+
+    public static DifferentialDriveOdometry m_odometry;
+    public static PigeonIMU gyro;
+
+    public static Translation2d translationValue;
+    public static Rotation2d rotationValue;
 
     public Drivetrain() {
         this.m_sparkLeft1Master = new WL_SparkMax(Constants.Drivetrain.SPARK_LEFT_PORT_MASTER);
@@ -43,6 +49,9 @@ public class Drivetrain extends SubsystemBase {
         this.m_sparkRight1Master.setFollowers(m_sparkRight2, m_sparkRight3);
 
         this.m_drive = new WL_DifferentialDrive(m_sparkLeft1Master, m_sparkRight1Master);
+
+        m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(gyro.getFusedHeading()));
+        gyro = new PigeonIMU(0);
 
         // 4x encoding so * 4
         this.m_encoderLeft = new SparkMaxAlternateEncoderWrapper(Constants.Drivetrain.SPARK_LEFT_ENCODER, Constants.Drivetrain.ENCODER_CPR * 4 );
@@ -66,13 +75,85 @@ public class Drivetrain extends SubsystemBase {
      * @param posLeft left encoder position
      * @param posRight right encoder position
      */
+
+
+
+    public void driveVolts(double leftVolts, double rightVolts) {
+        m_sparkLeft1Master.setVoltage(leftVolts);
+        m_sparkRight1Master.setVoltage(-rightVolts);
+        m_drive.feed();
+    }
+
     public void resetEncoders(double posLeft, double posRight) {
         m_encoderRight.setPosition(posLeft);
         m_encoderLeft.setPosition(posRight);
     }
 
+    public Pose2d getPose() {
+        return m_odometry.getPoseMeters();
+    }
+
+    public DifferentialDriveWheelSpeeds getWheelSpeeds() {
+        return new DifferentialDriveWheelSpeeds(m_encoderLeft.getVelocity(), m_encoderRight.getVelocity());
+    }
+
+
+//  public void arcadeDrive(double fwd, double rot) {
+//    m_drive.arcadeDrive(fwd, rot);
+//  }
+
+    public static void resetEncoders() {
+        m_encoderLeft.setPosition(0);
+        m_encoderRight.setPosition(0);
+    }
+
+    public static void resetOdometry(Pose2d newPose) {
+        resetEncoders();
+        m_odometry.resetPosition(newPose, new Rotation2d(0));
+    }
+
+    public double getAverageEncoderDistance() {
+        return ((m_encoderLeft.getPosition() + m_encoderRight.getPosition()) / 2.0);
+    }
+
+    public SparkMaxAlternateEncoderWrapper getLeftEncoder() {
+        return m_encoderLeft;
+    }
+
+    public SparkMaxAlternateEncoderWrapper getRightEncoder() {
+        return m_encoderRight;
+    }
+
+    //some extra random stuff that we aren't using right now
+
+//  public void setMaxOutput(double maxOutput) {
+//    driveBase.setMaxOutput(maxOutput);
+//  }
+
+//  public void zeroHeading() {
+//    gyro.setCompassAngle(0);
+//  }
+
+//  public double getHeading() {
+//    return Math.IEEEremainder(gyro.getCompassHeading(), 360);
+//  }
+
+//    public double getTurnRate() {
+//
+//        return 8.0;
+//        //return gyro.get
+//    }
+
     @Override
+
     public void periodic() {
+
+        m_odometry.update(Rotation2d.fromDegrees(gyro.getFusedHeading()), m_encoderLeft.getPosition(), m_encoderRight.getPosition());
+
+        translationValue = m_odometry.getPoseMeters().getTranslation();
+
+        rotationValue = m_odometry.getPoseMeters().getRotation();
+
     }
 
 
