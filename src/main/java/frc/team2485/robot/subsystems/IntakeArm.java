@@ -1,5 +1,7 @@
 package frc.team2485.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
+import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import edu.wpi.first.wpilibj.Counter;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team2485.WarlordsLib.Tunable;
@@ -31,6 +33,9 @@ public class IntakeArm extends SubsystemBase {
         super();
 
         this.m_talon = new WL_TalonSRX(Constants.IntakeArm.SPARK_PORT);
+        m_talon.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed);
+        m_talon.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed);
+
 
         this.m_encoderCounter = new Counter(Constants.IntakeArm.ENCODER_DIO_PORT);
 

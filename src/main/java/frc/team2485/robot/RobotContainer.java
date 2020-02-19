@@ -52,6 +52,10 @@ public class RobotContainer {
 
         m_jack.getJoystickButton(XboxController.Button.kA).whenHeld(new IntakeArmMove(m_intakeArm, IntakeArmMove.IntakeArmPosition.BOTTOM, Constants.IntakeArm.SPEED));
         m_jack.getJoystickButton(XboxController.Button.kB).whenHeld(new IntakeArmMove(m_intakeArm, IntakeArmMove.IntakeArmPosition.TOP, Constants.IntakeArm.SPEED));
+
+        m_jack.getJoystickButton(XboxController.Button.kBumperLeft).whenHeld(
+                new RunCommand(()-> m_intakeArm.setPWM(Deadband.linearScaledDeadband(m_jack.getY(GenericHID.Hand.kRight), 0.1)))
+        );
     }
 
     public Command getAutonomousCommand() {
