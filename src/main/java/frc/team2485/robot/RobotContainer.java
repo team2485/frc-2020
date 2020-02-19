@@ -119,8 +119,10 @@ public class RobotContainer {
 
     public void tunePeriodic(boolean enable) {
         m_lowMagazine.tunePeriodic(enable);
+//        m_highMagazine.tunePeriodic(enable);
         if (!enable) {
             m_lowMagazine.setPWM(-Deadband.linearScaledDeadband(m_jack.getY(GenericHID.Hand.kLeft), Constants.OI.XBOX_DEADBAND));
+//            m_highMagazine.setPWM(-Deadband.linearScaledDeadband(m_jack.getY(GenericHID.Hand.kLeft), Constants.OI.XBOX_DEADBAND));
         }
     }
 }
