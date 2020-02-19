@@ -1,11 +1,14 @@
 package frc.team2485.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.team2485.WarlordsLib.SmartDashboardHelper;
 import frc.team2485.WarlordsLib.Tunable;
 import frc.team2485.WarlordsLib.control.WL_PIDController;
 import frc.team2485.WarlordsLib.motorcontrol.PIDTalonSRX;
@@ -37,7 +40,9 @@ public class HighMagazine extends SubsystemBase implements AbstractMagazinePart,
      *                   the low and high belts, provided through the LowMagazine subsystem.
      */
     public HighMagazine(BooleanSupplier transferIR)  {
-        m_talon = new CurrentTalonSRX(Constants.Magazine.TALON_HIGH_PORT, Constants.Magazine.TALON_HIGH_MAX_CURRENT);
+        m_talon = new PIDTalonSRX(Constants.Magazine.TALON_HIGH_PORT, ControlMode.Position);
+        m_talon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
+        m_talon.setDistancePerPulse(1 / 4096);
 
         m_exitIR = new DigitalInput(Constants.Magazine.EXIT_IR_PORT);
 
@@ -122,6 +127,11 @@ public class HighMagazine extends SubsystemBase implements AbstractMagazinePart,
     @Override
     public void periodic() {
 
+        SmartDashboard.putNumber("Encoder Position", m_talon.getEncoderPosition());
+        SmartDashboard.putNumber("Current Draw", m_talon.getSupplyCurrent());
+
+
+
         if (!getTransferIR() && getTransferIR() != m_transferIRLastVal) {
             if (getEncoderVelocity() < 0) {
                 m_numBalls++;
@@ -140,6 +150,10 @@ public class HighMagazine extends SubsystemBase implements AbstractMagazinePart,
 
         m_exitIRLastVal = getExitIR();
         m_transferIRLastVal = getTransferIR();
+    }
+
+    public void resetEncoder(double position) {
+        m_talon.setSelectedSensorPosition(0);
     }
 
     /**

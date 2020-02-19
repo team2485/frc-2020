@@ -60,12 +60,12 @@ public final class Constants {
         public static final int TALON_HIGH_MAX_CURRENT = 60;
 
         //replace ports with real values
-        public static final int TALON_LOW_PORT = 0;
-        public static final int TALON_HIGH_PORT = 0;
+        public static final int TALON_LOW_PORT = 22;
+        public static final int TALON_HIGH_PORT = 23;
 
-        public static final int ENTRANCE_IR_PORT = 0;
-        public static final int TRANSFER_IR_PORT = 0;
-        public static final int EXIT_IR_PORT = 0;
+        public static final int ENTRANCE_IR_PORT = 1;
+        public static final int TRANSFER_IR_PORT = 2;
+        public static final int EXIT_IR_PORT = 3;
 
         public static final int HIGH_MAGAZINE_BALL_CAPACITY = 4;
 

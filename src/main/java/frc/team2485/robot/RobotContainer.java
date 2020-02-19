@@ -9,6 +9,8 @@ package frc.team2485.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.team2485.WarlordsLib.oi.Deadband;
 import frc.team2485.WarlordsLib.oi.WL_XboxController;
@@ -32,7 +34,7 @@ public class RobotContainer {
 
         m_drivetrain = new Drivetrain();
         m_lowMagazine = new LowMagazine();
-        m_highMagazine = new HighMagazine(m_lowMagazine::getTransferIR);
+        m_highMagazine = new HighMagazine(()->true);
 
         m_jack = new WL_XboxController(Constants.OI.JACK_PORT);
         m_suraj = new WL_XboxController(Constants.OI.SURAJ_PORT);
@@ -54,27 +56,27 @@ public class RobotContainer {
                 }, m_drivetrain)
         );
 
-        m_highMagazine.setDefaultCommand(
-                new ConditionalCommand(
-                        new IncrementMagazine(m_highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS),
-                        null,
-                        () -> {
-                            return m_highMagazine.getTransferIR() && m_highMagazine.getNumBalls() <= Constants.Magazine.HIGH_MAGAZINE_BALL_CAPACITY;
-                        }
-                )
-        );
-
-        m_suraj.getJoystickButton(XboxController.Button.kBumperRight).whenHeld(
-                new ConditionalCommand(
-                        new RunCommand(() -> {
-                            m_lowMagazine.setPWM(Constants.Magazine.LOW_BELT_PWM);
-                        }),
-                        null,
-                        () -> {
-                            return m_highMagazine.getNumBalls() <= Constants.Magazine.HIGH_MAGAZINE_BALL_CAPACITY && !m_lowMagazine.getTransferIR();
-                        }
-                )
-        );
+//        m_highMagazine.setDefaultCommand(
+//                new ConditionalCommand(
+//                        new IncrementMagazine(m_highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS),
+//                        null,
+//                        () -> {
+//                            return m_highMagazine.getTransferIR() && m_highMagazine.getNumBalls() <= Constants.Magazine.HIGH_MAGAZINE_BALL_CAPACITY;
+//                        }
+//                )
+//        );
+//
+//        m_suraj.getJoystickButton(XboxController.Button.kBumperRight).whenHeld(
+//                new ConditionalCommand(
+//                        new RunCommand(() -> {
+//                            m_lowMagazine.setPWM(Constants.Magazine.LOW_BELT_PWM);
+//                        }),
+//                        null,
+//                        () -> {
+//                            return m_highMagazine.getNumBalls() <= Constants.Magazine.HIGH_MAGAZINE_BALL_CAPACITY && !m_lowMagazine.getTransferIR();
+//                        }
+//                )
+//        );
 
         // Feed to shooter
         m_suraj.getJoystickButton(XboxController.Button.kA).whileHeld(
@@ -103,6 +105,10 @@ public class RobotContainer {
                         new WaitCommand(Constants.Magazine.NORMAL_BALL_INCREMENT_TIMEOUT)
                 )
         );
+
+        SmartDashboard.putData("reset encoder", new InstantCommand(() -> {
+            m_highMagazine.resetEncoder(0);
+        }));
     }
 
     public void resetAll() {
@@ -118,11 +124,11 @@ public class RobotContainer {
     }
 
     public void tunePeriodic(boolean enable) {
-        m_lowMagazine.tunePeriodic(enable);
-//        m_highMagazine.tunePeriodic(enable);
+//        m_lowMagazine.tunePeriodic(enable);
+        m_highMagazine.tunePeriodic(enable);
         if (!enable) {
-            m_lowMagazine.setPWM(-Deadband.linearScaledDeadband(m_jack.getY(GenericHID.Hand.kLeft), Constants.OI.XBOX_DEADBAND));
-//            m_highMagazine.setPWM(-Deadband.linearScaledDeadband(m_jack.getY(GenericHID.Hand.kLeft), Constants.OI.XBOX_DEADBAND));
+//            m_lowMagazine.setPWM(-Deadband.linearScaledDeadband(m_jack.getY(GenericHID.Hand.kLeft), Constants.OI.XBOX_DEADBAND));
+            m_highMagazine.setPWM(-Deadband.linearScaledDeadband(m_jack.getY(GenericHID.Hand.kLeft), Constants.OI.XBOX_DEADBAND));
         }
     }
 }

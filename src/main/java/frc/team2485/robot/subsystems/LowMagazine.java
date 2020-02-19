@@ -46,9 +46,9 @@ public class LowMagazine extends SubsystemBase implements AbstractMagazinePart, 
         ShuffleboardTab tab = Shuffleboard.getTab("Magazine");
         tab.addNumber("Low Position", this::getEncoderPosition);
         tab.addNumber("Low Velocity", this::getEncoderPosition);
-        tab.addNumber("Low Number of Balls", this::getNumBalls);
-        tab.addBoolean("Entrance IR", this::getEntranceIR);
-        tab.addBoolean("Transfer IR", this::getTransferIR);
+//        tab.addNumber("Low Number of Balls", this::getNumBalls);
+//        tab.addBoolean("Entrance IR", this::getEntranceIR);
+//        tab.addBoolean("Transfer IR", this::getTransferIR);
     }
 
     /**
@@ -145,5 +145,9 @@ public class LowMagazine extends SubsystemBase implements AbstractMagazinePart, 
         if (enable) {
             m_talon.runPID();
         }
+    }
+
+    public void setRawPWM(double pwm) {
+        m_talon.set(pwm);
     }
 }
