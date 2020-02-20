@@ -41,7 +41,7 @@ public class RobotContainer {
         m_jack = new WL_XboxController(Constants.OI.JACK_PORT);
         m_suraj = new WL_XboxController(Constants.OI.SURAJ_PORT);
 
-        pigeon = new PigeonIMU(0);
+        pigeon = new PigeonIMU(1);
 
         configureCommands();
     }
@@ -148,8 +148,9 @@ public class RobotContainer {
     }
 
     public void tunePeriodic(boolean enable) {
-        m_turret.tunePeriodic(enable);
-        if (!enable) {
+        if (enable) {
+            m_turret.tunePeriodic();
+        } else {
             m_turret.setPWM(-Deadband.linearScaledDeadband(m_jack.getY(GenericHID.Hand.kLeft), Constants.OI.XBOX_DEADBAND));
         }
     }

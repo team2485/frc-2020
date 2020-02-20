@@ -125,19 +125,7 @@ public class Turret extends SubsystemBase implements Tunable {
     }
 
     @Override
-    public void tunePeriodic(boolean enabled) {
-        if (enabled) {
-            m_talon.runPID();
-        }
-    }
-
-    /**
-     * Set the raw PWM of the subsystem motor. This is for setting the PWM WITHOUT using any current-based pwm.
-     *
-     * @param pwm value between -1 and 1
-     */
-    @Override
-    public void setRawPWM(double pwm) {
-        m_talon.set(pwm);
+    public void tunePeriodic() {
+        m_talon.runPID();
     }
 }
