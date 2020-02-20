@@ -1,11 +1,10 @@
 package frc.team2485.robot.commands.shooter;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.team2485.WarlordsLib.Limelight;
 import frc.team2485.robot.Constants;
-import frc.team2485.robot.subsystems.shooter.Flywheels;
-import frc.team2485.robot.subsystems.shooter.Hood;
+import frc.team2485.robot.subsystems.Flywheels;
+import frc.team2485.robot.subsystems.Hood;
 
 import java.util.function.DoubleSupplier;
 
@@ -15,16 +14,16 @@ public class Shoot extends ParallelCommandGroup {
     public Shoot(Flywheels flywheels, Hood hood, Limelight limelight, DoubleSupplier finalYVelocity) {
         super();
         double vfy = finalYVelocity.getAsDouble();
-        double ty = limelight.getTargetVerticalOffset(Constants.Shooter.LIMELIGHT_TY_DEFAULT_VALUE); //gets vertical angle from limelight
-        double xDist = getX(ty, Constants.Shooter.HEIGHT_FROM_LL_TO_PORT); //finds x distance (horizontal) to port
-        double v0y = getv0y(vfy, Constants.Shooter.HEIGHT_FROM_LL_TO_PORT, Constants.Shooter.GRAVITY_ACCELERATION_CONSTANT); //finds initial y velocity based on final y velocity and height changes
-        double timeOfTrajectory = gettimeOfTraj(v0y, vfy, Constants.Shooter.GRAVITY_ACCELERATION_CONSTANT, Constants.Shooter.HEIGHT_FROM_SHOOTER_TO_PORT); //finds time of trajectory based on y velocities, distances, and accelerations
+        double ty = limelight.getTargetVerticalOffset(Constants.Robot.LIMELIGHT_TY_DEFAULT_VALUE); //gets vertical angle from limelight
+        double xDist = getX(ty, Constants.Robot.HEIGHT_FROM_LL_TO_PORT); //finds x distance (horizontal) to port
+        double v0y = getv0y(vfy, Constants.Robot.HEIGHT_FROM_LL_TO_PORT, Constants.Shooter.GRAVITY_ACCELERATION_CONSTANT); //finds initial y velocity based on final y velocity and height changes
+        double timeOfTrajectory = gettimeOfTraj(v0y, vfy, Constants.Shooter.GRAVITY_ACCELERATION_CONSTANT, Constants.Robot.HEIGHT_FROM_SHOOTER_TO_PORT); //finds time of trajectory based on y velocities, distances, and accelerations
         double vfx = getvfX(xDist, timeOfTrajectory); //finds final x velocity from time of trajectory and distance traversed
-        double v0x = getv0xFromVfx(timeOfTrajectory, vfx, Constants.Shooter.POWER_CELL_DRAG_COEFF, Constants.Shooter.POWER_CELL_MASS); //finds initial x velocity using drag
+        double v0x = getv0xFromVfx(timeOfTrajectory, vfx, Constants.PowerCell.POWER_CELL_DRAG_COEFF, Constants.PowerCell.POWER_CELL_MASS); //finds initial x velocity using drag
         //double thetaApproach = getThetaApproach(vfx, vfy); //finds approach angle to port using final x and y velocities
 
         double thetaLaunch = getThetaLaunch(v0x, v0y); //finds launch angle using initial component velocities
-        double RPM = getRPM(v0x, thetaLaunch, Constants.Shooter.POWER_CELL_RADIUS, Constants.Shooter.RPM_CONVERSION_FACTOR); //finds launch RPM using initial angle+velocity
+        double RPM = getRPM(v0x, thetaLaunch, Constants.PowerCell.POWER_CELL_RADIUS, Constants.Shooter.RPM_CONVERSION_FACTOR); //finds launch RPM using initial angle+velocity
 
         this.addCommands(new SetFlywheels(flywheels, RPM * Constants.Shooter.FLYWHEEL_ENERGY_LOSS_FACTOR), new SetHood(hood, thetaLaunch));
 

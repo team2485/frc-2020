@@ -2,33 +2,52 @@ package frc.team2485.robot.commands.shooter;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.team2485.WarlordsLib.Tunable;
 import frc.team2485.WarlordsLib.control.WL_PIDController;
 import frc.team2485.WarlordsLib.robotConfigs.RobotConfigs;
-import frc.team2485.robot.subsystems.shooter.Hood;
+import frc.team2485.robot.subsystems.Hood;
 
-public class SetHood extends CommandBase {
+import java.util.function.DoubleSupplier;
+
+public class SetHood extends CommandBase implements Tunable {
+
     private Hood m_hood;
-    private WL_PIDController m_pidController;
-    private double m_angle;
+    private WL_PIDController m_controller;
+    private DoubleSupplier m_angle;
+    private boolean m_finishWhenAtTarget;
 
     public SetHood(Hood hood, double angle) {
+        this(hood, () -> angle, true);
+    }
+
+    public SetHood(Hood hood, DoubleSupplier angle, boolean finishWhenAtTarget) {
         addRequirements(hood);
+
         this.m_hood = hood;
         this.m_angle = angle;
-        this.m_pidController = new WL_PIDController();
-        SendableRegistry.add(m_pidController, "Hood Position Controller");
-        RobotConfigs.getInstance().addConfigurable("hoodPositionController", m_pidController);
+        this.m_controller = new WL_PIDController();
+        this.m_finishWhenAtTarget = finishWhenAtTarget;
+
+        SendableRegistry.add(m_controller, "Hood Position Controller");
+        RobotConfigs.getInstance().addConfigurable("hoodPositionController", m_controller);
     }
 
-    public void initialize() {
-        m_pidController.setSetpoint(m_angle);
+    @Override
+    public void execute() {
+        m_controller.setSetpoint(m_angle.getAsDouble());
+        m_hood.setPWM(m_controller.calculate(m_hood.getEncoderPosition()));
     }
-//
-//    public void execute() {
-//        m_hood.setCurrent(m_pidController.calculate(m_hood.getEncoderPosition()));
-//    }
 
+    @Override
     public boolean isFinished() {
-        return m_pidController.atSetpoint();
+        if (m_finishWhenAtTarget) {
+            return m_controller.atSetpoint();
+        }
+        return false;
+    }
+
+    @Override
+    public void tunePeriodic() {
+        m_hood.setPWM(m_controller.calculate(m_hood.getEncoderPosition()));
     }
 }

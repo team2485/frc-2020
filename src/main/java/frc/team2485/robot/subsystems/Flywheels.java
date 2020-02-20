@@ -1,4 +1,4 @@
-package frc.team2485.robot.subsystems.shooter;
+package frc.team2485.robot.subsystems;
 
 import com.revrobotics.CANEncoder;
 import com.revrobotics.ControlType;

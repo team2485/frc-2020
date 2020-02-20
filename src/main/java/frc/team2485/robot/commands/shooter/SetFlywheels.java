@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.team2485.WarlordsLib.control.WL_PIDController;
 import frc.team2485.WarlordsLib.robotConfigs.RobotConfigs;
-import frc.team2485.robot.subsystems.shooter.Flywheels;
+import frc.team2485.robot.subsystems.Flywheels;
 
 public class SetFlywheels extends CommandBase {
     private Flywheels m_flywheels;
