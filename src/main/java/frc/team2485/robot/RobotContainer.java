@@ -93,10 +93,12 @@ public class RobotContainer {
 
     public void tunePeriodic(boolean enabled) {
 
+        SmartDashboard.putNumber("Left Encoder RPM", m_flywheels.getLeftEncoderVelocity());
         if (enabled) {
-            setHood.tunePeriodic();
+            m_flywheels.tunePeriodic();
         } else {
-            m_hood.setPWM(0);
+            m_flywheels.setPWM(-Deadband.linearScaledDeadband(
+                    m_jack.getY(GenericHID.Hand.kRight), Constants.OI.XBOX_DEADBAND));
         }
     }
 
