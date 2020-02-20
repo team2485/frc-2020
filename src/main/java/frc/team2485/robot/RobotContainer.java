@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
+import frc.team2485.WarlordsLib.SmartDashboardHelper;
 import frc.team2485.WarlordsLib.oi.Deadband;
 import frc.team2485.WarlordsLib.oi.WL_XboxController;
 import frc.team2485.robot.commands.IncrementMagazine;
@@ -125,10 +126,13 @@ public class RobotContainer {
 
     public void tunePeriodic(boolean enable) {
 //        m_lowMagazine.tunePeriodic(enable);
-        m_highMagazine.tunePeriodic();
-        if (!enable) {
+        if(enable) {
+            m_lowMagazine.tunePeriodic();
+        } else {
 //            m_lowMagazine.setPWM(-Deadband.linearScaledDeadband(m_jack.getY(GenericHID.Hand.kLeft), Constants.OI.XBOX_DEADBAND));
-            m_highMagazine.setPWM(0);
+            m_lowMagazine.setPWM(0);
         }
+
+        SmartDashboard.putNumber("Low Magazine Position", m_lowMagazine.getEncoderPosition());
     }
 }

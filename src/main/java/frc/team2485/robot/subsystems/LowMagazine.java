@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team2485.WarlordsLib.Tunable;
 import frc.team2485.WarlordsLib.control.WL_PIDController;
@@ -32,6 +33,14 @@ public class LowMagazine extends SubsystemBase implements AbstractMagazinePart, 
      */
     public LowMagazine() {
         m_talon = new PIDTalonSRX(Constants.Magazine.TALON_LOW_PORT, ControlMode.Position);
+        m_talon.setDistancePerPulse(1/4096.0);
+        m_talon.configNominalOutputForward(0);
+        m_talon.configNominalOutputReverse(0);
+        m_talon.configPeakOutputForward(1);
+        m_talon.configPeakOutputReverse(-1);
+        m_talon.setSensorPhase(true);
+
+        m_talon.setEncoderPosition(0);
 
         m_entranceIR = new DigitalInput(Constants.Magazine.ENTRANCE_IR_PORT);
         m_transferIR = new DigitalInput(Constants.Magazine.TRANSFER_IR_PORT);
@@ -70,7 +79,7 @@ public class LowMagazine extends SubsystemBase implements AbstractMagazinePart, 
      * @return belt encoder position
      */
     public double getEncoderPosition() {
-        return m_talon.getSensorCollection().getQuadraturePosition();
+        return m_talon.getEncoderPosition();
     }
 
     @Override
@@ -141,5 +150,6 @@ public class LowMagazine extends SubsystemBase implements AbstractMagazinePart, 
     @Override
     public void tunePeriodic() {
         m_talon.runPID();
+
     }
 }

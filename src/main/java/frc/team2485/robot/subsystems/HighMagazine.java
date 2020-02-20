@@ -167,6 +167,6 @@ public class HighMagazine extends SubsystemBase implements AbstractMagazinePart,
     @Override
     public void tunePeriodic() {
         m_talon.runPID();
-        SmartDashboard.putNumber("High Magazine Position", m_talon.getSelectedSensorPosition());
+        SmartDashboard.putNumber("High Magazine Position", m_talon.getEncoderPosition());
     }
 }
