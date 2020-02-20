@@ -40,8 +40,8 @@ public class LowMagazine extends SubsystemBase implements AbstractMagazinePart, 
 
         m_entranceIRLastVal = false;
 
-        SendableRegistry.add(m_talon, "High Magazine Talon");
-        RobotConfigs.getInstance().addConfigurable("highMagazineTalon", m_talon);
+        SendableRegistry.add(m_talon, "Low Magazine Talon");
+        RobotConfigs.getInstance().addConfigurable("lowMagazineTalon", m_talon);
 
         ShuffleboardTab tab = Shuffleboard.getTab("Magazine");
         tab.addNumber("Low Position", this::getEncoderPosition);
