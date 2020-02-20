@@ -94,10 +94,9 @@ public class RobotContainer {
     public void tunePeriodic(boolean enabled) {
 
         if (enabled) {
-            m_flywheels.tunePeriodic();
-
+            setHood.tunePeriodic();
         } else {
-            m_flywheels.setPWM(0);
+            m_hood.setPWM(0);
         }
     }
 

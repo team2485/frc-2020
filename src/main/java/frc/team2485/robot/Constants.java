@@ -62,7 +62,7 @@ public final class Constants {
         public static final double HOOD_DISTANCE_PER_REVOLUTION = 360;
 
         // these are relative to the vertical axis
-        public static final double HOOD_BOTTOM_POSITION = 80;
+        public static final double HOOD_BOTTOM_POSITION = 74;
         public static final double HOOD_TOP_POSITION = 45;
 
 
