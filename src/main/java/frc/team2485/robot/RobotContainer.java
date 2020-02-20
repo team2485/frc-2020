@@ -94,6 +94,7 @@ public class RobotContainer {
                 new RunCommand(
                         () -> {
                             m_lowMagazine.setPWM(Deadband.linearScaledDeadband(m_suraj.getTriggerAxis(GenericHID.Hand.kRight), Constants.OI.XBOX_DEADBAND));
+
                         }
                 )
         );
@@ -129,8 +130,10 @@ public class RobotContainer {
         if(enable) {
             m_lowMagazine.tunePeriodic();
         } else {
-//            m_lowMagazine.setPWM(-Deadband.linearScaledDeadband(m_jack.getY(GenericHID.Hand.kLeft), Constants.OI.XBOX_DEADBAND));
-            m_lowMagazine.setPWM(0);
+            m_lowMagazine.setPWM(-Deadband.linearScaledDeadband(m_jack.getY(GenericHID.Hand.kLeft), Constants.OI.XBOX_DEADBAND));
+            m_highMagazine.setPWM(-Deadband.linearScaledDeadband(m_jack.getY(GenericHID.Hand.kLeft), Constants.OI.XBOX_DEADBAND));
+
+            //            m_lowMagazine.setPWM(0);
         }
 
         SmartDashboard.putNumber("Low Magazine Position", m_lowMagazine.getEncoderPosition());
