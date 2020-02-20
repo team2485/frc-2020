@@ -137,17 +137,9 @@ public class LowMagazine extends SubsystemBase implements AbstractMagazinePart, 
 
     /**
      * Should run periodically and run the motor to tune when enabled
-     *
-     * @param enable use this parameter to only enable the motor when this is true.
      */
     @Override
-    public void tunePeriodic(boolean enable) {
-        if (enable) {
-            m_talon.runPID();
-        }
-    }
-
-    public void setRawPWM(double pwm) {
-        m_talon.set(pwm);
+    public void tunePeriodic() {
+        m_talon.runPID();
     }
 }

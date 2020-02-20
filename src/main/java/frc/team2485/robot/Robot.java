@@ -8,6 +8,7 @@
 package frc.team2485.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.team2485.WarlordsLib.SmartDashboardHelper;
@@ -67,10 +68,11 @@ public class Robot extends TimedRobot {
   @Override
   public void testInit() {
     CommandScheduler.getInstance().cancelAll();
+    SmartDashboard.putBoolean("PID Enabled", false);
   }
 
   @Override
   public void testPeriodic() {
-    m_robotContainer.tunePeriodic(SmartDashboardHelper.getBoolean("PID Enabled", false));
+    m_robotContainer.tunePeriodic(SmartDashboard.getBoolean("PID Enabled", false));
   }
 }
