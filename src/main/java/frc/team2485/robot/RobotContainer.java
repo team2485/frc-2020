@@ -24,6 +24,7 @@ public class RobotContainer {
     private WL_XboxController m_jack;
 
     private Drivetrain m_drivetrain;
+
     private IntakeArm m_intakeArm;
 
     private Command m_autoCommand;
@@ -39,25 +40,36 @@ public class RobotContainer {
     }
 
     private void configureCommands() {
+        /*
+        DRIVETRAIN
+         */
+
         m_drivetrain.setDefaultCommand(new RunCommand(() -> {
                     m_drivetrain.curvatureDrive(
                             Deadband.cubicScaledDeadband(
-                                    m_jack.getTriggerAxis(GenericHID.Hand.kRight)
-                                            - m_jack.getTriggerAxis(GenericHID.Hand.kLeft),
-                                    Constants.OI.XBOX_DEADBAND),
+                                    m_jack.getTriggerAxis(GenericHID.Hand.kRight) - m_jack.getTriggerAxis(GenericHID.Hand.kLeft),
+                                    Constants.OI.XBOX_DEADBAND
+                            ),
                             Deadband.cubicScaledDeadband(
                                     m_jack.getX(GenericHID.Hand.kLeft),
-                                    Constants.OI.XBOX_DEADBAND),
+                                    Constants.OI.XBOX_DEADBAND
+                            ),
                             m_jack.getXButton());
                 }, m_drivetrain)
         );
 
+        /*
+        INTAKE ARM
+         */
+
         m_jack.getJoystickButton(XboxController.Button.kA).whenHeld(new IntakeArmMove(m_intakeArm, IntakeArmMove.IntakeArmPosition.BOTTOM, Constants.IntakeArm.SPEED));
         m_jack.getJoystickButton(XboxController.Button.kB).whenHeld(new IntakeArmMove(m_intakeArm, IntakeArmMove.IntakeArmPosition.TOP, Constants.IntakeArm.SPEED));
-    }
 
-    public void resetAll() {
-        m_drivetrain.resetEncoders(0, 0);
+        m_jack.getJoystickButton(XboxController.Button.kBumperLeft).whenHeld(
+                new RunCommand(()-> m_intakeArm.setPWM(Deadband.linearScaledDeadband(m_jack.getY(GenericHID.Hand.kRight), 0.1)))
+        ).whenReleased(
+                new RunCommand(() -> m_intakeArm.setPWM(0))
+        );
     }
 
     public Command getAutonomousCommand() {

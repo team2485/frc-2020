@@ -1,8 +1,18 @@
 package frc.team2485.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
+import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import edu.wpi.first.wpilibj.Counter;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DigitalSource;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.team2485.WarlordsLib.Tunable;
+import frc.team2485.WarlordsLib.motorcontrol.PIDTalonSRX;
 import frc.team2485.WarlordsLib.motorcontrol.WL_TalonSRX;
+import frc.team2485.WarlordsLib.motorcontrol.currentmanagement.CurrentTalonSRX;
 import frc.team2485.robot.Constants;
 
 public class IntakeArm extends SubsystemBase {
@@ -29,13 +39,22 @@ public class IntakeArm extends SubsystemBase {
 
         this.m_talon = new WL_TalonSRX(Constants.IntakeArm.TALON_PORT);
 
-        this.m_encoderCounter = new Counter(Constants.IntakeArm.ENCODER_DIO_PORT);
+        this.m_talon.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed);
+        this.m_talon.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed);
+
+        this.m_talon.configContinuousCurrentLimit(Constants.IntakeArm.MAX_CURRENT);
+
+        this.m_encoderCounter = new Counter(new DigitalInput(Constants.IntakeArm.ENCODER_DIO_PORT));
 
         this.ENCODER_COUNTS_PER_REV = Constants.IntakeArm.ENCODER_PULSES_PER_REVOLUTION * 2; // counter does 2x encoding.
 
         this.TOP_POSITION = Constants.IntakeArm.TOP_POSITION_DEGREES;
 
         this.BOTTOM_POSITION = Constants.IntakeArm.BOTTOM_POSITION_DEGREES;
+
+        ShuffleboardTab tab = Shuffleboard.getTab("Intake Arm");
+        tab.addNumber("Encoder Position", this::getEncoderDegrees);
+        tab.addNumber("Output Current", m_talon::getStatorCurrent);
     }
 
     public void setPWM(double pwm) {
@@ -60,15 +79,15 @@ public class IntakeArm extends SubsystemBase {
     }
 
     public void setEncoderDegrees(double degrees) {
-        this.m_encoderCounts = (int)((degrees / 360) * this.ENCODER_COUNTS_PER_REV);
+        this.m_encoderCounts = (int) ((degrees / 360) * this.ENCODER_COUNTS_PER_REV);
     }
 
     public boolean getTopLimitSwitch() {
-        return m_talon.getSensorCollection().isRevLimitSwitchClosed();
+        return !m_talon.getSensorCollection().isRevLimitSwitchClosed(); //normally closed switch
     }
 
     public boolean getBottomLimitSwitch() {
-        return m_talon.getSensorCollection().isFwdLimitSwitchClosed();
+        return !m_talon.getSensorCollection().isFwdLimitSwitchClosed(); //normally closed switch
     }
 
     public double getTopPosition() {
@@ -94,7 +113,7 @@ public class IntakeArm extends SubsystemBase {
     @Override
     public void periodic() {
         if (getTopLimitSwitch()) {
-           setEncoderDegrees(TOP_POSITION);
+            setEncoderDegrees(TOP_POSITION);
         } else if (getBottomLimitSwitch()) {
             setEncoderDegrees(BOTTOM_POSITION);
         } else {
