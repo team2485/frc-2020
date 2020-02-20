@@ -65,11 +65,11 @@ public class Robot extends TimedRobot {
   @Override
   public void testInit() {
     CommandScheduler.getInstance().cancelAll();
-    SmartDashboard.putBoolean("Tune Enabled", false);
+    m_robotContainer.testInit();
   }
 
   @Override
   public void testPeriodic() {
-    m_robotContainer.tunePeriodic(SmartDashboard.getBoolean("Tune Enabled", false));
+    m_robotContainer.testPeriodic();
   }
 }

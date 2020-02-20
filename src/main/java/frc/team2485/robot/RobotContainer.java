@@ -118,24 +118,6 @@ public class RobotContainer {
         m_suraj.getJoystickButton(XboxController.Button.kBack).whenPressed(new InstantCommand(() -> {
             m_turret.getLimelight().toggleLed();
         }));
-
-
-        SmartDashboard.putData("Zero Turret", new InstantCommand(() ->
-                m_turret.resetEncoderPosition(0)
-        ));
-
-        SmartDashboard.putData("Zero Pigeon", new InstantCommand(() ->
-                pigeon.setFusedHeading(0)
-        ));
-
-        if (Constants.Turret.TUNING_MODE) configTurretTuningCommands();
-    }
-
-
-    private void configTurretTuningCommands() {
-        SmartDashboard.putData("Turret PID Command", new TurretSetAngle(m_turret, () ->
-                SmartDashboardHelper.getNumber("Turret Setpoint", 0)
-        ));
     }
 
     public Command getAutonomousCommand() {
@@ -147,11 +129,30 @@ public class RobotContainer {
         return m_autoCommand;
     }
 
-    public void tunePeriodic(boolean enable) {
+    public void testInit() {
+        SmartDashboard.putBoolean("Tune Enable", false);
+        SmartDashboard.putBoolean("Zero Turret", false);
+        SmartDashboard.putBoolean("Zero Gyro", false);
+    }
+
+    public void testPeriodic() {
+
+        boolean enable = SmartDashboard.getBoolean("Tune Enable", false);
+
+        if (SmartDashboard.getBoolean("Zero Turret", false)) {
+            m_turret.resetEncoderPosition(0);
+            SmartDashboard.putBoolean("Zero Turret", false);
+        }
+
+        if (SmartDashboard.getBoolean("Zero Gyro", false)) {
+            pigeon.setFusedHeading(0);
+            SmartDashboard.putBoolean("Zero Gyro", false);
+        }
+
         if (enable) {
             m_turret.tunePeriodic();
         } else {
-            m_turret.setPWM(-Deadband.linearScaledDeadband(m_jack.getY(GenericHID.Hand.kLeft), Constants.OI.XBOX_DEADBAND));
+            m_turret.setUnclampedPWM(-Deadband.linearScaledDeadband(m_jack.getY(GenericHID.Hand.kLeft), Constants.OI.XBOX_DEADBAND));
         }
     }
 }

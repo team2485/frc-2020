@@ -60,7 +60,7 @@ public final class Constants {
 
         public static final boolean TUNING_MODE = false;
 
-        public static final int TALON_PORT = 1;
+        public static final int TALON_PORT = 25;
 
         /**
          * counts per revolution of the encoder
@@ -69,8 +69,8 @@ public final class Constants {
 
         public static final double TURRET_SPEED = 360.0 * 0.02; // degrees per ~20 milliseconds
 
-        public static final double MIN_POSITION = -160; // degrees
-        public static final double MAX_POSITION = 160; // degrees
+        public static final double MIN_POSITION = -135; // degrees
+        public static final double MAX_POSITION = 170; // degrees
 
         /**
          * In manual mode the max pwm will linearly clamp starting at the buffer zone size before the min or max positions.

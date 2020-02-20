@@ -2,6 +2,8 @@ package frc.team2485.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -18,11 +20,15 @@ public class Turret extends SubsystemBase implements Tunable {
 
     private Limelight m_limelight;
 
-    private double m_minAngle, m_maxAngle, m_bufferZoneSize;
+    private final double MIN_ANGLE, MAX_ANGLE, BUFFER_ZONE_SIZE;
 
     public Turret() {
 
         m_talon = new PIDTalonSRX(Constants.Turret.TALON_PORT, ControlMode.Position);
+        m_talon.configNominalOutputForward(0);
+        m_talon.configNominalOutputReverse(0);
+        m_talon.configPeakOutputForward(1);
+        m_talon.configPeakOutputReverse(-1);
         m_talon.enableVoltageCompensation();
         m_talon.setFeedbackDeviceType(FeedbackDevice.CTRE_MagEncoder_Relative);
         m_talon.setSelectedSensorPosition(m_talon.getSensorCollection().getPulseWidthPosition());
@@ -31,16 +37,22 @@ public class Turret extends SubsystemBase implements Tunable {
 
         m_limelight = new Limelight();
 
-        m_minAngle = Constants.Turret.MIN_POSITION;
-        m_maxAngle = Constants.Turret.MAX_POSITION;
+        MIN_ANGLE = Constants.Turret.MIN_POSITION;
+        MAX_ANGLE = Constants.Turret.MAX_POSITION;
 
-        m_bufferZoneSize = Constants.Turret.BUFFER_ZONE_SIZE;
+        BUFFER_ZONE_SIZE = Constants.Turret.BUFFER_ZONE_SIZE;
 
         RobotConfigs.getInstance().addConfigurable("Turret TalonSRX PID", m_talon);
 
         SendableRegistry.add(m_talon, "Turret Talon");
 
         SmartDashboard.putData(this);
+
+        ShuffleboardTab tab = Shuffleboard.getTab("Turret");
+        tab.add(this);
+        tab.addNumber("Encoder Position", this::getEncoderPosition);
+        tab.addNumber("Current", m_talon::getStatorCurrent);
+
     }
 
     /**
@@ -52,9 +64,9 @@ public class Turret extends SubsystemBase implements Tunable {
 
         // Set the max pwm output based on proximity to limits
         if (pwm < 0) {
-            output = Math.copySign(MathUtil.clamp(Math.abs(pwm), 0, (m_minAngle -  this.getEncoderPosition()) * (-1 / m_bufferZoneSize)), pwm);
+            output = Math.copySign(MathUtil.clamp(Math.abs(pwm), 0, (MIN_ANGLE -  this.getEncoderPosition()) * (-1 / BUFFER_ZONE_SIZE)), pwm);
         } else if (pwm > 0) {
-            output = MathUtil.clamp(pwm, 0, (m_maxAngle - this.getEncoderPosition()) * (1 / m_bufferZoneSize));
+            output = MathUtil.clamp(pwm, 0, (MAX_ANGLE - this.getEncoderPosition()) * (1 / BUFFER_ZONE_SIZE));
         }
 
         m_talon.set(output);
@@ -83,7 +95,7 @@ public class Turret extends SubsystemBase implements Tunable {
      * @return true if pid is at target within threshold.
      */
     public boolean runPID(double setpoint) {
-        m_talon.runPID(MathUtil.clamp(setpoint, this.m_minAngle, this.m_maxAngle));
+        m_talon.runPID(MathUtil.clamp(setpoint, this.MIN_ANGLE, this.MAX_ANGLE));
         return m_talon.atTarget();
     }
 
@@ -108,11 +120,11 @@ public class Turret extends SubsystemBase implements Tunable {
     }
 
     public double getMinAngle() {
-        return this.m_minAngle;
+        return this.MIN_ANGLE;
     }
 
     public double getMaxAngle() {
-        return this.m_maxAngle;
+        return this.MAX_ANGLE;
     }
 
     public void resetPID() {
@@ -121,7 +133,6 @@ public class Turret extends SubsystemBase implements Tunable {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Turret Encoder Position", (this.getEncoderPosition()));
     }
 
     @Override

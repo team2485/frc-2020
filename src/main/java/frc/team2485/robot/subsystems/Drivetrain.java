@@ -80,8 +80,5 @@ public class Drivetrain extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Pigeon Heading", m_pigeon.getFusedHeading());
-        SmartDashboard.putNumber("Left Drive Encoder", m_encoderLeft.getPosition());
-        SmartDashboard.putNumber("Right Drive Encoder", m_encoderRight.getPosition());
     }
 }
