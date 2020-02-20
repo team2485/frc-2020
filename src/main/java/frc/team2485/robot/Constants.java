@@ -49,7 +49,7 @@ public final class Constants {
 
     public static final class IntakeArm {
 
-        public static final int MAX_CURRENT = 60;
+        public static final int MAX_CURRENT = 2; //amps
 
         public static final int SPARK_PORT = 20;
 
@@ -61,7 +61,7 @@ public final class Constants {
 
         public static final double BOTTOM_POSITION_DEGREES = 90; //temp
 
-        public static final double SPEED = 1;
+        public static final double SPEED = 0.5;
 
     }
 }

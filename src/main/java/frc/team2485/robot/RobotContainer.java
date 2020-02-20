@@ -28,7 +28,6 @@ public class RobotContainer {
 
     public RobotContainer() {
 
-//        m_drivetrain = new Drivetrain();
         m_intakeArm = new IntakeArm();
 
         m_jack = new WL_XboxController(Constants.OI.JACK_PORT);
@@ -37,19 +36,6 @@ public class RobotContainer {
     }
 
     private void configureCommands() {
-//        m_drivetrain.setDefaultCommand(new RunCommand(() -> {
-//                    m_drivetrain.curvatureDrive(
-//                            Deadband.cubicScaledDeadband(
-//                                    m_jack.getTriggerAxis(GenericHID.Hand.kRight)
-//                                            - m_jack.getTriggerAxis(GenericHID.Hand.kLeft),
-//                                    Constants.OI.XBOX_DEADBAND),
-//                            Deadband.cubicScaledDeadband(
-//                                    m_jack.getX(GenericHID.Hand.kLeft),
-//                                    Constants.OI.XBOX_DEADBAND),
-//                            m_jack.getXButton());
-//                }, m_drivetrain)
-//        );
-
         m_jack.getJoystickButton(XboxController.Button.kA).whenHeld(new IntakeArmMove(m_intakeArm, IntakeArmMove.IntakeArmPosition.BOTTOM, Constants.IntakeArm.SPEED));
         m_jack.getJoystickButton(XboxController.Button.kB).whenHeld(new IntakeArmMove(m_intakeArm, IntakeArmMove.IntakeArmPosition.TOP, Constants.IntakeArm.SPEED));
 
