@@ -43,6 +43,7 @@ public class RobotContainer {
         m_flywheels = new Flywheels();
         m_hood = new Hood(m_feeder.getHoodEncoder());
         m_limelight = new Limelight();
+        m_limelight.setLedMode(Limelight.LedMode.OFF);
 
         m_jack = new WL_XboxController(Constants.OI.JACK_PORT);
         m_suraj = new WL_XboxController(Constants.OI.SURAJ_PORT);
@@ -91,10 +92,12 @@ public class RobotContainer {
 
 
     public void tunePeriodic(boolean enabled) {
+
         if (enabled) {
-            setHood.tunePeriodic();
+            m_flywheels.tunePeriodic();
+
         } else {
-            m_hood.setPWM(0);
+            m_flywheels.setPWM(0);
         }
     }
 
