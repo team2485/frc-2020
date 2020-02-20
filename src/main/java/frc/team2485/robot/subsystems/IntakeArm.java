@@ -27,7 +27,7 @@ public class IntakeArm extends SubsystemBase {
     public IntakeArm() {
         super();
 
-        this.m_talon = new WL_TalonSRX(Constants.IntakeArm.SPARK_PORT);
+        this.m_talon = new WL_TalonSRX(Constants.IntakeArm.TALON_PORT);
 
         this.m_encoderCounter = new Counter(Constants.IntakeArm.ENCODER_DIO_PORT);
 

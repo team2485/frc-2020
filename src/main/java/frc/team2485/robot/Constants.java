@@ -49,7 +49,7 @@ public final class Constants {
 
     public static final class IntakeArm {
 
-        public static final int SPARK_PORT = 20;
+        public static final int TALON_PORT = 20;
 
         public static final int ENCODER_DIO_PORT = 0;
 
