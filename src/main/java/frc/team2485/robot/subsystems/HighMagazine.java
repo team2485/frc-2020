@@ -42,7 +42,11 @@ public class HighMagazine extends SubsystemBase implements AbstractMagazinePart,
     public HighMagazine(BooleanSupplier transferIR)  {
         m_talon = new PIDTalonSRX(Constants.Magazine.TALON_HIGH_PORT, ControlMode.Position);
         m_talon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
-        m_talon.setEncoderPosition(0);
+        m_talon.setDistancePerPulse(1/4096.0);
+        m_talon.configNominalOutputForward(0);
+        m_talon.configNominalOutputReverse(0);
+        m_talon.configPeakOutputForward(1);
+        m_talon.configPeakOutputReverse(-1);
 
 
         m_exitIR = new DigitalInput(Constants.Magazine.EXIT_IR_PORT);
