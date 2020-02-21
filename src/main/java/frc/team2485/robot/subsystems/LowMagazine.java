@@ -38,7 +38,8 @@ public class LowMagazine extends SubsystemBase implements AbstractMagazinePart, 
         m_talon.configNominalOutputReverse(0);
         m_talon.configPeakOutputForward(1);
         m_talon.configPeakOutputReverse(-1);
-        m_talon.setSensorPhase(true);
+//        m_talon.setSensorPhase(true);
+        m_talon.setInverted(true);
 
         m_talon.setEncoderPosition(0);
 
@@ -55,9 +56,9 @@ public class LowMagazine extends SubsystemBase implements AbstractMagazinePart, 
         ShuffleboardTab tab = Shuffleboard.getTab("Magazine");
         tab.addNumber("Low Position", this::getEncoderPosition);
         tab.addNumber("Low Velocity", this::getEncoderPosition);
-//        tab.addNumber("Low Number of Balls", this::getNumBalls);
-//        tab.addBoolean("Entrance IR", this::getEntranceIR);
-//        tab.addBoolean("Transfer IR", this::getTransferIR);
+        tab.addNumber("Low Number of Balls", this::getNumBalls);
+        tab.addBoolean("Entrance IR", this::getEntranceIR);
+        tab.addBoolean("Transfer IR", this::getTransferIR);
     }
 
     /**
@@ -100,15 +101,16 @@ public class LowMagazine extends SubsystemBase implements AbstractMagazinePart, 
      * @return boolean value of beam break sensor at start of low belt
      */
     public boolean getEntranceIR() {
-        return m_entranceIR.get();
+        return !m_entranceIR.get();
     }
+
 
     /**
      *
      * @return value of beam break sensor at intersection of low and high belts
      */
     public boolean getTransferIR() {
-        return m_transferIR.get();
+        return !m_transferIR.get();
     }
 
     /**

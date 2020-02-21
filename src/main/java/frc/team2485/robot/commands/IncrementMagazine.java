@@ -1,7 +1,6 @@
 package frc.team2485.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.team2485.robot.Constants;
 import frc.team2485.robot.subsystems.AbstractMagazinePart;
 
 public class IncrementMagazine extends CommandBase {
@@ -10,9 +9,16 @@ public class IncrementMagazine extends CommandBase {
 
     private double m_distanceSetpoint;
 
+    private double m_distance;
+
     public IncrementMagazine(AbstractMagazinePart magazine, double distance) {
         m_magazine = magazine;
-        m_distanceSetpoint = magazine.getEncoderPosition() + distance;
+        m_distance = distance;
+    }
+
+    @Override
+    public void initialize() {
+        m_distanceSetpoint = m_magazine.getEncoderPosition() - m_distance;
     }
 
     @Override

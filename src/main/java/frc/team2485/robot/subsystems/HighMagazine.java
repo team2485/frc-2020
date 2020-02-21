@@ -42,11 +42,13 @@ public class HighMagazine extends SubsystemBase implements AbstractMagazinePart,
     public HighMagazine(BooleanSupplier transferIR)  {
         m_talon = new PIDTalonSRX(Constants.Magazine.TALON_HIGH_PORT, ControlMode.Position);
         m_talon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
-        m_talon.setDistancePerPulse(1/4096.0);
+        m_talon.setDistancePerPulse(Constants.Magazine.ROLLER_DIAMETER * 2 * Math.PI * 1/4096.0);
+//        m_talon.setSensorPhase(true);
         m_talon.configNominalOutputForward(0);
         m_talon.configNominalOutputReverse(0);
         m_talon.configPeakOutputForward(1);
         m_talon.configPeakOutputReverse(-1);
+        m_talon.setSelectedSensorPosition(0);
 
 
         m_exitIR = new DigitalInput(Constants.Magazine.EXIT_IR_PORT);
@@ -61,9 +63,9 @@ public class HighMagazine extends SubsystemBase implements AbstractMagazinePart,
 
         ShuffleboardTab tab = Shuffleboard.getTab("Magazine");
         tab.addNumber("High Position", this::getEncoderPosition);
-        tab.addNumber("High Velocity", this::getEncoderPosition);
+        tab.addNumber("High Velocity", this::getEncoderVelocity);
         tab.addNumber("High Number of Balls", this::getNumBalls);
-        tab.addBoolean("Exit IR", this::getTransferIR);
+        tab.addBoolean("Exit IR", this::getExitIR);
     }
 
     /**
@@ -91,7 +93,7 @@ public class HighMagazine extends SubsystemBase implements AbstractMagazinePart,
      * @return belt encoder position
      */
     public double getEncoderPosition() {
-        return m_talon.getSensorCollection().getQuadraturePosition();
+        return m_talon.getEncoderPosition();
     }
 
     /**
@@ -99,7 +101,7 @@ public class HighMagazine extends SubsystemBase implements AbstractMagazinePart,
      * @return belt encoder velocity
      */
     public double getEncoderVelocity() {
-        return Deadband.deadband(m_talon.getSensorCollection().getQuadraturePosition(), Constants.Magazine.ENCODER_VELOCITY_DEADBAND);
+        return Deadband.deadband(m_talon.getEncoderVelocity(), Constants.Magazine.ENCODER_VELOCITY_DEADBAND);
     }
 
     /**
@@ -115,7 +117,7 @@ public class HighMagazine extends SubsystemBase implements AbstractMagazinePart,
      * @return boolean value of beam break sensor at end of high belt
      */
     public boolean getExitIR() {
-        return m_exitIR.get();
+        return !m_exitIR.get();
     }
 
     /**
@@ -131,11 +133,6 @@ public class HighMagazine extends SubsystemBase implements AbstractMagazinePart,
      */
     @Override
     public void periodic() {
-
-        SmartDashboard.putNumber("Encoder Position", m_talon.getEncoderPosition());
-        SmartDashboard.putNumber("Current Draw", m_talon.getSupplyCurrent());
-
-
 
         if (!getTransferIR() && getTransferIR() != m_transferIRLastVal) {
             if (getEncoderVelocity() < 0) {
@@ -167,6 +164,5 @@ public class HighMagazine extends SubsystemBase implements AbstractMagazinePart,
     @Override
     public void tunePeriodic() {
         m_talon.runPID();
-        SmartDashboard.putNumber("High Magazine Position", m_talon.getEncoderPosition());
     }
 }

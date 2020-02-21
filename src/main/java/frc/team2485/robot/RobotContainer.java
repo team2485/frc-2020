@@ -35,7 +35,7 @@ public class RobotContainer {
 
         m_drivetrain = new Drivetrain();
         m_lowMagazine = new LowMagazine();
-        m_highMagazine = new HighMagazine(()->true);
+        m_highMagazine = new HighMagazine(() -> true);
 
         m_jack = new WL_XboxController(Constants.OI.JACK_PORT);
         m_suraj = new WL_XboxController(Constants.OI.SURAJ_PORT);
@@ -60,24 +60,51 @@ public class RobotContainer {
 //        m_highMagazine.setDefaultCommand(
 //                new ConditionalCommand(
 //                        new IncrementMagazine(m_highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS),
-//                        null,
+//                        new InstantCommand(() -> {
+//                            m_highMagazine.setPWM(0);
+//                        }),
 //                        () -> {
 //                            return m_highMagazine.getTransferIR() && m_highMagazine.getNumBalls() <= Constants.Magazine.HIGH_MAGAZINE_BALL_CAPACITY;
 //                        }
 //                )
 //        );
-//
-//        m_suraj.getJoystickButton(XboxController.Button.kBumperRight).whenHeld(
-//                new ConditionalCommand(
-//                        new RunCommand(() -> {
-//                            m_lowMagazine.setPWM(Constants.Magazine.LOW_BELT_PWM);
-//                        }),
-//                        null,
-//                        () -> {
-//                            return m_highMagazine.getNumBalls() <= Constants.Magazine.HIGH_MAGAZINE_BALL_CAPACITY && !m_lowMagazine.getTransferIR();
-//                        }
-//                )
-//        );
+
+        m_suraj.getJoystickButton(XboxController.Button.kBumperLeft).whenHeld(
+                new ConditionalCommand(
+                        new IncrementMagazine(m_highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS),
+                        new RunCommand(() -> {
+                            m_highMagazine.setPWM(0);
+                        }),
+                        () -> {
+//                            return m_highMagazine.getTransferIR() && m_highMagazine.getNumBalls() <= Constants.Magazine.HIGH_MAGAZINE_BALL_CAPACITY;
+                            return m_highMagazine.getTransferIR();
+                        }
+                )
+        ).whenReleased(
+                new InstantCommand(()-> {
+                    m_highMagazine.setPWM(0);
+                })
+        );
+
+        m_suraj.getJoystickButton(XboxController.Button.kBumperRight).whenHeld(
+                new ConditionalCommand(
+                        new RunCommand(() -> {
+                            m_lowMagazine.setPWM(Constants.Magazine.LOW_BELT_PWM);
+                        }),
+                        new InstantCommand(() -> {
+                            m_lowMagazine.setPWM(0);
+                        }),
+                        () -> {
+                            return m_highMagazine.getNumBalls() <= Constants.Magazine.HIGH_MAGAZINE_BALL_CAPACITY && !m_lowMagazine.getTransferIR();
+                        }
+                )
+        ).whenReleased(
+                new InstantCommand(
+                        () -> {
+                            m_lowMagazine.setPWM(0);
+                        }
+                )
+        );
 
         // Feed to shooter
         m_suraj.getJoystickButton(XboxController.Button.kA).whileHeld(
@@ -85,6 +112,13 @@ public class RobotContainer {
                         () -> {
                             m_lowMagazine.setPWM(Constants.Magazine.FAST_INTAKE_PWM);
                             m_highMagazine.setPWM(Constants.Magazine.FAST_INTAKE_PWM);
+                        }
+                )
+        ).whenReleased(
+                new InstantCommand(
+                        () -> {
+                            m_lowMagazine.setPWM(0);
+                            m_highMagazine.setPWM(0);
                         }
                 )
         );
@@ -111,6 +145,7 @@ public class RobotContainer {
         SmartDashboard.putData("reset encoder", new InstantCommand(() -> {
             m_highMagazine.resetEncoder(0);
         }));
+
     }
 
     public void resetAll() {
@@ -127,10 +162,10 @@ public class RobotContainer {
 
     public void tunePeriodic(boolean enable) {
 //        m_lowMagazine.tunePeriodic(enable);
-        if(enable) {
-            m_lowMagazine.tunePeriodic();
+        if (enable) {
+            m_highMagazine.tunePeriodic();
         } else {
-            m_lowMagazine.setPWM(-Deadband.linearScaledDeadband(m_jack.getY(GenericHID.Hand.kLeft), Constants.OI.XBOX_DEADBAND));
+//            m_lowMagazine.setPWM(-Deadband.linearScaledDeadband(m_jack.getY(GenericHID.Hand.kLeft), Constants.OI.XBOX_DEADBAND));
             m_highMagazine.setPWM(-Deadband.linearScaledDeadband(m_jack.getY(GenericHID.Hand.kRight), Constants.OI.XBOX_DEADBAND));
 
             //            m_lowMagazine.setPWM(0);

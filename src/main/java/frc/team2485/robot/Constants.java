@@ -63,17 +63,19 @@ public final class Constants {
         public static final int TALON_LOW_PORT = 22;
         public static final int TALON_HIGH_PORT = 23;
 
-        public static final int ENTRANCE_IR_PORT = 1;
-        public static final int TRANSFER_IR_PORT = 2;
-        public static final int EXIT_IR_PORT = 3;
+        public static final int ENTRANCE_IR_PORT = 2;
+        public static final int TRANSFER_IR_PORT = 3;
+        public static final int EXIT_IR_PORT = 4;
 
         public static final int HIGH_MAGAZINE_BALL_CAPACITY = 4;
 
         public static final double ENCODER_VELOCITY_DEADBAND = 0.1;
 
+        public static final double ROLLER_DIAMETER = 0.5;
+
         //Replace below with actual number
-        public static final double LOW_INTAKE_BY_ONE_POS = 0.7;
-        public static final double HIGH_INDEX_BY_ONE_POS = 0.7;
+        public static final double LOW_INTAKE_BY_ONE_POS = 9;
+        public static final double HIGH_INDEX_BY_ONE_POS = 9;
 
         //replace below with actual number
         public static final double LOW_BELT_PWM = 0.2;
