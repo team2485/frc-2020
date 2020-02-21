@@ -11,6 +11,9 @@ public final class Constants {
 
     public static final String CONFIGS_FILE = "/home/lvuser/constants.csv";
 
+    public static final boolean TUNE_MODE = true;
+    public static final String TUNE_ENABLE_LABEL = "Tune Enable";
+
     /**
      * Constants specific to operator interface
      */
@@ -37,14 +40,16 @@ public final class Constants {
         public static final int SPARK_RIGHT_PORT_SLAVE_2 = 15;
         public static final int SPARK_RIGHT_PORT_SLAVE_3 = 16;
 
-        public static final int SPARK_LEFT_ENCODER = 10;
-        public static final int SPARK_RIGHT_ENCODER = 14;
+        public static final int LEFT_ENCODER_SPARK = 10;
+        public static final int RIGHT_ENCODER_SPARK = 14;
 
-        public static final int ENCODER_CPR = 250;
+        public static final int PIGEON_IMU_PORT = 1;
 
-        public static final double WHEEL_RADIUS = 3;
+        public static final int ENCODER_CPR = 250 * 4; // 4x encoding
 
-        public static final int CURRENT_LIMIT = 18;
+        public static final double WHEEL_RADIUS = 3; // inches
+
+        public static final int MAX_CURRENT = 18;
     }
 
     public static final class IntakeArm {

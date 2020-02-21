@@ -40,16 +40,12 @@ public class RobotContainer {
     }
 
     private void configureCommands() {
-        /*
-        DRIVETRAIN
-         */
-
-        m_drivetrain.setDefaultCommand(new RunCommand(() -> {
+        m_drivetrain.setDefaultCommand(
+                new RunCommand(() -> {
                     m_drivetrain.curvatureDrive(
                             Deadband.cubicScaledDeadband(
                                     m_jack.getTriggerAxis(GenericHID.Hand.kRight) - m_jack.getTriggerAxis(GenericHID.Hand.kLeft),
-                                    Constants.OI.XBOX_DEADBAND
-                            ),
+                                    Constants.OI.XBOX_DEADBAND),
                             Deadband.cubicScaledDeadband(
                                     m_jack.getX(GenericHID.Hand.kLeft),
                                     Constants.OI.XBOX_DEADBAND
@@ -78,5 +74,17 @@ public class RobotContainer {
         });
 
         return m_autoCommand;
+    }
+
+    public void testInit() {
+        if (Constants.TUNE_MODE) {
+            SmartDashboard.putBoolean(Constants.TUNE_ENABLE_LABEL, false);
+        }
+    }
+
+    public void testPeriodic() {
+        if (Constants.TUNE_MODE) {
+            boolean enable = SmartDashboard.getBoolean(Constants.TUNE_ENABLE_LABEL, false);
+        }
     }
 }
