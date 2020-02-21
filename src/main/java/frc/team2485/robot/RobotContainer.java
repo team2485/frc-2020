@@ -90,10 +90,14 @@ public class RobotContainer {
         return m_autoCommand;
     }
 
+    public void testInit() {
 
-    public void tunePeriodic(boolean enabled) {
+        SmartDashboard.putBoolean("Tune Enable", false);
+        m_flywheels.tuneInit();
+    }
 
-        SmartDashboard.putNumber("Left Encoder RPM", m_flywheels.getLeftEncoderVelocity());
+    public void testPeriodic() {
+        boolean enabled = SmartDashboard.getBoolean("Tune Enable", false);
         if (enabled) {
             m_flywheels.tunePeriodic();
         } else {

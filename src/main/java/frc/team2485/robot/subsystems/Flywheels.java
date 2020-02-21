@@ -2,6 +2,8 @@ package frc.team2485.robot.subsystems;
 
 import com.revrobotics.CANEncoder;
 import com.revrobotics.ControlType;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -23,10 +25,19 @@ public class Flywheels extends SubsystemBase implements Tunable {
         m_sparkRight.getEncoder().setVelocityConversionFactor(2);
         m_sparkLeft.getEncoder().setVelocityConversionFactor(2);
 
-        SendableRegistry.add(m_sparkLeft, "Flywheels Left Spark Velocity Controller");
-        SendableRegistry.add(m_sparkRight, "Flywheels Right Spark Velocity Controller");
         RobotConfigs.getInstance().addConfigurable("flywheelsLeftSparkVelocityController", m_sparkLeft);
         RobotConfigs.getInstance().addConfigurable("flywheelsRightSparkVelocityController", m_sparkRight);
+
+        ShuffleboardTab tab = Shuffleboard.getTab("Shooter");
+        tab.addNumber("Left Flywheel Velocity", this::getLeftEncoderVelocity);
+        tab.addNumber("Right Flywheel Velocity", this::getRightEncoderVelocity);
+        tab.addNumber("Left Flywheel Current", m_sparkLeft::getOutputCurrent);
+        tab.addNumber("Right Flywheel Current", m_sparkRight::getOutputCurrent);
+
+
+        SendableRegistry.add(m_sparkLeft, "Flywheels Left Spark");
+        SendableRegistry.add(m_sparkRight, "Flywheels Right Spark");
+
     }
 
     private void setLeftPWM(double pwm) {
@@ -81,10 +92,14 @@ public class Flywheels extends SubsystemBase implements Tunable {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("Left RPM", m_sparkLeft.getEncoder().getVelocity());
-        SmartDashboard.putNumber("Right RPM", m_sparkRight.getEncoder().getVelocity());
     }
 
+    public void tuneInit() {
+
+//        SendableRegistry.add(m_sparkRight, "Flywheels Right Sparks");
+    }
+
+    @Override
     public void tunePeriodic() {
         m_sparkLeft.runPID();
 //        m_sparkRight.runPID();
