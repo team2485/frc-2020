@@ -50,6 +50,7 @@ public class HighMagazine extends SubsystemBase implements AbstractMagazinePart,
         m_talon.configPeakOutputForward(1);
         m_talon.configPeakOutputReverse(-1);
         m_talon.setSelectedSensorPosition(0);
+        m_talon.setTolerance(1);
 
 
         m_exitIR = new DigitalInput(Constants.Magazine.EXIT_IR_PORT);
