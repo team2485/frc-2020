@@ -44,6 +44,7 @@ public class HighMagazine extends SubsystemBase implements AbstractMagazinePart,
         m_talon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
         m_talon.setDistancePerPulse(Constants.Magazine.ROLLER_DIAMETER * 2 * Math.PI * 1/4096.0);
 //        m_talon.setSensorPhase(true);
+        m_talon.setInverted(true);
         m_talon.configNominalOutputForward(0);
         m_talon.configNominalOutputReverse(0);
         m_talon.configPeakOutputForward(1);

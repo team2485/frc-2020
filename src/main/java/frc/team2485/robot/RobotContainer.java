@@ -35,7 +35,7 @@ public class RobotContainer {
 
         m_drivetrain = new Drivetrain();
         m_lowMagazine = new LowMagazine();
-        m_highMagazine = new HighMagazine(() -> true);
+        m_highMagazine = new HighMagazine(m_lowMagazine::getTransferIR);
 
         m_jack = new WL_XboxController(Constants.OI.JACK_PORT);
         m_suraj = new WL_XboxController(Constants.OI.SURAJ_PORT);
@@ -69,7 +69,7 @@ public class RobotContainer {
 //                )
 //        );
 
-        m_suraj.getJoystickButton(XboxController.Button.kBumperLeft).whenHeld(
+        m_suraj.getJoystickButton(XboxController.Button.kBumperLeft).whileHeld(
                 new ConditionalCommand(
                         new IncrementMagazine(m_highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS),
                         new RunCommand(() -> {

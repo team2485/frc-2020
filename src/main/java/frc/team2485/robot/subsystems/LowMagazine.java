@@ -39,7 +39,6 @@ public class LowMagazine extends SubsystemBase implements AbstractMagazinePart, 
         m_talon.configPeakOutputForward(1);
         m_talon.configPeakOutputReverse(-1);
 //        m_talon.setSensorPhase(true);
-        m_talon.setInverted(true);
 
         m_talon.setEncoderPosition(0);
 
