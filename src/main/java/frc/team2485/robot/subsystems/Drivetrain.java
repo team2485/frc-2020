@@ -1,14 +1,10 @@
 package frc.team2485.robot.subsystems;
 
-import com.revrobotics.AlternateEncoderType;
-import com.revrobotics.CANEncoder;
-import edu.wpi.first.wpilibj.Spark;
 import com.ctre.phoenix.sensors.PigeonIMU;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team2485.WarlordsLib.Tunable;
 import frc.team2485.WarlordsLib.motorcontrol.WL_SparkMax;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -61,12 +57,10 @@ public class Drivetrain extends SubsystemBase implements Tunable {
 
         this.m_pigeon = new PigeonIMU(Constants.Drivetrain.PIGEON_IMU_PORT);
 
-        this.configShuffleboard();
+        this.addToShuffleboard();
     }
 
-    public void configShuffleboard() {
-        SendableRegistry.add(this.m_drive, "DifferentialDrive");
-
+    public void addToShuffleboard() {
         ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
         tab.add(this);
         tab.add(this.m_drive);

@@ -40,6 +40,10 @@ public class RobotContainer {
     }
 
     private void configureCommands() {
+
+        /*
+        DRIVETRAIN
+         */
         m_drivetrain.setDefaultCommand(
                 new RunCommand(() -> {
                     m_drivetrain.curvatureDrive(
@@ -57,15 +61,18 @@ public class RobotContainer {
         /*
         INTAKE ARM
          */
+        m_jack.getJoystickButton(XboxController.Button.kA)
+                .whenHeld(new IntakeArmMove(m_intakeArm, IntakeArmMove.IntakeArmPosition.BOTTOM, Constants.IntakeArm.SPEED));
+        m_jack.getJoystickButton(XboxController.Button.kB)
+                .whenHeld(new IntakeArmMove(m_intakeArm, IntakeArmMove.IntakeArmPosition.TOP, Constants.IntakeArm.SPEED));
 
-        m_jack.getJoystickButton(XboxController.Button.kA).whenHeld(new IntakeArmMove(m_intakeArm, IntakeArmMove.IntakeArmPosition.BOTTOM, Constants.IntakeArm.SPEED));
-        m_jack.getJoystickButton(XboxController.Button.kB).whenHeld(new IntakeArmMove(m_intakeArm, IntakeArmMove.IntakeArmPosition.TOP, Constants.IntakeArm.SPEED));
-
-        m_jack.getJoystickButton(XboxController.Button.kBumperLeft).whenHeld(
-                new RunCommand(()-> m_intakeArm.setPWM(Deadband.linearScaledDeadband(m_jack.getY(GenericHID.Hand.kRight), 0.1)))
-        ).whenReleased(
-                new RunCommand(() -> m_intakeArm.setPWM(0))
-        );
+        m_jack.getJoystickButton(XboxController.Button.kBumperLeft)
+                .whenHeld(
+                        new RunCommand(() -> m_intakeArm.setPWM(Deadband.linearScaledDeadband(m_jack.getY(GenericHID.Hand.kRight), 0.1)))
+                )
+                .whenReleased(
+                        new RunCommand(() -> m_intakeArm.setPWM(0))
+                );
     }
 
     public Command getAutonomousCommand() {

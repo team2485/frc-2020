@@ -52,7 +52,14 @@ public class IntakeArm extends SubsystemBase {
 
         this.BOTTOM_POSITION = Constants.IntakeArm.BOTTOM_POSITION_DEGREES;
 
+        this.addToShuffleboard();
+    }
+
+    public void addToShuffleboard() {
         ShuffleboardTab tab = Shuffleboard.getTab("Intake Arm");
+        tab.add(this);
+        tab.add(m_talon);
+        tab.add(m_encoderCounter);
         tab.addNumber("Encoder Position", this::getEncoderDegrees);
         tab.addNumber("Output Current", m_talon::getStatorCurrent);
     }
