@@ -1,5 +1,6 @@
 package frc.team2485.robot.subsystems;
 
+import com.revrobotics.AlternateEncoderType;
 import com.revrobotics.CANEncoder;
 import com.revrobotics.ControlType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -19,6 +20,7 @@ public class Feeder extends SubsystemBase {
     public Feeder() {
         this.m_spark = new PIDSparkMax(Constants.Shooter.SPARK_FEEDER_PORT, ControlType.kPosition);
         this.m_spark.setSmartCurrentLimit(Constants.Shooter.SPARK_FEEDER_MAX_CURRENT, 20);
+//        this.m_spark.setInverted(true);
 
         SendableRegistry.add(m_spark, "Feeder Spark");
         RobotConfigs.getInstance().addConfigurable("feederSpark", m_spark);
@@ -40,7 +42,7 @@ public class Feeder extends SubsystemBase {
     }
 
     public CANEncoder getHoodEncoder() {
-        return m_spark.getAlternateEncoder(Constants.Shooter.HOOD_ENCODER_CPR);
+        return m_spark.getAlternateEncoder(AlternateEncoderType.kQuadrature, Constants.Shooter.HOOD_ENCODER_CPR);
     }
 
 }

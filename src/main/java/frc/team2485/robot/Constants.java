@@ -58,7 +58,7 @@ public final class Constants {
 
         public static final int MAX_CURRENT = 2; //amps
 
-        public static final int SPARK_PORT = 20;
+        public static final int TALON_PORT = 20;
 
         public static final int ENCODER_DIO_PORT = 0;
 
@@ -108,5 +108,35 @@ public final class Constants {
         public static final double HEIGHT_FROM_LL_TO_PORT = 1.58114915; //meters
         public static final double HEIGHT_FROM_SHOOTER_TO_PORT = 1.46685; //meters
         public static final double LIMELIGHT_TY_DEFAULT_VALUE = 15; //angle...change?
+
+    }
+
+    public static final class Magazine {
+
+        public static final int TALON_LOW_MAX_CURRENT = 60;
+        public static final int TALON_HIGH_MAX_CURRENT = 60;
+
+        //replace ports with real values
+        public static final int TALON_LOW_PORT = 22;
+        public static final int TALON_HIGH_PORT = 23;
+
+        public static final int ENTRANCE_IR_PORT = 2;
+        public static final int TRANSFER_IR_PORT = 3;
+        public static final int EXIT_IR_PORT = 4;
+
+        public static final int HIGH_MAGAZINE_BALL_CAPACITY = 4;
+
+        public static final double ENCODER_VELOCITY_DEADBAND = 0.1;
+
+        public static final double ROLLER_DIAMETER = 0.5;
+
+        //Replace below with actual number
+        public static final double LOW_INTAKE_BY_ONE_POS = 9;
+        public static final double HIGH_INDEX_BY_ONE_POS = 9;
+
+        //replace below with actual number
+        public static final double LOW_BELT_PWM = -0.2;
+        public static final double FAST_INTAKE_PWM = -0.5;
+        public static final double NORMAL_BALL_INCREMENT_TIMEOUT = 0.2;
     }
 }
