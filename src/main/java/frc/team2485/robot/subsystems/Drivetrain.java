@@ -1,11 +1,9 @@
 package frc.team2485.robot.subsystems;
 
-import com.revrobotics.AlternateEncoderType;
-import com.revrobotics.CANEncoder;
+import com.ctre.phoenix.sensors.PigeonIMU;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.team2485.WarlordsLib.WL_DifferentialDrive;
 import frc.team2485.WarlordsLib.motorcontrol.WL_SparkMax;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team2485.WarlordsLib.sensors.SparkMaxAlternateEncoder;
@@ -27,6 +25,8 @@ public class Drivetrain extends SubsystemBase {
     private SparkMaxAlternateEncoder m_encoderLeft;
     private SparkMaxAlternateEncoder m_encoderRight;
 
+    private PigeonIMU m_pigeon;
+
     public Drivetrain() {
         this.m_sparkLeft1Master = new WL_SparkMax(Constants.Drivetrain.SPARK_LEFT_PORT_MASTER);
         this.m_sparkLeft2 = new WL_SparkMax(Constants.Drivetrain.SPARK_LEFT_PORT_SLAVE_2);
@@ -42,7 +42,7 @@ public class Drivetrain extends SubsystemBase {
         this.m_sparkLeft1Master.setFollowers(m_sparkLeft2, m_sparkLeft3);
         this.m_sparkRight1Master.setFollowers(m_sparkRight2, m_sparkRight3);
 
-        this.m_drive = new WL_DifferentialDrive(m_sparkLeft1Master, m_sparkRight1Master);
+        this.m_drive = new DifferentialDrive(m_sparkLeft1Master, m_sparkRight1Master);
 
         // 4x encoding so * 4
         this.m_encoderLeft = new SparkMaxAlternateEncoder(Constants.Drivetrain.SPARK_LEFT_ENCODER, Constants.Drivetrain.ENCODER_CPR * 4 );
@@ -53,8 +53,10 @@ public class Drivetrain extends SubsystemBase {
         this.m_encoderLeft.setDistancePerRevolution(2 * Math.PI * Constants.Drivetrain.WHEEL_RADIUS);
         this.m_encoderRight.setDistancePerRevolution(2 * Math.PI * Constants.Drivetrain.WHEEL_RADIUS);
 
-        SmartDashboard.putData(this);
+        this.m_pigeon = new PigeonIMU(0);
+
         SendableRegistry.add(this.m_drive, "DifferentialDrive");
+        SmartDashboard.putData(this);
     }
 
     public void curvatureDrive(double throttle, double steering, boolean isQuickTurn) {
@@ -71,10 +73,11 @@ public class Drivetrain extends SubsystemBase {
         m_encoderLeft.setPosition(posRight);
     }
 
+    public double getHeading() {
+        return - m_pigeon.getFusedHeading();
+    }
+
     @Override
     public void periodic() {
     }
-
-
-
 }

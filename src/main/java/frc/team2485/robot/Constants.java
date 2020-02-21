@@ -11,6 +11,8 @@ public final class Constants {
 
     public static final String CONFIGS_FILE = "/home/lvuser/constants.csv";
 
+    public static final boolean DEBUG_MODE = true;
+
     /**
      * Constants specific to operator interface
      */
@@ -22,7 +24,7 @@ public final class Constants {
         public static final int JACK_PORT = 0;
 
         /**
-         * Suraj's XBOX port
+         * We know it's not actually Suraj this year but whatever. It's a Suraj.
          */
         public static final int SURAJ_PORT = 1;
 
@@ -35,6 +37,8 @@ public final class Constants {
     }
 
     public static final class Drivetrain {
+
+        public static final boolean TUNING_MODE = false;
 
         public static final int SPARK_LEFT_PORT_MASTER = 10;
         public static final int SPARK_LEFT_PORT_SLAVE_2 = 11;
@@ -138,5 +142,29 @@ public final class Constants {
         public static final double LOW_BELT_PWM = -0.2;
         public static final double FAST_INTAKE_PWM = -0.5;
         public static final double NORMAL_BALL_INCREMENT_TIMEOUT = 0.2;
+    }
+
+    public static final class Turret {
+
+        public static final boolean TUNING_MODE = false;
+
+        public static final int TALON_PORT = 25;
+
+        /**
+         * counts per revolution of the encoder
+         */
+        public static final int ENCODER_CPR = 4096;
+
+        public static final double TURRET_SPEED = 360.0 * 0.02; // degrees per ~20 milliseconds
+
+        public static final double MIN_POSITION = -135; // degrees
+        public static final double MAX_POSITION = 170; // degrees
+
+        /**
+         * In manual mode the max pwm will linearly clamp starting at the buffer zone size before the min or max positions.
+         */
+        public static final double BUFFER_ZONE_SIZE = 10; // degrees
+
+        public static final double TURRET_PID_TOLERANCE = 2; // degrees
     }
 }
