@@ -7,34 +7,55 @@
 
 package frc.team2485.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import frc.team2485.WarlordsLib.Limelight;
 import frc.team2485.WarlordsLib.oi.Deadband;
 import frc.team2485.WarlordsLib.oi.WL_XboxController;
 import frc.team2485.robot.commands.IntakeArmMove;
 import frc.team2485.robot.subsystems.Drivetrain;
 import frc.team2485.robot.subsystems.IntakeArm;
+import frc.team2485.robot.commands.shooter.SetHood;
+import frc.team2485.robot.commands.shooter.Shoot;
+import frc.team2485.robot.subsystems.Feeder;
+import frc.team2485.robot.subsystems.Flywheels;
+import frc.team2485.robot.subsystems.Hood;
 
 public class RobotContainer {
 
     private WL_XboxController m_jack;
+    private WL_XboxController m_suraj;
 
-    private Drivetrain m_drivetrain;
+    private Feeder m_feeder;
+    private Flywheels m_flywheels;
+    private Hood m_hood;
+    private Limelight m_limelight;
+
+
+    SetHood setHood;
 
     private IntakeArm m_intakeArm;
 
+    private Drivetrain m_drivetrain;
+
     private Command m_autoCommand;
+
+
 
     public RobotContainer() {
 
         m_drivetrain = new Drivetrain();
         m_intakeArm = new IntakeArm();
+        m_feeder = new Feeder();
+        m_flywheels = new Flywheels();
+        m_hood = new Hood(m_feeder.getHoodEncoder());
 
         m_jack = new WL_XboxController(Constants.OI.JACK_PORT);
+        m_suraj = new WL_XboxController(Constants.OI.SURAJ_PORT);
 
         configureCommands();
     }
@@ -65,11 +86,45 @@ public class RobotContainer {
         m_jack.getJoystickButton(XboxController.Button.kA).whenHeld(new IntakeArmMove(m_intakeArm, IntakeArmMove.IntakeArmPosition.BOTTOM, Constants.IntakeArm.SPEED));
         m_jack.getJoystickButton(XboxController.Button.kB).whenHeld(new IntakeArmMove(m_intakeArm, IntakeArmMove.IntakeArmPosition.TOP, Constants.IntakeArm.SPEED));
 
-        m_jack.getJoystickButton(XboxController.Button.kBumperLeft).whenHeld(
-                new RunCommand(()-> m_intakeArm.setPWM(Deadband.linearScaledDeadband(m_jack.getY(GenericHID.Hand.kRight), 0.1)))
+//        m_jack.getJoystickButton(XboxController.Button.kBumperLeft).whenHeld(
+//                new RunCommand(()-> m_intakeArm.setPWM(Deadband.linearScaledDeadband(m_jack.getY(GenericHID.Hand.kRight), 0.1)))
+//        ).whenReleased(
+//                new RunCommand(() -> m_intakeArm.setPWM(0))
+//        );
+
+//        m_suraj.getJoystickAxisButton(XboxController.Axis.kLeftTrigger, Constants.OI.SURAJ_LTRIGGER_THRESHOLD).whenHeld(
+//                new Shoot(m_flywheels, m_hood, m_limelight, () -> {
+//                    return -m_suraj.getY(GenericHID.Hand.kRight);
+//                }));
+
+        m_suraj.getJoystickButton(XboxController.Button.kA).whenHeld(
+                new RunCommand(() ->
+//                        m_feeder.setPWM(Deadband.linearScaledDeadband(
+//                                m_jack.getY(GenericHID.Hand.kRight), Constants.OI.XBOX_DEADBAND)))
+                        m_feeder.setPWM(0.5)
+                )
         ).whenReleased(
-                new RunCommand(() -> m_intakeArm.setPWM(0))
+                new RunCommand(() -> {
+                    m_feeder.setPWM(0);
+                })
         );
+
+
+//        m_jack.getJoystickButton(XboxController.Button.kB).whenHeld(
+//                new RunCommand(() -> {
+//                    m_hood.setPWM(Deadband.linearScaledDeadband(m_jack.getY(GenericHID.Hand.kRight), Constants.OI.XBOX_DEADBAND));
+//                })
+//        ).whenReleased(
+//                new RunCommand(() -> {
+//                    m_hood.setPWM(0);
+//                })
+//        );
+
+        m_hood.setDefaultCommand( new RunCommand(() -> {
+            m_hood.setPWM(Deadband.linearScaledDeadband(m_jack.getY(GenericHID.Hand.kRight), Constants.OI.XBOX_DEADBAND));
+        }));
+
+        setHood = new SetHood(m_hood, 0);
     }
 
     public Command getAutonomousCommand() {
@@ -79,4 +134,22 @@ public class RobotContainer {
 
         return m_autoCommand;
     }
+
+    public void testInit() {
+
+        SmartDashboard.putBoolean("Tune Enable", false);
+        m_flywheels.tuneInit();
+    }
+
+    public void testPeriodic() {
+        boolean enabled = SmartDashboard.getBoolean("Tune Enable", false);
+        if (enabled) {
+            m_flywheels.tunePeriodic();
+        } else {
+            m_flywheels.setPWM(-Deadband.linearScaledDeadband(
+                    m_jack.getY(GenericHID.Hand.kRight), Constants.OI.XBOX_DEADBAND));
+        }
+    }
+
+
 }
