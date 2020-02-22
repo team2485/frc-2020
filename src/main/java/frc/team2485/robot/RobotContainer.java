@@ -68,7 +68,7 @@ public class RobotContainer {
 
         m_jack.getJoystickButton(XboxController.Button.kBumperLeft)
                 .whenHeld(
-                        new RunCommand(() -> m_intakeArm.setPWM(Deadband.linearScaledDeadband(m_jack.getY(GenericHID.Hand.kRight), 0.1)))
+                        new RunCommand(() -> m_intakeArm.setPWM( - Deadband.linearScaledDeadband(m_jack.getY(GenericHID.Hand.kRight), 0.1)))
                 )
                 .whenReleased(
                         new RunCommand(() -> m_intakeArm.setPWM(0))
