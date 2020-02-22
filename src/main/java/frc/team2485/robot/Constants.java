@@ -73,7 +73,7 @@ public final class Constants {
         public static final double SPARK_FLYWHEEL_RIGHT_MAX_CURRENT = 0;
 
         public static final int SPARK_FEEDER_PORT = 33;
-        public static final int SPARK_FEEDER_MAX_CURRENT = 32;
+        public static final int SPARK_FEEDER_MAX_CURRENT = 50; //keep this
 
         public static final double RPM_CONVERSION_FACTOR = 0.10472;
         public static final double FLYWHEEL_ENERGY_LOSS_FACTOR = 1;

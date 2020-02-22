@@ -17,14 +17,15 @@ public class Feeder extends SubsystemBase {
     private PIDSparkMax m_spark;
 
     public Feeder() {
-        this.m_spark = new PIDSparkMax(Constants.Shooter.SPARK_FEEDER_PORT, ControlType.kPosition);
-        this.m_spark.setSmartCurrentLimit(Constants.Shooter.SPARK_FEEDER_MAX_CURRENT, 20);
+        this.m_spark = new PIDSparkMax(Constants.Shooter.SPARK_FEEDER_PORT, ControlType.kVelocity);
+        this.m_spark.setSmartCurrentLimit(Constants.Shooter.SPARK_FEEDER_MAX_CURRENT, 50);
 
         SendableRegistry.add(m_spark, "Feeder Spark");
         RobotConfigs.getInstance().addConfigurable("feederSpark", m_spark);
 
         ShuffleboardTab tab = Shuffleboard.getTab("Shooter");
         tab.addNumber("Feeder Current", m_spark::getOutputCurrent);
+        tab.addNumber("Feeder Velocity", this::getEncoderVelocity);
     }
 
     public void setPWM(double pwm) {
@@ -41,6 +42,10 @@ public class Feeder extends SubsystemBase {
 
     public CANEncoder getHoodEncoder() {
         return m_spark.getAlternateEncoder(Constants.Shooter.HOOD_ENCODER_CPR);
+    }
+
+    public void tunePeriodic() {
+        m_spark.runPID();
     }
 
 }
