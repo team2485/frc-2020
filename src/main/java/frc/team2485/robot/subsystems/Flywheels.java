@@ -101,7 +101,7 @@ public class Flywheels extends SubsystemBase implements Tunable {
 
     @Override
     public void tunePeriodic() {
-        m_sparkLeft.runPID();
-//        m_sparkRight.runPID();
+        //m_sparkLeft.runPID();
+        m_sparkRight.runPID();
     }
 }

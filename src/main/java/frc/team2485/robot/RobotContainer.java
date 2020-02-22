@@ -99,7 +99,7 @@ public class RobotContainer {
         m_drivetrain.setDefaultCommand(new RunCommand(() -> {
                     m_drivetrain.curvatureDrive(
                             Deadband.cubicScaledDeadband(
-                                    m_jack.getTriggerAxis(GenericHID.Hand.kRight) - m_jack.getTriggerAxis(GenericHID.Hand.kLeft),
+                                    m_jack.getTriggerAxis(GenericHID.Hand.kLeft) - m_jack.getTriggerAxis(GenericHID.Hand.kRight),
                                     Constants.OI.XBOX_DEADBAND
                             ),
                             Deadband.cubicScaledDeadband(
