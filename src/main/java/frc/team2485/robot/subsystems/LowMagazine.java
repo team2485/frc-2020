@@ -38,7 +38,8 @@ public class LowMagazine extends SubsystemBase implements AbstractMagazinePart, 
         m_talon.configNominalOutputReverse(0);
         m_talon.configPeakOutputForward(1);
         m_talon.configPeakOutputReverse(-1);
-//        m_talon.setSensorPhase(true);
+        m_talon.setInverted(true);
+        m_talon.setSensorPhase(true);
 
         m_talon.setEncoderPosition(0);
 
@@ -59,6 +60,7 @@ public class LowMagazine extends SubsystemBase implements AbstractMagazinePart, 
         ShuffleboardTab tab = Shuffleboard.getTab("Magazine");
         tab.addNumber("Low Position", this::getEncoderPosition);
         tab.addNumber("Low Velocity", this::getEncoderVelocity);
+        tab.addNumber("Low Current", m_talon::getSupplyCurrent);
         tab.addNumber("Low Number of Balls", this::getNumBalls);
         tab.addBoolean("Entrance IR", this::getEntranceIR);
         tab.addBoolean("Transfer IR", this::getTransferIR);

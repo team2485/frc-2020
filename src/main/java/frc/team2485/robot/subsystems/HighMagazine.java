@@ -71,6 +71,7 @@ public class HighMagazine extends SubsystemBase implements AbstractMagazinePart,
         tab.add(this);
         tab.addNumber("High Position", this::getEncoderPosition);
         tab.addNumber("High Velocity", this::getEncoderVelocity);
+        tab.addNumber("High Current", m_talon::getSupplyCurrent);
         tab.addNumber("High Number of Balls", this::getNumBalls);
         tab.addBoolean("Exit IR", this::getExitIR);
     }
