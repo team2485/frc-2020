@@ -78,8 +78,13 @@ public final class Constants {
         public static final double HIGH_INDEX_BY_ONE_POS = 9;
 
         //replace below with actual number
-        public static final double LOW_BELT_PWM = -0.2;
+        public static final double LOW_BELT_PWM = -0.5;
         public static final double FAST_INTAKE_PWM = -0.5;
         public static final double NORMAL_BALL_INCREMENT_TIMEOUT = 0.2;
+
+        public static final String HIGH_MAGAZINE_POSITION_CONTROLLER_CONFIGURABLE_LABEL = "highMagazineTalonPositionController";
+        public static final String LOW_MAGAZINE_POSITION_CONTROLLER_CONFIGURABLE_LABEL = "lowMagazineTalonPositionController";
+
+        public static final String LOW_MAGAZINE_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL = "lowMagazineTalonVelocityController";
     }
 }

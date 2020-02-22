@@ -59,11 +59,16 @@ public class HighMagazine extends SubsystemBase implements AbstractMagazinePart,
 
         m_transferIR = transferIR;
 
-        SendableRegistry.add(m_talon, "High Magazine Talon");
-        RobotConfigs.getInstance().addConfigurable("highMagazineTalon", m_talon);
+        RobotConfigs.getInstance().addConfigurable(Constants.Magazine.HIGH_MAGAZINE_POSITION_CONTROLLER_CONFIGURABLE_LABEL, m_talon);
 
+        this.addToShuffleboard();
+    }
+
+    public void addToShuffleboard() {
+        SendableRegistry.add(m_talon, "High Magazine Talon");
 
         ShuffleboardTab tab = Shuffleboard.getTab("Magazine");
+        tab.add(this);
         tab.addNumber("High Position", this::getEncoderPosition);
         tab.addNumber("High Velocity", this::getEncoderVelocity);
         tab.addNumber("High Number of Balls", this::getNumBalls);

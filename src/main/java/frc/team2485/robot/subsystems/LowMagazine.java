@@ -32,8 +32,8 @@ public class LowMagazine extends SubsystemBase implements AbstractMagazinePart, 
      * Low magazine subystem, controlling the intake rollers and low belt.
      */
     public LowMagazine() {
-        m_talon = new PIDTalonSRX(Constants.Magazine.TALON_LOW_PORT, ControlMode.Position);
-        m_talon.setDistancePerPulse(1/4096.0);
+        m_talon = new PIDTalonSRX(Constants.Magazine.TALON_LOW_PORT, ControlMode.Velocity);
+        m_talon.setDistancePerPulse(Constants.Magazine.ROLLER_DIAMETER * 2 * Math.PI /4096.0);
         m_talon.configNominalOutputForward(0);
         m_talon.configNominalOutputReverse(0);
         m_talon.configPeakOutputForward(1);
@@ -50,11 +50,15 @@ public class LowMagazine extends SubsystemBase implements AbstractMagazinePart, 
         m_entranceIRLastVal = false;
 
         SendableRegistry.add(m_talon, "Low Magazine Talon");
-        RobotConfigs.getInstance().addConfigurable("lowMagazineTalon", m_talon);
+        RobotConfigs.getInstance().addConfigurable(Constants.Magazine.LOW_MAGAZINE_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL, m_talon);
 
+        this.addToShuffleboard();
+    }
+
+    public void addToShuffleboard() {
         ShuffleboardTab tab = Shuffleboard.getTab("Magazine");
         tab.addNumber("Low Position", this::getEncoderPosition);
-        tab.addNumber("Low Velocity", this::getEncoderPosition);
+        tab.addNumber("Low Velocity", this::getEncoderVelocity);
         tab.addNumber("Low Number of Balls", this::getNumBalls);
         tab.addBoolean("Entrance IR", this::getEntranceIR);
         tab.addBoolean("Transfer IR", this::getTransferIR);
@@ -92,7 +96,7 @@ public class LowMagazine extends SubsystemBase implements AbstractMagazinePart, 
      * @return belt encoder velocity
      */
     public double getEncoderVelocity() {
-        return Deadband.deadband(m_talon.getSensorCollection().getQuadraturePosition(), Constants.Magazine.ENCODER_VELOCITY_DEADBAND);
+        return m_talon.getEncoderVelocity();
     }
 
     /**

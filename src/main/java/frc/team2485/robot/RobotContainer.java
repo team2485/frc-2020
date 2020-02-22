@@ -9,13 +9,11 @@ package frc.team2485.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
-import frc.team2485.WarlordsLib.SmartDashboardHelper;
 import frc.team2485.WarlordsLib.oi.Deadband;
 import frc.team2485.WarlordsLib.oi.WL_XboxController;
-import frc.team2485.robot.commands.IncrementMagazine;
+import frc.team2485.robot.commands.IncrementHighMagazine;
 import frc.team2485.robot.subsystems.Drivetrain;
 import frc.team2485.robot.subsystems.HighMagazine;
 import frc.team2485.robot.subsystems.LowMagazine;
@@ -71,7 +69,7 @@ public class RobotContainer {
 
         m_suraj.getJoystickButton(XboxController.Button.kBumperLeft).whileHeld(
                 new ConditionalCommand(
-                        new IncrementMagazine(m_highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS),
+                        new IncrementHighMagazine(m_highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS),
                         new InstantCommand(() -> {
                             m_highMagazine.setPWM(0);
                         }),
@@ -81,7 +79,7 @@ public class RobotContainer {
                         }
                 )
         ).whenReleased(
-                new InstantCommand(()-> {
+                new InstantCommand(() -> {
                     m_highMagazine.setPWM(0);
                 })
         );
@@ -134,13 +132,13 @@ public class RobotContainer {
         );
 
         // Increment ball into shooter
-        m_suraj.getJoystickButton(XboxController.Button.kBumperRight).whileHeld(
-                new SequentialCommandGroup(
-                        new IncrementMagazine(m_lowMagazine, Constants.Magazine.LOW_INTAKE_BY_ONE_POS)
-                                .alongWith(new IncrementMagazine(m_lowMagazine, Constants.Magazine.LOW_INTAKE_BY_ONE_POS)),
-                        new WaitCommand(Constants.Magazine.NORMAL_BALL_INCREMENT_TIMEOUT)
-                )
-        );
+//        m_suraj.getJoystickButton(XboxController.Button.kBumperRight).whileHeld(
+//                new SequentialCommandGroup(
+//                        new IncrementHighMagazine(m_lowMagazine, Constants.Magazine.LOW_INTAKE_BY_ONE_POS)
+//                                .alongWith(new IncrementHighMagazine(m_lowMagazine, Constants.Magazine.LOW_INTAKE_BY_ONE_POS)),
+//                        new WaitCommand(Constants.Magazine.NORMAL_BALL_INCREMENT_TIMEOUT)
+//                )
+//        );
 
         SmartDashboard.putData("reset encoder", new InstantCommand(() -> {
             m_highMagazine.resetEncoder(0);
@@ -161,16 +159,14 @@ public class RobotContainer {
     }
 
     public void tunePeriodic(boolean enable) {
-//        m_lowMagazine.tunePeriodic(enable);
         if (enable) {
-            m_highMagazine.tunePeriodic();
+//            m_highMagazine.tunePeriodic();
+            m_lowMagazine.tunePeriodic();
         } else {
-//            m_lowMagazine.setPWM(-Deadband.linearScaledDeadband(m_jack.getY(GenericHID.Hand.kLeft), Constants.OI.XBOX_DEADBAND));
-            m_highMagazine.setPWM(-Deadband.linearScaledDeadband(m_jack.getY(GenericHID.Hand.kRight), Constants.OI.XBOX_DEADBAND));
+            m_lowMagazine.setPWM(-Deadband.linearScaledDeadband(m_suraj.getY(GenericHID.Hand.kLeft), Constants.OI.XBOX_DEADBAND));
+//            m_highMagazine.setPWM(-Deadband.linearScaledDeadband(m_jack.getY(GenericHID.Hand.kRight), Constants.OI.XBOX_DEADBAND));
 
             //            m_lowMagazine.setPWM(0);
         }
-
-        SmartDashboard.putNumber("Low Magazine Position", m_lowMagazine.getEncoderPosition());
     }
 }
