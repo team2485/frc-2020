@@ -65,6 +65,11 @@ public final class Constants {
         public static final double HOOD_BOTTOM_POSITION = 74;
         public static final double HOOD_TOP_POSITION = 45;
 
+        //both in radians relative to horizontal
+        //check if these should be in degrees or radians
+        public static final double HOOD_MAX_THETA = Math.PI/4;
+        public static final double HOOD_MIN_THETA = Math.toRadians(16);
+
 
         public static final int SPARK_FLYWHEEL_LEFT_PORT = 30;
         public static final double SPARK_FLYWHEEL_LEFT_MAX_CURRENT = 0;

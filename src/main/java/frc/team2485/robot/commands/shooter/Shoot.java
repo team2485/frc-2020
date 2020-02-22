@@ -10,7 +10,6 @@ import java.util.function.DoubleSupplier;
 
 public class Shoot extends ParallelCommandGroup {
 
-
     public Shoot(Flywheels flywheels, Hood hood, Limelight limelight, DoubleSupplier finalYVelocity) {
         super();
         double vfy = finalYVelocity.getAsDouble();
@@ -20,12 +19,14 @@ public class Shoot extends ParallelCommandGroup {
         double timeOfTrajectory = gettimeOfTraj(v0y, vfy, Constants.Shooter.GRAVITY_ACCELERATION_CONSTANT, Constants.Robot.HEIGHT_FROM_SHOOTER_TO_PORT); //finds time of trajectory based on y velocities, distances, and accelerations
         double vfx = getvfX(xDist, timeOfTrajectory); //finds final x velocity from time of trajectory and distance traversed
         double v0x = getv0xFromVfx(timeOfTrajectory, vfx, Constants.PowerCell.POWER_CELL_DRAG_COEFF, Constants.PowerCell.POWER_CELL_MASS); //finds initial x velocity using drag
+
         //double thetaApproach = getThetaApproach(vfx, vfy); //finds approach angle to port using final x and y velocities
 
         double thetaLaunch = getThetaLaunch(v0x, v0y); //finds launch angle using initial component velocities
+        double hoodSetpoint = getHoodSetpoint(thetaLaunch); //accounts for 90 degree shift
         double RPM = getRPM(v0x, thetaLaunch, Constants.PowerCell.POWER_CELL_RADIUS, Constants.Shooter.RPM_CONVERSION_FACTOR); //finds launch RPM using initial angle+velocity
 
-        this.addCommands(new SetFlywheels(flywheels, RPM * Constants.Shooter.FLYWHEEL_ENERGY_LOSS_FACTOR), new SetHood(hood, thetaLaunch));
+        this.addCommands(new SetFlywheels(flywheels, RPM * Constants.Shooter.FLYWHEEL_ENERGY_LOSS_FACTOR), new SetHood(hood, hoodSetpoint));
 
     }
 
@@ -75,8 +76,17 @@ public class Shoot extends ParallelCommandGroup {
     }
 
     public static double getThetaLaunch( double v0x, double v0y){
-        return Math.atan(v0y/v0x);
+        double theta = Math.atan(v0y/v0x);
+        if( theta > Constants.Shooter.HOOD_MAX_THETA){
+            return Constants.Shooter.HOOD_MAX_THETA;
+        } else if (theta < Constants.Shooter.HOOD_MIN_THETA){
+            return Constants.Shooter.HOOD_MIN_THETA;
+        } else {
+            return theta;
+        }
     }
+
+    public static double getHoodSetpoint(double theta){ return Math.PI/2 - theta; } //check if this should be Math.PI/2 or 90
 
     public static double getRPM(double v0x, double thetaLaunch, double radius, double rpmConversionFactor){
         double numerator = Math.sqrt( (v0x *v0x) + ((v0x * Math.tan(thetaLaunch)) * (v0x * Math.tan(thetaLaunch))));
