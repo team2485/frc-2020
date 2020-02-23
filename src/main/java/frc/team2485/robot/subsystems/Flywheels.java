@@ -25,6 +25,9 @@ public class Flywheels extends SubsystemBase implements Tunable {
         m_sparkRight.getEncoder().setVelocityConversionFactor(2);
         m_sparkLeft.getEncoder().setVelocityConversionFactor(2);
 
+        m_sparkLeft.enableVoltageCompensation(12);
+        m_sparkRight.enableVoltageCompensation(12);
+
         RobotConfigs.getInstance().addConfigurable("flywheelsLeftSparkVelocityController", m_sparkLeft);
         RobotConfigs.getInstance().addConfigurable("flywheelsRightSparkVelocityController", m_sparkRight);
 

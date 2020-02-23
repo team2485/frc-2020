@@ -99,10 +99,10 @@ public class RobotContainer {
     public void testPeriodic() {
         boolean enabled = SmartDashboard.getBoolean("Tune Enable", false);
         if (enabled) {
-            //m_flywheels.tunePeriodic();
-            m_feeder.tunePeriodic();
+            m_flywheels.tunePeriodic();
+            //m_feeder.tunePeriodic();
         } else {
-            m_feeder.setPWM(-Deadband.linearScaledDeadband(
+            m_flywheels.setPWM(-Deadband.linearScaledDeadband(
                     m_jack.getY(GenericHID.Hand.kRight), Constants.OI.XBOX_DEADBAND));
         }
     }
