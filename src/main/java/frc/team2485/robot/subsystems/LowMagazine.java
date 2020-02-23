@@ -15,7 +15,7 @@ import frc.team2485.WarlordsLib.oi.Deadband;
 import frc.team2485.WarlordsLib.robotConfigs.RobotConfigs;
 import frc.team2485.robot.Constants;
 
-public class LowMagazine extends SubsystemBase implements AbstractMagazinePart, Tunable {
+public class LowMagazine extends SubsystemBase implements Tunable {
 
     private PIDTalonSRX m_talon;
 
@@ -74,9 +74,9 @@ public class LowMagazine extends SubsystemBase implements AbstractMagazinePart, 
         m_talon.set(pwm);
     }
 
-    @Override
-    public boolean setPosition(double position) {
-        m_talon.set(position);
+
+    public boolean setVelocity(double velocity) {
+        m_talon.set(velocity);
         return m_talon.atTarget();
     }
 
@@ -88,8 +88,8 @@ public class LowMagazine extends SubsystemBase implements AbstractMagazinePart, 
         return m_talon.getEncoderPosition();
     }
 
-    @Override
-    public boolean atPositionSetpoint() {
+
+    public boolean atVelocitySetpoint() {
         return m_talon.atTarget();
     }
 

@@ -150,13 +150,13 @@ public class HighMagazine extends SubsystemBase implements AbstractMagazinePart,
             }
         }
 
-        if (!getExitIR() && getExitIR() != m_exitIRLastVal) {
-            if (getEncoderVelocity() < 0) {
-                m_numBalls--;
-            } else if (getEncoderVelocity() > 0 ) {
-                m_numBalls++;
-            }
-        }
+//        if (!getExitIR() && getExitIR() != m_exitIRLastVal) {
+//            if (getEncoderVelocity() < 0) {
+//                m_numBalls--;
+//            } else if (getEncoderVelocity() > 0 ) {
+//                m_numBalls++;
+//            }
+//        }
 
         m_exitIRLastVal = getExitIR();
         m_transferIRLastVal = getTransferIR();

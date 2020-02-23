@@ -55,9 +55,10 @@ public class RobotContainer {
                 }, m_drivetrain)
         );
 
+
 //        m_highMagazine.setDefaultCommand(
 //                new ConditionalCommand(
-//                        new IncrementMagazine(m_highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS),
+//                        new IncrementHighMagazine(m_highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS),
 //                        new InstantCommand(() -> {
 //                            m_highMagazine.setPWM(0);
 //                        }),
@@ -74,8 +75,9 @@ public class RobotContainer {
                             m_highMagazine.setPWM(0);
                         }),
                         () -> {
-//                            return m_highMagazine.getTransferIR() && m_highMagazine.getNumBalls() <= Constants.Magazine.HIGH_MAGAZINE_BALL_CAPACITY;
-                            return m_highMagazine.getTransferIR();
+                            return m_highMagazine.getTransferIR() && m_highMagazine.getNumBalls() < Constants.Magazine.HIGH_MAGAZINE_BALL_CAPACITY;
+//                            return m_highMagazine.g
+//                            etTransferIR();
                         }
                 )
         ).whenReleased(
@@ -84,16 +86,17 @@ public class RobotContainer {
                 })
         );
 
-        m_suraj.getJoystickButton(XboxController.Button.kBumperRight).whenHeld(
+        m_suraj.getJoystickButton(XboxController.Button.kBumperLeft).whileHeld(
                 new ConditionalCommand(
-                        new RunCommand(() -> {
+                        new InstantCommand(() -> {
                             m_lowMagazine.setPWM(Constants.Magazine.LOW_BELT_PWM);
                         }),
                         new InstantCommand(() -> {
                             m_lowMagazine.setPWM(0);
                         }),
                         () -> {
-                            return m_highMagazine.getNumBalls() <= Constants.Magazine.HIGH_MAGAZINE_BALL_CAPACITY && !m_lowMagazine.getTransferIR();
+                            return m_highMagazine.getNumBalls() < Constants.Magazine.HIGH_MAGAZINE_BALL_CAPACITY || !m_lowMagazine.getTransferIR();
+
                         }
                 )
         ).whenReleased(
@@ -105,40 +108,40 @@ public class RobotContainer {
         );
 
         // Feed to shooter
-        m_suraj.getJoystickButton(XboxController.Button.kA).whileHeld(
-                new RunCommand(
-                        () -> {
-                            m_lowMagazine.setPWM(Constants.Magazine.FAST_INTAKE_PWM);
-                            m_highMagazine.setPWM(Constants.Magazine.FAST_INTAKE_PWM);
-                        }
-                )
-        ).whenReleased(
-                new InstantCommand(
-                        () -> {
-                            m_lowMagazine.setPWM(0);
-                            m_highMagazine.setPWM(0);
-                        }
-                )
-        );
-
-        // Manual low magazine
-        m_suraj.getJoystickButton(XboxController.Button.kB).whileHeld(
-                new RunCommand(
-                        () -> {
-                            m_lowMagazine.setPWM(Deadband.linearScaledDeadband(m_suraj.getTriggerAxis(GenericHID.Hand.kRight), Constants.OI.XBOX_DEADBAND));
-
-                        }
-                )
-        );
-
-        // Increment ball into shooter
-//        m_suraj.getJoystickButton(XboxController.Button.kBumperRight).whileHeld(
-//                new SequentialCommandGroup(
-//                        new IncrementHighMagazine(m_lowMagazine, Constants.Magazine.LOW_INTAKE_BY_ONE_POS)
-//                                .alongWith(new IncrementHighMagazine(m_lowMagazine, Constants.Magazine.LOW_INTAKE_BY_ONE_POS)),
-//                        new WaitCommand(Constants.Magazine.NORMAL_BALL_INCREMENT_TIMEOUT)
+//        m_suraj.getJoystickButton(XboxController.Button.kA).whileHeld(
+//                new RunCommand(
+//                        () -> {
+//                            m_lowMagazine.setPWM(Constants.Magazine.FAST_INTAKE_PWM);
+//                            m_highMagazine.setPWM(Constants.Magazine.FAST_INTAKE_PWM);
+//                        }
+//                )
+//        ).whenReleased(
+//                new InstantCommand(
+//                        () -> {
+//                            m_lowMagazine.setPWM(0);
+//                            m_highMagazine.setPWM(0);
+//                        }
 //                )
 //        );
+
+        // Manual low magazine
+//        m_suraj.getJoystickButton(XboxController.Button.kB).whileHeld(
+//                new RunCommand(
+//                        () -> {
+//                            m_lowMagazine.setPWM(Deadband.linearScaledDeadband(m_suraj.getTriggerAxis(GenericHID.Hand.kRight), Constants.OI.XBOX_DEADBAND));
+//
+//                        }
+//                )
+//        );
+
+//         Increment ball into shooter
+        m_suraj.getJoystickButton(XboxController.Button.kBumperRight).whileHeld(
+                new SequentialCommandGroup(
+                        new InstantCommand(()->m_lowMagazine.setVelocity(6))
+                                .alongWith(new IncrementHighMagazine(m_highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS)),
+                        new WaitCommand(Constants.Magazine.NORMAL_BALL_INCREMENT_TIMEOUT)
+                )
+        );
 
         SmartDashboard.putData("reset encoder", new InstantCommand(() -> {
             m_highMagazine.resetEncoder(0);
@@ -164,7 +167,7 @@ public class RobotContainer {
             m_lowMagazine.tunePeriodic();
         } else {
             m_lowMagazine.setPWM(-Deadband.linearScaledDeadband(m_suraj.getY(GenericHID.Hand.kLeft), Constants.OI.XBOX_DEADBAND));
-//            m_highMagazine.setPWM(-Deadband.linearScaledDeadband(m_jack.getY(GenericHID.Hand.kRight), Constants.OI.XBOX_DEADBAND));
+            m_highMagazine.setPWM(-Deadband.linearScaledDeadband(m_suraj.getY(GenericHID.Hand.kRight), Constants.OI.XBOX_DEADBAND));
 
             //            m_lowMagazine.setPWM(0);
         }
