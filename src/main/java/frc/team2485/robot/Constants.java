@@ -26,7 +26,8 @@ public final class Constants {
          */
         public static final int SURAJ_PORT = 1;
 
-
+        public static final double SURAJ_LTRIGGER_THRESHOLD = 0.3;
+        public static final double SURAJ_RTRIGGER_THRESHOLD = 0.3;
 
         /**
          * Deadband threshold for all Xbox controllers.
@@ -80,11 +81,55 @@ public final class Constants {
         //replace below with actual number
         public static final double LOW_BELT_PWM = -0.7;
         public static final double FAST_INTAKE_PWM = -0.5;
-        public static final double NORMAL_BALL_INCREMENT_TIMEOUT = 0.2;
+        public static final double NORMAL_BALL_INCREMENT_TIMEOUT = 0.5;
 
         public static final String HIGH_MAGAZINE_POSITION_CONTROLLER_CONFIGURABLE_LABEL = "highMagazineTalonPositionController";
         public static final String LOW_MAGAZINE_POSITION_CONTROLLER_CONFIGURABLE_LABEL = "lowMagazineTalonPositionController";
 
         public static final String LOW_MAGAZINE_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL = "lowMagazineTalonVelocityController";
+    }
+
+    public static final class Shooter {
+        public static final int SPARK_HOOD_PORT = 32;
+        public static final double SPARK_HOOD_MAX_CURRENT = 0;
+
+        public static final int HOOD_ENCODER_CPR = 1000 * 4; //4x encoding
+        public static final double HOOD_DISTANCE_PER_REVOLUTION = 360;
+
+        // these are relative to the vertical axis
+        public static final double HOOD_BOTTOM_POSITION = 74;
+        public static final double HOOD_TOP_POSITION = 45;
+
+        //both in radians relative to horizontal
+        //check if these should be in degrees or radians
+        public static final double HOOD_MAX_THETA = Math.PI/4;
+        public static final double HOOD_MIN_THETA = Math.toRadians(16);
+
+
+        public static final int SPARK_FLYWHEEL_LEFT_PORT = 30;
+        public static final double SPARK_FLYWHEEL_LEFT_MAX_CURRENT = 0;
+
+        public static final int SPARK_FLYWHEEL_RIGHT_PORT = 31;
+        public static final double SPARK_FLYWHEEL_RIGHT_MAX_CURRENT = 0;
+
+        public static final int SPARK_FEEDER_PORT = 33;
+        public static final int SPARK_FEEDER_MAX_CURRENT = 60; //keep this
+
+        public static final double RPM_CONVERSION_FACTOR = 0.10472;
+        public static final double FLYWHEEL_ENERGY_LOSS_FACTOR = 1;
+        public static final double GRAVITY_ACCELERATION_CONSTANT = 9.8; //meters per second
+    }
+
+    public static final class PowerCell {
+        public static final double POWER_CELL_MASS = 0.141748; //kg
+        public static final double POWER_CELL_DRAG_COEFF = 0.116;
+        public static final double POWER_CELL_RADIUS = 0.0508; //meters
+    }
+
+    public static final class Robot {
+        public static final double HEIGHT_FROM_LL_TO_PORT = 1.58114915; //meters
+        public static final double HEIGHT_FROM_SHOOTER_TO_PORT = 1.46685; //meters
+        public static final double LIMELIGHT_TY_DEFAULT_VALUE = 15; //angle...change?
+
     }
 }
