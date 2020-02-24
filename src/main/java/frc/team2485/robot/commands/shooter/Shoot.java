@@ -1,5 +1,8 @@
 package frc.team2485.robot.commands.shooter;
 
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.team2485.WarlordsLib.Limelight;
 import frc.team2485.robot.Constants;
@@ -10,10 +13,30 @@ import java.util.function.DoubleSupplier;
 
 public class Shoot extends ParallelCommandGroup {
 
+    private double hoodSetpoint;
+    private double RPMSetpoint;
+    private DoubleSupplier  finalYVelocity;
+    private Limelight limelight;
+    private Hood hood;
+    private Flywheels flywheels;
     public Shoot(Flywheels flywheels, Hood hood, Limelight limelight, DoubleSupplier finalYVelocity) {
         super();
+        this.flywheels = flywheels;
+        this.hood = hood;
+        this.limelight = limelight;
+        this.finalYVelocity = finalYVelocity;
+        this.hoodSetpoint = 0;
+        this.RPMSetpoint = 0;
+        this.addCommands(new SetFlywheels(flywheels, ()->RPMSetpoint * Constants.Shooter.FLYWHEEL_ENERGY_LOSS_FACTOR), new SetHood(hood, ()->hoodSetpoint));
+
+
+        this.addToShuffleboard();
+    }
+
+    public void execute() {
+        super.execute();
         double vfy = finalYVelocity.getAsDouble();
-        double ty = limelight.getTargetVerticalOffset(Constants.Robot.LIMELIGHT_TY_DEFAULT_VALUE); //gets vertical angle from limelight
+        double ty = limelight.getTargetVerticalOffset(Constants.Robot.LIMELIGHT_TY_DEFAULT_VALUE) + Constants.Shooter.LIMELIGHT_ANGLE_FROM_HORIZONTAL; //gets vertical angle from limelight
         double xDist = getX(ty, Constants.Robot.HEIGHT_FROM_LL_TO_PORT); //finds x distance (horizontal) to port
         double v0y = getv0y(vfy, Constants.Robot.HEIGHT_FROM_LL_TO_PORT, Constants.Shooter.GRAVITY_ACCELERATION_CONSTANT); //finds initial y velocity based on final y velocity and height changes
         double timeOfTrajectory = gettimeOfTraj(v0y, vfy, Constants.Shooter.GRAVITY_ACCELERATION_CONSTANT, Constants.Robot.HEIGHT_FROM_SHOOTER_TO_PORT); //finds time of trajectory based on y velocities, distances, and accelerations
@@ -23,11 +46,16 @@ public class Shoot extends ParallelCommandGroup {
         //double thetaApproach = getThetaApproach(vfx, vfy); //finds approach angle to port using final x and y velocities
 
         double thetaLaunch = getThetaLaunch(v0x, v0y); //finds launch angle using initial component velocities
-        double hoodSetpoint = getHoodSetpoint(thetaLaunch); //accounts for 90 degree shift
-        double RPM = getRPM(v0x, thetaLaunch, Constants.PowerCell.POWER_CELL_RADIUS, Constants.Shooter.RPM_CONVERSION_FACTOR); //finds launch RPM using initial angle+velocity
+        hoodSetpoint = Math.toDegrees(getHoodSetpoint(thetaLaunch)); //accounts for 90 degree shift
 
-        this.addCommands(new SetFlywheels(flywheels, RPM * Constants.Shooter.FLYWHEEL_ENERGY_LOSS_FACTOR), new SetHood(hood, hoodSetpoint));
+        RPMSetpoint= - getRPM(v0x, thetaLaunch, Constants.PowerCell.POWER_CELL_RADIUS, Constants.Shooter.RPM_CONVERSION_FACTOR); //finds launch RPM using initial angle+velocity
 
+    }
+
+    public void addToShuffleboard() {
+        ShuffleboardTab tab = Shuffleboard.getTab("Shooter");
+        tab.addNumber(" Angle Setpoint", ()->hoodSetpoint);
+        tab.addNumber("RPM Setpoint", ()->RPMSetpoint);
     }
 
     private static double getX(double ty, double LLtoPort){

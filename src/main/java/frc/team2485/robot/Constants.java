@@ -11,6 +11,8 @@ public final class Constants {
 
     public static final String CONFIGS_FILE = "/home/lvuser/constants.csv";
 
+    public static final boolean DEBUG_MODE = true;
+
     /**
      * Constants specific to operator interface
      */
@@ -36,6 +38,8 @@ public final class Constants {
     }
 
     public static final class Drivetrain {
+
+        public static final boolean TUNING_MODE = false;
 
         public static final int SPARK_LEFT_PORT_MASTER = 10;
         public static final int SPARK_LEFT_PORT_SLAVE_2 = 11;
@@ -118,6 +122,7 @@ public final class Constants {
         public static final double RPM_CONVERSION_FACTOR = 0.10472;
         public static final double FLYWHEEL_ENERGY_LOSS_FACTOR = 1;
         public static final double GRAVITY_ACCELERATION_CONSTANT = 9.8; //meters per second
+        public static final double LIMELIGHT_ANGLE_FROM_HORIZONTAL = 14.34; //degrees
     }
 
     public static final class PowerCell {
@@ -130,6 +135,29 @@ public final class Constants {
         public static final double HEIGHT_FROM_LL_TO_PORT = 1.58114915; //meters
         public static final double HEIGHT_FROM_SHOOTER_TO_PORT = 1.46685; //meters
         public static final double LIMELIGHT_TY_DEFAULT_VALUE = 15; //angle...change?
+    }
 
+    public static final class Turret {
+
+        public static final boolean TUNING_MODE = false;
+
+        public static final int TALON_PORT = 25;
+
+        /**
+         * counts per revolution of the encoder
+         */
+        public static final int ENCODER_CPR = 4096;
+
+        public static final double TURRET_SPEED = 360.0 * 0.02; // degrees per ~20 milliseconds
+
+        public static final double MIN_POSITION = -135; // degrees
+        public static final double MAX_POSITION = 170; // degrees
+
+        /**
+         * In manual mode the max pwm will linearly clamp starting at the buffer zone size before the min or max positions.
+         */
+        public static final double BUFFER_ZONE_SIZE = 10; // degrees
+
+        public static final double TURRET_PID_TOLERANCE = 2; // degrees
     }
 }

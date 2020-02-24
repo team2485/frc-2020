@@ -29,9 +29,14 @@ public class Hood extends SubsystemBase {
 
 //        SendableRegistry.add(m_spark, "Hood Spark");
 //        RobotConfigs.getInstance().addConfigurable("hoodSpark", m_spark);
+        this.addToShuffleboard();
 
+    }
+
+    public void addToShuffleboard() {
         ShuffleboardTab tab = Shuffleboard.getTab("Shooter");
         tab.addNumber("Hood Encoder Position", this::getEncoderPosition);
+
     }
 
     public void setPWM(double pwm) {

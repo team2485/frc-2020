@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.team2485.WarlordsLib.SmartDashboardHelper;
 import frc.team2485.WarlordsLib.oi.Deadband;
 import frc.team2485.WarlordsLib.robotConfigs.RobotConfigs;
+import frc.team2485.robot.commands.shooter.SetFlywheels;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
@@ -43,7 +44,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    //CHANGE THIS LATER
+    m_autonomousCommand = null;
 
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();

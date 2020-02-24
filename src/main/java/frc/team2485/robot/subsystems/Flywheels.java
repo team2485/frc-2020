@@ -31,16 +31,21 @@ public class Flywheels extends SubsystemBase implements Tunable {
         RobotConfigs.getInstance().addConfigurable("flywheelsLeftSparkVelocityController", m_sparkLeft);
         RobotConfigs.getInstance().addConfigurable("flywheelsRightSparkVelocityController", m_sparkRight);
 
+     this.addToShuffleboard();
+
+
+
+    }
+
+    private void addToShuffleboard() {
         ShuffleboardTab tab = Shuffleboard.getTab("Shooter");
+        tab.addNumber("Flywheels Velocity Setpoint", m_sparkLeft::getSetpoint);
         tab.addNumber("Left Flywheel Velocity", this::getLeftEncoderVelocity);
         tab.addNumber("Right Flywheel Velocity", this::getRightEncoderVelocity);
         tab.addNumber("Left Flywheel Current", m_sparkLeft::getOutputCurrent);
         tab.addNumber("Right Flywheel Current", m_sparkRight::getOutputCurrent);
-
-
-        SendableRegistry.add(m_sparkLeft, "Flywheels Left Spark");
-        SendableRegistry.add(m_sparkRight, "Flywheels Right Spark");
-
+        tab.add("Flywheels Left Spark", m_sparkLeft);
+        tab.add("Flywheels Right Spark", m_sparkRight);
     }
 
     private void setLeftPWM(double pwm) {

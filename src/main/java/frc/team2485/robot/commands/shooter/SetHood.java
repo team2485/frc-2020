@@ -1,5 +1,7 @@
 package frc.team2485.robot.commands.shooter;
 
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.team2485.WarlordsLib.Tunable;
@@ -16,8 +18,8 @@ public class SetHood extends CommandBase implements Tunable {
     private DoubleSupplier m_angle;
     private boolean m_finishWhenAtTarget;
 
-    public SetHood(Hood hood, double angle) {
-        this(hood, () -> angle, true);
+    public SetHood(Hood hood, DoubleSupplier angle) {
+        this(hood,  angle, true);
     }
 
     public SetHood(Hood hood, DoubleSupplier angle, boolean finishWhenAtTarget) {
@@ -28,8 +30,13 @@ public class SetHood extends CommandBase implements Tunable {
         this.m_controller = new WL_PIDController();
         this.m_finishWhenAtTarget = finishWhenAtTarget;
 
-        SendableRegistry.add(m_controller, "Hood Position Controller");
+        this.addToShuffleboard();
         RobotConfigs.getInstance().addConfigurable("hoodPositionController", m_controller);
+    }
+
+    public void addToShuffleboard() {
+        SendableRegistry.add(m_controller, "Hood Position Controller");
+
     }
 
     @Override

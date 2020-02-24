@@ -1,7 +1,6 @@
 package frc.team2485.robot.subsystems;
 
-import com.revrobotics.AlternateEncoderType;
-import com.revrobotics.CANEncoder;
+import com.ctre.phoenix.sensors.PigeonIMU;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -25,6 +24,10 @@ public class Drivetrain extends SubsystemBase {
 
     private SparkMaxAlternateEncoder m_encoderLeft;
     private SparkMaxAlternateEncoder m_encoderRight;
+
+
+    private PigeonIMU m_pigeon;
+
 
     public Drivetrain() {
         this.m_sparkLeft1Master = new WL_SparkMax(Constants.Drivetrain.SPARK_LEFT_PORT_MASTER);
@@ -52,8 +55,10 @@ public class Drivetrain extends SubsystemBase {
         this.m_encoderLeft.setDistancePerRevolution(2 * Math.PI * Constants.Drivetrain.WHEEL_RADIUS);
         this.m_encoderRight.setDistancePerRevolution(2 * Math.PI * Constants.Drivetrain.WHEEL_RADIUS);
 
-        SmartDashboard.putData(this);
+        this.m_pigeon = new PigeonIMU(0);
+
         SendableRegistry.add(this.m_drive, "DifferentialDrive");
+        SmartDashboard.putData(this);
     }
 
     public void curvatureDrive(double throttle, double steering, boolean isQuickTurn) {
@@ -70,10 +75,11 @@ public class Drivetrain extends SubsystemBase {
         m_encoderLeft.setPosition(posRight);
     }
 
+    public double getHeading() {
+        return - m_pigeon.getFusedHeading();
+    }
+
     @Override
     public void periodic() {
     }
-
-
-
 }
