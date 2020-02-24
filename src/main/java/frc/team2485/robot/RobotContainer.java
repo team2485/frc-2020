@@ -102,7 +102,7 @@ public class RobotContainer {
 
         m_jack.getJoystickButton(XboxController.Button.kBumperLeft).whileHeld(
                 new ConditionalCommand(
-                        new IncrementHighMagazine(m_highMagazine, -Constants.Magazine.HIGH_INDEX_BY_ONE_POS),
+                        new IncrementHighMagazine(m_highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS),
                         new InstantCommand(() -> {
                             m_highMagazine.setPWM(0);
                         }),
