@@ -285,20 +285,19 @@ public class RobotContainer {
 
     }
 
-//    public Command getAutonomousCommand() {
-//        // temporary!
-//        m_autoCommand = new RunCommand(() -> {
-//
-//        });
-//
-//        return m_autoCommand;
-//    }
+    public Command getAutonomousCommand() {
+        // temporary!
+        m_autoCommand = new RunCommand(() -> {
+
+        });
+
+        return m_autoCommand;
+    }
 
 
     public void testInit() {
 
         SmartDashboard.putBoolean("Tune Enable", false);
-        m_flywheels.tuneInit();
         SmartDashboard.putBoolean("Tune Enable", false);
         SmartDashboard.putBoolean("Zero Turret", false);
         SmartDashboard.putBoolean("Zero Gyro", false);
@@ -306,6 +305,7 @@ public class RobotContainer {
 
     public void testPeriodic() {
         boolean enabled = SmartDashboard.getBoolean("Tune Enable", false);
+
         if (SmartDashboard.getBoolean("Zero Turret", false)) {
             m_turret.resetEncoderPosition(0);
             SmartDashboard.putBoolean("Zero Turret", false);
@@ -326,7 +326,5 @@ public class RobotContainer {
             m_highMagazine.setPWM(-Deadband.linearScaledDeadband(m_suraj.getY(GenericHID.Hand.kRight), Constants.OI.XBOX_DEADBAND));
             m_turret.setUnclampedPWM(-Deadband.linearScaledDeadband(m_jack.getY(GenericHID.Hand.kLeft), Constants.OI.XBOX_DEADBAND));
         }
-
-
     }
 }

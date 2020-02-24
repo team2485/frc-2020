@@ -14,12 +14,13 @@ import frc.team2485.robot.Constants;
 
 
 public class Hood extends SubsystemBase {
+
     private WL_SparkMax m_spark;
     private CANEncoder m_hoodEncoder;
 
     public Hood(CANEncoder hoodEncoder) {
         this.m_spark = new WL_SparkMax(Constants.Shooter.SPARK_HOOD_PORT);
-        this.m_spark.enableVoltageCompensation(12);
+        this.m_spark.enableVoltageCompensation(Constants.NOMINAL_VOLTAGE);
 
         this.m_spark.getForwardLimitSwitch(CANDigitalInput.LimitSwitchPolarity.kNormallyClosed).enableLimitSwitch(true);
         this.m_spark.getReverseLimitSwitch(CANDigitalInput.LimitSwitchPolarity.kNormallyClosed).enableLimitSwitch(true);
@@ -27,16 +28,13 @@ public class Hood extends SubsystemBase {
         this.m_hoodEncoder = hoodEncoder;
         this.m_hoodEncoder.setPositionConversionFactor(Constants.Shooter.HOOD_DISTANCE_PER_REVOLUTION);
 
-//        SendableRegistry.add(m_spark, "Hood Spark");
-//        RobotConfigs.getInstance().addConfigurable("hoodSpark", m_spark);
         this.addToShuffleboard();
 
     }
 
     public void addToShuffleboard() {
-        ShuffleboardTab tab = Shuffleboard.getTab("Shooter");
+        ShuffleboardTab tab = Shuffleboard.getTab(Constants.Shooter.TAB_NAME);
         tab.addNumber("Hood Encoder Position", this::getEncoderPosition);
-
     }
 
     public void setPWM(double pwm) {

@@ -14,6 +14,7 @@ import frc.team2485.WarlordsLib.robotConfigs.RobotConfigs;
 import frc.team2485.robot.Constants;
 
 public class Flywheels extends SubsystemBase implements Tunable {
+
     private PIDSparkMax m_sparkLeft;
     private PIDSparkMax m_sparkRight;
 
@@ -25,20 +26,17 @@ public class Flywheels extends SubsystemBase implements Tunable {
         m_sparkRight.getEncoder().setVelocityConversionFactor(2);
         m_sparkLeft.getEncoder().setVelocityConversionFactor(2);
 
-        m_sparkLeft.enableVoltageCompensation(12);
-        m_sparkRight.enableVoltageCompensation(12);
+        m_sparkLeft.enableVoltageCompensation(Constants.NOMINAL_VOLTAGE);
+        m_sparkRight.enableVoltageCompensation(Constants.NOMINAL_VOLTAGE);
 
-        RobotConfigs.getInstance().addConfigurable("flywheelsLeftSparkVelocityController", m_sparkLeft);
-        RobotConfigs.getInstance().addConfigurable("flywheelsRightSparkVelocityController", m_sparkRight);
+        RobotConfigs.getInstance().addConfigurable(Constants.Shooter.LEFT_FLYWHEEL_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL, m_sparkLeft);
+        RobotConfigs.getInstance().addConfigurable(Constants.Shooter.RIGHT_FLYWHEEL_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL, m_sparkRight);
 
-     this.addToShuffleboard();
-
-
-
+        this.addToShuffleboard();
     }
 
     private void addToShuffleboard() {
-        ShuffleboardTab tab = Shuffleboard.getTab("Shooter");
+        ShuffleboardTab tab = Shuffleboard.getTab(Constants.Shooter.TAB_NAME);
         tab.addNumber("Flywheels Velocity Setpoint", m_sparkLeft::getSetpoint);
         tab.addNumber("Left Flywheel Velocity", this::getLeftEncoderVelocity);
         tab.addNumber("Right Flywheel Velocity", this::getRightEncoderVelocity);
@@ -56,20 +54,13 @@ public class Flywheels extends SubsystemBase implements Tunable {
         m_sparkRight.set(pwm);
     }
 
-    /**
-     *
-     * @param pwm
-     * @param spinFactor factor that the right side is multiplied by to produce spin
-     *                   > 1 meaning spins left
-     *                   < 1 spins right
-     */
-    public void setPWM(double pwm, double spinFactor) {
-        setLeftPWM(pwm);
-        setRightPWM(pwm * spinFactor);
+    public void setPWM(double leftPWM, double rightPWM) {
+        setLeftPWM(leftPWM);
+        setRightPWM(rightPWM);
     }
 
     public void setPWM(double pwm) {
-        setPWM(pwm, 1);
+        setPWM(pwm, pwm);
     }
 
     private void setLeftVelocity(double velocity) {
@@ -81,12 +72,12 @@ public class Flywheels extends SubsystemBase implements Tunable {
     }
 
     public void setVelocity(double velocity) {
-        setVelocity(velocity, 1);
+        setVelocity(velocity, velocity);
     }
 
-    public void setVelocity(double velocity, double spinFactor) {
-        setLeftVelocity(velocity);
-        setRightVelocity(velocity * spinFactor);
+    public void setVelocity(double leftVelocity, double rightVelocity) {
+        setLeftVelocity(leftVelocity);
+        setRightVelocity(rightVelocity);
     }
 
     public double getLeftEncoderVelocity() {
@@ -96,15 +87,10 @@ public class Flywheels extends SubsystemBase implements Tunable {
     public double getRightEncoderVelocity() {
         return m_sparkRight.getEncoder().getVelocity();
     }
-    
+
 
     @Override
     public void periodic() {
-    }
-
-    public void tuneInit() {
-
-//        SendableRegistry.add(m_sparkRight, "Flywheels Right Sparks");
     }
 
     @Override

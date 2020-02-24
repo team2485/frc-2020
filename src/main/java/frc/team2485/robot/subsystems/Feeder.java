@@ -4,26 +4,24 @@ import com.revrobotics.CANEncoder;
 import com.revrobotics.ControlType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team2485.WarlordsLib.motorcontrol.PIDSparkMax;
-import frc.team2485.WarlordsLib.motorcontrol.WL_SparkMax;
-import frc.team2485.WarlordsLib.motorcontrol.currentmanagement.CurrentSparkMax;
 import frc.team2485.WarlordsLib.robotConfigs.RobotConfigs;
 import frc.team2485.robot.Constants;
+import frc.team2485.robot.commands.shooter.Shoot;
 
 public class Feeder extends SubsystemBase {
     private PIDSparkMax m_spark;
 
     public Feeder() {
         this.m_spark = new PIDSparkMax(Constants.Shooter.SPARK_FEEDER_PORT, ControlType.kVelocity);
-        this.m_spark.setSmartCurrentLimit(Constants.Shooter.SPARK_FEEDER_MAX_CURRENT, 50);
+        this.m_spark.setSmartCurrentLimit(Constants.Shooter.SPARK_FEEDER_MAX_STALL_CURRENT);
 
-        SendableRegistry.add(m_spark, "Feeder Spark");
-        RobotConfigs.getInstance().addConfigurable("feederSpark", m_spark);
+        RobotConfigs.getInstance().addConfigurable(Constants.Shooter.FEEDER_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL, m_spark);
+    }
 
-        ShuffleboardTab tab = Shuffleboard.getTab("Shooter");
+    public void addToShuffleboard() {
+        ShuffleboardTab tab = Shuffleboard.getTab(Constants.Shooter.TAB_NAME);
         tab.addNumber("Feeder Current", m_spark::getOutputCurrent);
         tab.addNumber("Feeder Velocity", this::getEncoderVelocity);
     }

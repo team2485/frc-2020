@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: com.ctre.phoenix:api-java:5.18.2">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.ctre.phoenix/api-java/5.18.2/c05b410d32fc78144765e8e2d88bc570c4d073dd/api-java-5.18.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.ctre.phoenix/api-java/5.18.2/4ebbb28dc220e7d487aa2af06f6e011af03b0997/api-java-5.18.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

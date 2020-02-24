@@ -26,7 +26,7 @@ public class LowMagazine extends SubsystemBase implements Tunable {
      */
     private int m_numBalls;
 
-    private boolean m_entranceIRLastVal, m_transferIRLastVal, m_exitIRLastVal;
+    private boolean m_entranceIRLastVal, m_transferIRLastVal;
 
     /**
      * Low magazine subystem, controlling the intake rollers and low belt.
@@ -38,6 +38,7 @@ public class LowMagazine extends SubsystemBase implements Tunable {
         m_talon.configNominalOutputReverse(0);
         m_talon.configPeakOutputForward(1);
         m_talon.configPeakOutputReverse(-1);
+        m_talon.enableVoltageCompensation(Constants.NOMINAL_VOLTAGE);
         m_talon.setInverted(true);
         m_talon.setSensorPhase(true);
 
@@ -50,14 +51,14 @@ public class LowMagazine extends SubsystemBase implements Tunable {
 
         m_entranceIRLastVal = false;
 
-        SendableRegistry.add(m_talon, "Low Magazine Talon");
         RobotConfigs.getInstance().addConfigurable(Constants.Magazine.LOW_MAGAZINE_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL, m_talon);
 
         this.addToShuffleboard();
     }
 
     public void addToShuffleboard() {
-        ShuffleboardTab tab = Shuffleboard.getTab("Magazine");
+        SendableRegistry.add(m_talon, "Low Magazine Talon");
+        ShuffleboardTab tab = Shuffleboard.getTab(Constants.Magazine.TAB_NAME);
         tab.addNumber("Low Position", this::getEncoderPosition);
         tab.addNumber("Low Velocity", this::getEncoderVelocity);
         tab.addNumber("Low Current", m_talon::getSupplyCurrent);

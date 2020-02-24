@@ -33,6 +33,7 @@ public class Turret extends SubsystemBase implements Tunable {
         m_talon.setFeedbackDeviceType(FeedbackDevice.CTRE_MagEncoder_Relative);
         m_talon.setSelectedSensorPosition(m_talon.getSensorCollection().getPulseWidthPosition());
         m_talon.setDistancePerPulse(360.0 / Constants.Turret.ENCODER_CPR); // convert to degrees
+        m_talon.enableVoltageCompensation(Constants.NOMINAL_VOLTAGE);
         m_talon.setTolerance(Constants.Turret.TURRET_PID_TOLERANCE);
 
         m_limelight = new Limelight();
@@ -42,17 +43,15 @@ public class Turret extends SubsystemBase implements Tunable {
 
         BUFFER_ZONE_SIZE = Constants.Turret.BUFFER_ZONE_SIZE;
 
-        RobotConfigs.getInstance().addConfigurable("Turret TalonSRX PID", m_talon);
+        RobotConfigs.getInstance().addConfigurable(Constants.Turret.POSITION_CONTROLLER_CONFIGURABLE_LABEL, m_talon);
+    }
 
+    public void addToShuffleboard() {
         SendableRegistry.add(m_talon, "Turret Talon");
-
-        SmartDashboard.putData(this);
-
-        ShuffleboardTab tab = Shuffleboard.getTab("Turret");
+        ShuffleboardTab tab = Shuffleboard.getTab(Constants.Turret.TAB_NAME);
         tab.add(this);
         tab.addNumber("Encoder Position", this::getEncoderPosition);
         tab.addNumber("Current", m_talon::getStatorCurrent);
-
     }
 
     /**

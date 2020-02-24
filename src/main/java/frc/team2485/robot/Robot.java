@@ -45,7 +45,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     //CHANGE THIS LATER
-    m_autonomousCommand = null;
+    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
@@ -54,7 +54,6 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousPeriodic() {
-
 
 
   }
@@ -69,13 +68,11 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
 
-
   }
 
   @Override
   public void testInit() {
     CommandScheduler.getInstance().cancelAll();
-    SmartDashboard.putBoolean("PID Enabled", false);
     m_robotContainer.testInit();
   }
 

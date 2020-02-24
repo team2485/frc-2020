@@ -19,7 +19,7 @@ import frc.team2485.robot.Constants;
 
 import java.util.function.BooleanSupplier;
 
-public class HighMagazine extends SubsystemBase implements AbstractMagazinePart, Tunable {
+public class HighMagazine extends SubsystemBase implements Tunable {
 
     private PIDTalonSRX m_talon;
 
@@ -50,8 +50,8 @@ public class HighMagazine extends SubsystemBase implements AbstractMagazinePart,
         m_talon.configPeakOutputForward(1);
         m_talon.configPeakOutputReverse(-1);
         m_talon.setSelectedSensorPosition(0);
+        m_talon.enableVoltageCompensation(Constants.NOMINAL_VOLTAGE);
         m_talon.setTolerance(1);
-
 
         m_exitIR = new DigitalInput(Constants.Magazine.EXIT_IR_PORT);
 
@@ -67,7 +67,7 @@ public class HighMagazine extends SubsystemBase implements AbstractMagazinePart,
     public void addToShuffleboard() {
         SendableRegistry.add(m_talon, "High Magazine Talon");
 
-        ShuffleboardTab tab = Shuffleboard.getTab("Magazine");
+        ShuffleboardTab tab = Shuffleboard.getTab(Constants.Magazine.TAB_NAME);
         tab.add(this);
         tab.addNumber("High Position", this::getEncoderPosition);
         tab.addNumber("High Velocity", this::getEncoderVelocity);
@@ -84,18 +84,15 @@ public class HighMagazine extends SubsystemBase implements AbstractMagazinePart,
         m_talon.set(pwm);
     }
 
-    @Override
     public boolean setPosition(double position) {
         m_talon.runPID(position);
         return m_talon.atTarget();
     }
 
-    @Override
     public boolean atPositionSetpoint() {
         return m_talon.atTarget();
     }
 
-    @Override
     /**
      *
      * @return belt encoder position
