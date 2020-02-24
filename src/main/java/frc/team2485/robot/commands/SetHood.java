@@ -1,4 +1,4 @@
-package frc.team2485.robot.commands.shooter;
+package frc.team2485.robot.commands;
 
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -18,6 +18,10 @@ public class SetHood extends CommandBase implements Tunable {
     private WL_PIDController m_controller;
     private DoubleSupplier m_angle;
     private boolean m_finishWhenAtTarget;
+
+    public SetHood(Hood hood, double angle) {
+        this(hood, () -> angle, true);
+    }
 
     public SetHood(Hood hood, DoubleSupplier angle) {
         this(hood,  angle, true);

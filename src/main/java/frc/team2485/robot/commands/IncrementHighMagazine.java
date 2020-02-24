@@ -18,7 +18,7 @@ public class IncrementHighMagazine extends CommandBase {
 
     @Override
     public void initialize() {
-        m_distanceSetpoint = m_highMagazine.getEncoderPosition() - m_distance;
+        m_distanceSetpoint = m_highMagazine.getEncoderPosition() + m_distance;
     }
 
     @Override

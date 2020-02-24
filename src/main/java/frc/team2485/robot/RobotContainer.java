@@ -22,20 +22,12 @@ import frc.team2485.robot.subsystems.LowMagazine;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.team2485.WarlordsLib.Limelight;
-import frc.team2485.WarlordsLib.SmartDashboardHelper;
-import frc.team2485.WarlordsLib.oi.Deadband;
-import frc.team2485.WarlordsLib.oi.WL_XboxController;
-import frc.team2485.robot.commands.shooter.SetHood;
-import frc.team2485.robot.commands.shooter.Shoot;
+import frc.team2485.robot.commands.SetHood;
+import frc.team2485.robot.commands.Shoot;
 import frc.team2485.robot.subsystems.Feeder;
 import frc.team2485.robot.subsystems.Flywheels;
 import frc.team2485.robot.subsystems.Hood;
 
-import java.time.Instant;
-import frc.team2485.WarlordsLib.SmartDashboardHelper;
-import frc.team2485.WarlordsLib.Tunable;
-import frc.team2485.WarlordsLib.oi.Deadband;
-import frc.team2485.WarlordsLib.oi.WL_XboxController;
 import frc.team2485.robot.commands.TurretFieldCentricAdjust;
 import frc.team2485.robot.commands.TurretSetAngle;
 import frc.team2485.robot.subsystems.Turret;
@@ -51,8 +43,6 @@ public class RobotContainer {
     private Feeder m_feeder;
     private Flywheels m_flywheels;
     private Hood m_hood;
-    private Limelight m_limelight;
-
 
     SetHood setHood;
     //    private Drivetrain m_drivetrain;
@@ -72,9 +62,6 @@ public class RobotContainer {
         m_feeder = new Feeder();
         m_flywheels = new Flywheels();
         m_hood = new Hood(m_feeder.getHoodEncoder());
-        m_limelight = new Limelight();
-        m_limelight.setLedMode(Limelight.LedMode.ON);
-
 
         m_jack = new WL_XboxController(Constants.OI.JACK_PORT);
         m_suraj = new WL_XboxController(Constants.OI.SURAJ_PORT);
@@ -115,7 +102,7 @@ public class RobotContainer {
 
         m_jack.getJoystickButton(XboxController.Button.kBumperLeft).whileHeld(
                 new ConditionalCommand(
-                        new IncrementHighMagazine(m_highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS),
+                        new IncrementHighMagazine(m_highMagazine, -Constants.Magazine.HIGH_INDEX_BY_ONE_POS),
                         new InstantCommand(() -> {
                             m_highMagazine.setPWM(0);
                         }),
@@ -249,9 +236,6 @@ public class RobotContainer {
             m_highMagazine.resetEncoder(0);
         }));
 
-
-        setHood = new SetHood(m_hood, ()->0);
-
         m_suraj.getJoystickButton(XboxController.Button.kBumperLeft).whenHeld(new ConditionalCommand(
                 new TurretSetAngle(m_turret, m_turret.getMinAngle(), true),
                 new TurretSetAngle(m_turret, m_turret.getMaxAngle(), true),
@@ -271,18 +255,17 @@ public class RobotContainer {
                         () -> m_turret.getLimelight().hasValidTarget())
         );
 
+        // Toggle Limelight LED
         m_suraj.getJoystickButton(XboxController.Button.kBack).whenPressed(new InstantCommand(() -> {
             m_turret.getLimelight().toggleLed();
         }));
 
         m_suraj.getJoystickAxisButton(XboxController.Axis.kLeftTrigger, Constants.OI.SURAJ_LTRIGGER_THRESHOLD).whileHeld(
-                new Shoot(m_flywheels, m_hood, m_limelight, () -> {
+                new Shoot(m_flywheels, m_hood, m_turret.getLimelight(), () -> {
                     return -m_suraj.getY(GenericHID.Hand.kRight);
                 }).alongWith(
                         new InstantCommand(()->m_feeder.setPWM(-0.3)))
                 );
-
-
     }
 
     public Command getAutonomousCommand() {
@@ -297,23 +280,24 @@ public class RobotContainer {
 
     public void testInit() {
 
-        SmartDashboard.putBoolean("Tune Enable", false);
-        SmartDashboard.putBoolean("Tune Enable", false);
-        SmartDashboard.putBoolean("Zero Turret", false);
-        SmartDashboard.putBoolean("Zero Gyro", false);
+        SmartDashboard.putBoolean(Constants.TUNE_ENABLE_LABEL, false);
+        SmartDashboard.putBoolean(Constants.Turret.ZERO_TURRET_LABEL, false);
+        SmartDashboard.putBoolean(Constants.Drivetrain.RESET_GYRO_LABEL, false);
+
+        setHood = new SetHood(m_hood, ()->45);
     }
 
     public void testPeriodic() {
-        boolean enabled = SmartDashboard.getBoolean("Tune Enable", false);
+        boolean enabled = SmartDashboard.getBoolean(Constants.TUNE_ENABLE_LABEL, false);
 
-        if (SmartDashboard.getBoolean("Zero Turret", false)) {
+        if (SmartDashboard.getBoolean(Constants.Turret.ZERO_TURRET_LABEL, false)) {
             m_turret.resetEncoderPosition(0);
-            SmartDashboard.putBoolean("Zero Turret", false);
+            SmartDashboard.putBoolean(Constants.Turret.ZERO_TURRET_LABEL, false);
         }
 
-        if (SmartDashboard.getBoolean("Zero Gyro", false)) {
+        if (SmartDashboard.getBoolean(Constants.Drivetrain.RESET_GYRO_LABEL, false)) {
             pigeon.setFusedHeading(0);
-            SmartDashboard.putBoolean("Zero Gyro", false);
+            SmartDashboard.putBoolean(Constants.Drivetrain.RESET_GYRO_LABEL, false);
         }
 
         if (enabled) {

@@ -15,6 +15,8 @@ public final class Constants {
 
     public static final double NOMINAL_VOLTAGE = 12;
 
+    public static final String TUNE_ENABLE_LABEL = "Tune Enable";
+
     /**
      * Constants specific to operator interface
      */
@@ -59,6 +61,8 @@ public final class Constants {
         public static final double WHEEL_RADIUS = 3;
 
         public static final int CURRENT_LIMIT = 18;
+
+        public static final String RESET_GYRO_LABEL = "Zero Gyro";
     }
 
     public static final class Magazine {
@@ -105,13 +109,13 @@ public final class Constants {
         public static final double HOOD_DISTANCE_PER_REVOLUTION = 360;
 
         // these are relative to the vertical axis
-        public static final double HOOD_BOTTOM_POSITION = 74;
-        public static final double HOOD_TOP_POSITION = 45;
+        public static final double HOOD_BOTTOM_POSITION_DEG = 74;
+        public static final double HOOD_TOP_POSITION_DEG = 45;
 
         //both in radians relative to horizontal
         //check if these should be in degrees or radians
-        public static final double HOOD_MAX_THETA = Math.PI/4;
-        public static final double HOOD_MIN_THETA = Math.toRadians(16);
+        public static final double HOOD_MAX_THETA = Math.toRadians(90 - HOOD_TOP_POSITION_DEG);
+        public static final double HOOD_MIN_THETA = Math.toRadians(90 - HOOD_BOTTOM_POSITION_DEG);
 
 
         public static final int SPARK_FLYWHEEL_LEFT_PORT = 30;
@@ -173,5 +177,6 @@ public final class Constants {
 
         public static final String TAB_NAME = "Turret";
         public static final String POSITION_CONTROLLER_CONFIGURABLE_LABEL = "Turret TalonSRX PID";
+        public static final String ZERO_TURRET_LABEL = "Zero Turret";
     }
 }

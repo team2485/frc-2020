@@ -7,15 +7,10 @@
 
 package frc.team2485.robot;
 
-import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.team2485.WarlordsLib.SmartDashboardHelper;
-import frc.team2485.WarlordsLib.oi.Deadband;
 import frc.team2485.WarlordsLib.robotConfigs.RobotConfigs;
-import frc.team2485.robot.commands.shooter.SetFlywheels;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;

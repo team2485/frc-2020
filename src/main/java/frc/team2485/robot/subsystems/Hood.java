@@ -2,14 +2,10 @@ package frc.team2485.robot.subsystems;
 
 import com.revrobotics.CANDigitalInput;
 import com.revrobotics.CANEncoder;
-import com.revrobotics.ControlType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.team2485.WarlordsLib.motorcontrol.PIDSparkMax;
 import frc.team2485.WarlordsLib.motorcontrol.WL_SparkMax;
-import frc.team2485.WarlordsLib.robotConfigs.RobotConfigs;
 import frc.team2485.robot.Constants;
 
 
@@ -45,6 +41,14 @@ public class Hood extends SubsystemBase {
         return m_hoodEncoder.getPosition();
     }
 
+    /**
+     * Returns the hood position relative to the horizontal in radians.
+     * @return position in radians
+     */
+    public double getHoodTheta() {
+        return Math.toRadians(90 - getEncoderPosition());
+    }
+
     public boolean getTopLimitSwitch() {
         return m_spark.getReverseLimitSwitch(CANDigitalInput.LimitSwitchPolarity.kNormallyClosed).get();
     }
@@ -56,9 +60,9 @@ public class Hood extends SubsystemBase {
     @Override
     public void periodic() {
         if (getBottomLimitSwitch()) {
-            this.m_hoodEncoder.setPosition(Constants.Shooter.HOOD_BOTTOM_POSITION);
+            this.m_hoodEncoder.setPosition(Constants.Shooter.HOOD_BOTTOM_POSITION_DEG);
         } else if (getTopLimitSwitch()) {
-            this.m_hoodEncoder.setPosition(Constants.Shooter.HOOD_TOP_POSITION);
+            this.m_hoodEncoder.setPosition(Constants.Shooter.HOOD_TOP_POSITION_DEG);
         }
     }
 }

@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team2485.WarlordsLib.motorcontrol.PIDSparkMax;
 import frc.team2485.WarlordsLib.robotConfigs.RobotConfigs;
 import frc.team2485.robot.Constants;
-import frc.team2485.robot.commands.shooter.Shoot;
 
 public class Feeder extends SubsystemBase {
     private PIDSparkMax m_spark;
