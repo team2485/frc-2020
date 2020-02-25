@@ -65,8 +65,8 @@ public final class Constants {
         public static final int TALON_HIGH_MAX_CURRENT = 60;
 
         //replace ports with real values
-        public static final int TALON_LOW_PORT = 22;
-        public static final int TALON_HIGH_PORT = 23;
+        public static final int SPARK_LOW_PORT = 22;
+        public static final int SPARK_HIGH_PORT = 23;
 
         public static final int ENTRANCE_IR_PORT = 2;
         public static final int TRANSFER_IR_PORT = 3;
@@ -77,6 +77,9 @@ public final class Constants {
         public static final double ENCODER_VELOCITY_DEADBAND = 0.1;
 
         public static final double ROLLER_DIAMETER = 0.5;
+
+        public static final double HIGH_GEAR_RATIO = 18/24;
+        public static final double LOW_GEAR_RATIO = 12/30;
 
         //Replace below with actual number
         public static final double LOW_INTAKE_BY_ONE_POS = 7;
@@ -117,7 +120,7 @@ public final class Constants {
         public static final double SPARK_FLYWHEEL_RIGHT_MAX_CURRENT = 0;
 
         public static final int SPARK_FEEDER_PORT = 33;
-        public static final int SPARK_FEEDER_MAX_CURRENT = 60; //keep this
+        public static final int SPARK_FEEDER_MAX_CURRENT = 80; //keep this
 
         public static final double RPM_CONVERSION_FACTOR = 0.10472;
         public static final double FLYWHEEL_ENERGY_LOSS_FACTOR = 1;

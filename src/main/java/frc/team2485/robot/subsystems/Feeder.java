@@ -18,7 +18,7 @@ public class Feeder extends SubsystemBase {
 
     public Feeder() {
         this.m_spark = new PIDSparkMax(Constants.Shooter.SPARK_FEEDER_PORT, ControlType.kVelocity);
-        this.m_spark.setSmartCurrentLimit(Constants.Shooter.SPARK_FEEDER_MAX_CURRENT, 50);
+        this.m_spark.setSmartCurrentLimit(Constants.Shooter.SPARK_FEEDER_MAX_CURRENT);
 
         SendableRegistry.add(m_spark, "Feeder Spark");
         RobotConfigs.getInstance().addConfigurable("feederSpark", m_spark);

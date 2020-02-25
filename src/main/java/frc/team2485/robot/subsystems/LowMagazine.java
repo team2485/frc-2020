@@ -1,23 +1,19 @@
 package frc.team2485.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.revrobotics.ControlType;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team2485.WarlordsLib.Tunable;
-import frc.team2485.WarlordsLib.control.WL_PIDController;
-import frc.team2485.WarlordsLib.motorcontrol.PIDTalonSRX;
-import frc.team2485.WarlordsLib.motorcontrol.currentmanagement.CurrentTalonSRX;
-import frc.team2485.WarlordsLib.oi.Deadband;
+import frc.team2485.WarlordsLib.motorcontrol.PIDSparkMax;
 import frc.team2485.WarlordsLib.robotConfigs.RobotConfigs;
 import frc.team2485.robot.Constants;
 
 public class LowMagazine extends SubsystemBase implements Tunable {
 
-    private PIDTalonSRX m_talon;
+    private PIDSparkMax m_spark;
 
     private DigitalInput m_entranceIR, m_transferIR;
 
@@ -32,16 +28,12 @@ public class LowMagazine extends SubsystemBase implements Tunable {
      * Low magazine subystem, controlling the intake rollers and low belt.
      */
     public LowMagazine() {
-        m_talon = new PIDTalonSRX(Constants.Magazine.TALON_LOW_PORT, ControlMode.Velocity);
-        m_talon.setDistancePerPulse(Constants.Magazine.ROLLER_DIAMETER * 2 * Math.PI /4096.0);
-        m_talon.configNominalOutputForward(0);
-        m_talon.configNominalOutputReverse(0);
-        m_talon.configPeakOutputForward(1);
-        m_talon.configPeakOutputReverse(-1);
-        m_talon.setInverted(true);
-        m_talon.setSensorPhase(true);
-
-        m_talon.setEncoderPosition(0);
+        m_spark = new PIDSparkMax(Constants.Magazine.SPARK_LOW_PORT, ControlType.kCurrent);
+        m_spark.getEncoder().setPositionConversionFactor(Constants.Magazine.LOW_BELT_PWM * Constants.Magazine.ROLLER_DIAMETER * 2 * Math.PI);
+        m_spark.getEncoder().setVelocityConversionFactor(Constants.Magazine.LOW_BELT_PWM * Constants.Magazine.ROLLER_DIAMETER * 2 * Math.PI);
+        m_spark.setInverted(true);
+//        m_spark.setSmartCurrentLimit(80, 50, 500);
+//        m_spark.enableVoltageCompensation(12);
 
         m_entranceIR = new DigitalInput(Constants.Magazine.ENTRANCE_IR_PORT);
         m_transferIR = new DigitalInput(Constants.Magazine.TRANSFER_IR_PORT);
@@ -50,8 +42,8 @@ public class LowMagazine extends SubsystemBase implements Tunable {
 
         m_entranceIRLastVal = false;
 
-        SendableRegistry.add(m_talon, "Low Magazine Talon");
-        RobotConfigs.getInstance().addConfigurable(Constants.Magazine.LOW_MAGAZINE_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL, m_talon);
+        SendableRegistry.add(m_spark, "Low Magazine Talon");
+        RobotConfigs.getInstance().addConfigurable(Constants.Magazine.LOW_MAGAZINE_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL, m_spark);
 
         this.addToShuffleboard();
     }
@@ -60,7 +52,7 @@ public class LowMagazine extends SubsystemBase implements Tunable {
         ShuffleboardTab tab = Shuffleboard.getTab("Magazine");
         tab.addNumber("Low Position", this::getEncoderPosition);
         tab.addNumber("Low Velocity", this::getEncoderVelocity);
-        tab.addNumber("Low Current", m_talon::getSupplyCurrent);
+        tab.addNumber("Low Current", m_spark::getOutputCurrent);
         tab.addNumber("Low Number of Balls", this::getNumBalls);
         tab.addBoolean("Entrance IR", this::getEntranceIR);
         tab.addBoolean("Transfer IR", this::getTransferIR);
@@ -71,26 +63,25 @@ public class LowMagazine extends SubsystemBase implements Tunable {
      * @param pwm PWM to set the talon to
      */
     public void setPWM(double pwm) {
-        m_talon.set(pwm);
+        m_spark.set(pwm);
     }
 
 
     public boolean setVelocity(double velocity) {
-        m_talon.set(velocity);
-        return m_talon.atTarget();
+        m_spark.runPID(velocity);
+        return m_spark.atTarget();
     }
 
     /**
-     *
      * @return belt encoder position
      */
     public double getEncoderPosition() {
-        return m_talon.getEncoderPosition();
+        return m_spark.getEncoder().getPosition();
     }
 
 
     public boolean atVelocitySetpoint() {
-        return m_talon.atTarget();
+        return m_spark.atTarget();
     }
 
     /**
@@ -98,7 +89,7 @@ public class LowMagazine extends SubsystemBase implements Tunable {
      * @return belt encoder velocity
      */
     public double getEncoderVelocity() {
-        return m_talon.getEncoderVelocity();
+        return m_spark.getEncoder().getVelocity();
     }
 
     /**
@@ -156,7 +147,7 @@ public class LowMagazine extends SubsystemBase implements Tunable {
      */
     @Override
     public void tunePeriodic() {
-        m_talon.runPID();
+        m_spark.runPID();
 
     }
 }
