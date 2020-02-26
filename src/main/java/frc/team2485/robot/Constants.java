@@ -60,7 +60,7 @@ public final class Constants {
 
         public static final double WHEEL_RADIUS = 3;
 
-        public static final int CURRENT_LIMIT = 18;
+        public static final int CURRENT_LIMIT = 10;
 
         public static final String RESET_GYRO_LABEL = "Zero Gyro";
     }
@@ -182,5 +182,27 @@ public final class Constants {
         public static final String TAB_NAME = "Turret";
         public static final String POSITION_CONTROLLER_CONFIGURABLE_LABEL = "Turret TalonSRX PID";
         public static final String ZERO_TURRET_LABEL = "Zero Turret";
+    }
+
+    public static final class IntakeArm {
+
+        public static final int MAX_CURRENT = 2; //amps
+
+        public static final int SPARK_PORT = 20;
+
+        public static final int ENCODER_DIO_PORT = 0;
+
+        public static final double ENCODER_PULSES_PER_REVOLUTION = 174.9;
+
+        public static final double TOP_POSITION_DEGREES = 0;
+
+        public static final double BOTTOM_POSITION_DEGREES = 90; //temp
+
+        public static final double SPEED = 0.5;
+
+    }
+
+    public static final class Climber {
+        public static final int TALON_PORT = 18;
     }
 }

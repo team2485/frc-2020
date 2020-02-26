@@ -2,6 +2,8 @@ package frc.team2485.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
+import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
@@ -36,10 +38,14 @@ public class Turret extends SubsystemBase implements Tunable {
         m_talon.setDistancePerPulse(360.0 / Constants.Turret.ENCODER_CPR); // convert to degrees
         m_talon.enableVoltageCompensation(Constants.NOMINAL_VOLTAGE);
         m_talon.setTolerance(Constants.Turret.TURRET_PID_TOLERANCE);
-        m_talon.configReverseSoftLimitThreshold((int) (Constants.Turret.MIN_POSITION * Constants.Turret.ENCODER_CPR / 360));
-        m_talon.configReverseSoftLimitEnable(true);
-        m_talon.configForwardSoftLimitThreshold((int) (Constants.Turret.MAX_POSITION * Constants.Turret.ENCODER_CPR / 360));
-        m_talon.configForwardSoftLimitEnable(true);
+//        m_talon.configReverseSoftLimitThreshold((int) (Constants.Turret.MIN_POSITION * Constants.Turret.ENCODER_CPR / 360));
+//        m_talon.configReverseSoftLimitEnable(true);
+//        m_talon.configForwardSoftLimitThreshold((int) (Constants.Turret.MAX_POSITION * Constants.Turret.ENCODER_CPR / 360));
+//        m_talon.configForwardSoftLimitEnable(true);
+//
+
+       // this.m_talon.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed);
+       // this.m_talon.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed);
 
         m_limelight = new Limelight();
 
@@ -66,16 +72,16 @@ public class Turret extends SubsystemBase implements Tunable {
      * @param pwm pwm to set.
      */
     public void setPWM(double pwm) {
-        double output = 0;
+//        double output = 0;
+//
+//        // Set the max pwm output based on proximity to limits
+//        if (pwm < 0) {
+//            output = Math.copySign(MathUtil.clamp(Math.abs(pwm), 0, Math.pow((MIN_ANGLE -  this.getEncoderPosition()) * (-1 / BUFFER_ZONE_SIZE), 2)), pwm);
+//        } else if (pwm > 0) {
+//            output = MathUtil.clamp(pwm, 0, Math.pow((MAX_ANGLE - this.getEncoderPosition()) * (1 / BUFFER_ZONE_SIZE), 2));
+//        }
 
-        // Set the max pwm output based on proximity to limits
-        if (pwm < 0) {
-            output = Math.copySign(MathUtil.clamp(Math.abs(pwm), 0, Math.pow((MIN_ANGLE -  this.getEncoderPosition()) * (-1 / BUFFER_ZONE_SIZE), 2)), pwm);
-        } else if (pwm > 0) {
-            output = MathUtil.clamp(pwm, 0, Math.pow((MAX_ANGLE - this.getEncoderPosition()) * (1 / BUFFER_ZONE_SIZE), 2));
-        }
-
-        m_talon.set(output);
+        m_talon.set(pwm);
     }
 
     /**
@@ -145,6 +151,7 @@ public class Turret extends SubsystemBase implements Tunable {
 
     @Override
     public void periodic() {
+
     }
 
     @Override
