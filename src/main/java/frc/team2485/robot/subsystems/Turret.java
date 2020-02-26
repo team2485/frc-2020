@@ -12,6 +12,7 @@ import frc.team2485.WarlordsLib.Limelight;
 import frc.team2485.WarlordsLib.Tunable;
 import frc.team2485.WarlordsLib.motorcontrol.PIDTalonSRX;
 import frc.team2485.WarlordsLib.robotConfigs.RobotConfigs;
+import frc.team2485.WarlordsLib.sensors.TalonSRXEncoder;
 import frc.team2485.robot.Constants;
 
 public class Turret extends SubsystemBase implements Tunable {
@@ -33,7 +34,12 @@ public class Turret extends SubsystemBase implements Tunable {
         m_talon.setFeedbackDeviceType(FeedbackDevice.CTRE_MagEncoder_Relative);
         m_talon.setSelectedSensorPosition(m_talon.getSensorCollection().getPulseWidthPosition());
         m_talon.setDistancePerPulse(360.0 / Constants.Turret.ENCODER_CPR); // convert to degrees
+        m_talon.enableVoltageCompensation(Constants.NOMINAL_VOLTAGE);
         m_talon.setTolerance(Constants.Turret.TURRET_PID_TOLERANCE);
+        m_talon.configReverseSoftLimitThreshold((int) (Constants.Turret.MIN_POSITION * Constants.Turret.ENCODER_CPR / 360));
+        m_talon.configReverseSoftLimitEnable(true);
+        m_talon.configForwardSoftLimitThreshold((int) (Constants.Turret.MAX_POSITION * Constants.Turret.ENCODER_CPR / 360));
+        m_talon.configForwardSoftLimitEnable(true);
 
         m_limelight = new Limelight();
 
@@ -42,17 +48,17 @@ public class Turret extends SubsystemBase implements Tunable {
 
         BUFFER_ZONE_SIZE = Constants.Turret.BUFFER_ZONE_SIZE;
 
-        RobotConfigs.getInstance().addConfigurable("Turret TalonSRX PID", m_talon);
+        RobotConfigs.getInstance().addConfigurable(Constants.Turret.POSITION_CONTROLLER_CONFIGURABLE_LABEL, m_talon);
 
+        this.addToShuffleboard();
+    }
+
+    public void addToShuffleboard() {
         SendableRegistry.add(m_talon, "Turret Talon");
-
-        SmartDashboard.putData(this);
-
-        ShuffleboardTab tab = Shuffleboard.getTab("Turret");
+        ShuffleboardTab tab = Shuffleboard.getTab(Constants.Turret.TAB_NAME);
         tab.add(this);
         tab.addNumber("Encoder Position", this::getEncoderPosition);
         tab.addNumber("Current", m_talon::getStatorCurrent);
-
     }
 
     /**
@@ -64,9 +70,9 @@ public class Turret extends SubsystemBase implements Tunable {
 
         // Set the max pwm output based on proximity to limits
         if (pwm < 0) {
-            output = Math.copySign(MathUtil.clamp(Math.abs(pwm), 0, (MIN_ANGLE -  this.getEncoderPosition()) * (-1 / BUFFER_ZONE_SIZE)), pwm);
+            output = Math.copySign(MathUtil.clamp(Math.abs(pwm), 0, Math.pow((MIN_ANGLE -  this.getEncoderPosition()) * (-1 / BUFFER_ZONE_SIZE), 2)), pwm);
         } else if (pwm > 0) {
-            output = MathUtil.clamp(pwm, 0, (MAX_ANGLE - this.getEncoderPosition()) * (1 / BUFFER_ZONE_SIZE));
+            output = MathUtil.clamp(pwm, 0, Math.pow((MAX_ANGLE - this.getEncoderPosition()) * (1 / BUFFER_ZONE_SIZE), 2));
         }
 
         m_talon.set(output);
@@ -87,6 +93,7 @@ public class Turret extends SubsystemBase implements Tunable {
      */
     public void resetEncoderPosition(double position) {
         m_talon.setEncoderPosition(position);
+        m_talon.getSensorCollection().setPulseWidthPosition((int) (position * Constants.Turret.ENCODER_CPR / 360.0), 0);
     }
 
     /**
@@ -129,6 +136,11 @@ public class Turret extends SubsystemBase implements Tunable {
 
     public void resetPID() {
         this.m_talon.resetPID();
+    }
+
+    public void enableSoftLimits(boolean enable) {
+        m_talon.configForwardSoftLimitEnable(enable);
+        m_talon.configReverseSoftLimitEnable(enable);
     }
 
     @Override

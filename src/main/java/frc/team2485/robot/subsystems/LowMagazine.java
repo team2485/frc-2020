@@ -22,18 +22,17 @@ public class LowMagazine extends SubsystemBase implements Tunable {
      */
     private int m_numBalls;
 
-    private boolean m_entranceIRLastVal, m_transferIRLastVal, m_exitIRLastVal;
+    private boolean m_entranceIRLastVal, m_transferIRLastVal;
 
     /**
      * Low magazine subystem, controlling the intake rollers and low belt.
      */
     public LowMagazine() {
         m_spark = new PIDSparkMax(Constants.Magazine.SPARK_LOW_PORT, ControlType.kCurrent);
-        m_spark.getEncoder().setPositionConversionFactor(Constants.Magazine.LOW_BELT_PWM * Constants.Magazine.ROLLER_DIAMETER * 2 * Math.PI);
-        m_spark.getEncoder().setVelocityConversionFactor(Constants.Magazine.LOW_BELT_PWM * Constants.Magazine.ROLLER_DIAMETER * 2 * Math.PI);
+        m_spark.getEncoder().setPositionConversionFactor(Constants.Magazine.LOW_GEAR_RATIO * Constants.Magazine.ROLLER_DIAMETER * 2 * Math.PI);
+        m_spark.getEncoder().setVelocityConversionFactor(Constants.Magazine.LOW_GEAR_RATIO * Constants.Magazine.ROLLER_DIAMETER * 2 * Math.PI);
         m_spark.setInverted(true);
-//        m_spark.setSmartCurrentLimit(80, 50, 500);
-//        m_spark.enableVoltageCompensation(12);
+        m_spark.enableVoltageCompensation(Constants.NOMINAL_VOLTAGE);
 
         m_entranceIR = new DigitalInput(Constants.Magazine.ENTRANCE_IR_PORT);
         m_transferIR = new DigitalInput(Constants.Magazine.TRANSFER_IR_PORT);
@@ -42,14 +41,14 @@ public class LowMagazine extends SubsystemBase implements Tunable {
 
         m_entranceIRLastVal = false;
 
-        SendableRegistry.add(m_spark, "Low Magazine Talon");
         RobotConfigs.getInstance().addConfigurable(Constants.Magazine.LOW_MAGAZINE_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL, m_spark);
 
         this.addToShuffleboard();
     }
 
     public void addToShuffleboard() {
-        ShuffleboardTab tab = Shuffleboard.getTab("Magazine");
+        SendableRegistry.add(m_spark, "Low Magazine Spark");
+        ShuffleboardTab tab = Shuffleboard.getTab(Constants.Magazine.TAB_NAME);
         tab.addNumber("Low Position", this::getEncoderPosition);
         tab.addNumber("Low Velocity", this::getEncoderVelocity);
         tab.addNumber("Low Current", m_spark::getOutputCurrent);
@@ -68,7 +67,7 @@ public class LowMagazine extends SubsystemBase implements Tunable {
 
 
     public boolean setVelocity(double velocity) {
-        m_spark.runPID(velocity);
+        m_spark.runPID(velocity * 60);
         return m_spark.atTarget();
     }
 
@@ -89,7 +88,7 @@ public class LowMagazine extends SubsystemBase implements Tunable {
      * @return belt encoder velocity
      */
     public double getEncoderVelocity() {
-        return m_spark.getEncoder().getVelocity();
+        return m_spark.getEncoder().getVelocity() / 60;
     }
 
     /**

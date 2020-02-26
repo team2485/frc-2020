@@ -2,24 +2,21 @@ package frc.team2485.robot.subsystems;
 
 import com.revrobotics.CANDigitalInput;
 import com.revrobotics.CANEncoder;
-import com.revrobotics.ControlType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.team2485.WarlordsLib.motorcontrol.PIDSparkMax;
 import frc.team2485.WarlordsLib.motorcontrol.WL_SparkMax;
-import frc.team2485.WarlordsLib.robotConfigs.RobotConfigs;
 import frc.team2485.robot.Constants;
 
 
 public class Hood extends SubsystemBase {
+
     private WL_SparkMax m_spark;
     private CANEncoder m_hoodEncoder;
 
     public Hood(CANEncoder hoodEncoder) {
         this.m_spark = new WL_SparkMax(Constants.Shooter.SPARK_HOOD_PORT);
-        this.m_spark.enableVoltageCompensation(12);
+        this.m_spark.enableVoltageCompensation(Constants.NOMINAL_VOLTAGE);
 
         this.m_spark.getForwardLimitSwitch(CANDigitalInput.LimitSwitchPolarity.kNormallyClosed).enableLimitSwitch(true);
         this.m_spark.getReverseLimitSwitch(CANDigitalInput.LimitSwitchPolarity.kNormallyClosed).enableLimitSwitch(true);
@@ -27,16 +24,13 @@ public class Hood extends SubsystemBase {
         this.m_hoodEncoder = hoodEncoder;
         this.m_hoodEncoder.setPositionConversionFactor(Constants.Shooter.HOOD_DISTANCE_PER_REVOLUTION);
 
-//        SendableRegistry.add(m_spark, "Hood Spark");
-//        RobotConfigs.getInstance().addConfigurable("hoodSpark", m_spark);
         this.addToShuffleboard();
 
     }
 
     public void addToShuffleboard() {
-        ShuffleboardTab tab = Shuffleboard.getTab("Shooter");
+        ShuffleboardTab tab = Shuffleboard.getTab(Constants.Shooter.TAB_NAME);
         tab.addNumber("Hood Encoder Position", this::getEncoderPosition);
-
     }
 
     public void setPWM(double pwm) {
@@ -45,6 +39,14 @@ public class Hood extends SubsystemBase {
 
     public double getEncoderPosition() {
         return m_hoodEncoder.getPosition();
+    }
+
+    /**
+     * Returns the hood position relative to the horizontal in radians.
+     * @return position in radians
+     */
+    public double getHoodTheta() {
+        return Math.toRadians(90 - getEncoderPosition());
     }
 
     public boolean getTopLimitSwitch() {
@@ -58,9 +60,9 @@ public class Hood extends SubsystemBase {
     @Override
     public void periodic() {
         if (getBottomLimitSwitch()) {
-            this.m_hoodEncoder.setPosition(Constants.Shooter.HOOD_BOTTOM_POSITION);
+            this.m_hoodEncoder.setPosition(Constants.Shooter.HOOD_BOTTOM_POSITION_DEG);
         } else if (getTopLimitSwitch()) {
-            this.m_hoodEncoder.setPosition(Constants.Shooter.HOOD_TOP_POSITION);
+            this.m_hoodEncoder.setPosition(Constants.Shooter.HOOD_TOP_POSITION_DEG);
         }
     }
 }

@@ -1,8 +1,7 @@
-package frc.team2485.robot.commands.shooter;
+package frc.team2485.robot.commands;
 
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.team2485.WarlordsLib.Limelight;
 import frc.team2485.robot.Constants;
@@ -13,30 +12,30 @@ import java.util.function.DoubleSupplier;
 
 public class Shoot extends ParallelCommandGroup {
 
-    private double hoodSetpoint;
-    private double RPMSetpoint;
-    private DoubleSupplier  finalYVelocity;
-    private Limelight limelight;
-    private Hood hood;
-    private Flywheels flywheels;
+    private double m_hoodSetpoint;
+    private double m_rpmSetpoint;
+    private DoubleSupplier m_finalYVelocity;
+    private Limelight m_limelight;
+    private Hood m_hood;
+    private Flywheels m_flywheels;
+
     public Shoot(Flywheels flywheels, Hood hood, Limelight limelight, DoubleSupplier finalYVelocity) {
         super();
-        this.flywheels = flywheels;
-        this.hood = hood;
-        this.limelight = limelight;
-        this.finalYVelocity = finalYVelocity;
-        this.hoodSetpoint = 0;
-        this.RPMSetpoint = 0;
-        this.addCommands(new SetFlywheels(flywheels, ()->RPMSetpoint * Constants.Shooter.FLYWHEEL_ENERGY_LOSS_FACTOR), new SetHood(hood, ()->hoodSetpoint));
-
+        this.m_flywheels = flywheels;
+        this.m_hood = hood;
+        this.m_limelight = limelight;
+        this.m_finalYVelocity = finalYVelocity;
+        this.m_hoodSetpoint = 0;
+        this.m_rpmSetpoint = 0;
+        this.addCommands(new SetFlywheels(flywheels, ()-> m_rpmSetpoint * Constants.Shooter.FLYWHEEL_ENERGY_LOSS_FACTOR), new SetHood(hood, ()-> m_hoodSetpoint));
 
         this.addToShuffleboard();
     }
 
     public void execute() {
         super.execute();
-        double vfy = finalYVelocity.getAsDouble();
-        double ty = limelight.getTargetVerticalOffset(Constants.Robot.LIMELIGHT_TY_DEFAULT_VALUE) + Constants.Shooter.LIMELIGHT_ANGLE_FROM_HORIZONTAL; //gets vertical angle from limelight
+        double vfy = m_finalYVelocity.getAsDouble();
+        double ty = m_limelight.getTargetVerticalOffset(Constants.Robot.LIMELIGHT_TY_DEFAULT_VALUE) + Constants.Shooter.LIMELIGHT_ANGLE_FROM_HORIZONTAL; //gets vertical angle from m_limelight
         double xDist = getX(ty, Constants.Robot.HEIGHT_FROM_LL_TO_PORT); //finds x distance (horizontal) to port
         double v0y = getv0y(vfy, Constants.Robot.HEIGHT_FROM_LL_TO_PORT, Constants.Shooter.GRAVITY_ACCELERATION_CONSTANT); //finds initial y velocity based on final y velocity and height changes
         double timeOfTrajectory = gettimeOfTraj(v0y, vfy, Constants.Shooter.GRAVITY_ACCELERATION_CONSTANT, Constants.Robot.HEIGHT_FROM_SHOOTER_TO_PORT); //finds time of trajectory based on y velocities, distances, and accelerations
@@ -46,16 +45,16 @@ public class Shoot extends ParallelCommandGroup {
         //double thetaApproach = getThetaApproach(vfx, vfy); //finds approach angle to port using final x and y velocities
 
         double thetaLaunch = getThetaLaunch(v0x, v0y); //finds launch angle using initial component velocities
-        hoodSetpoint = Math.toDegrees(getHoodSetpoint(thetaLaunch)); //accounts for 90 degree shift
 
-        RPMSetpoint= - getRPM(v0x, thetaLaunch, Constants.PowerCell.POWER_CELL_RADIUS, Constants.Shooter.RPM_CONVERSION_FACTOR); //finds launch RPM using initial angle+velocity
 
+        m_hoodSetpoint = Math.toDegrees(getComplement(thetaLaunch)); //accounts for 90 degree shift
+        m_rpmSetpoint = - getRPM(v0x, thetaLaunch, Constants.PowerCell.POWER_CELL_RADIUS, Constants.Shooter.RPM_CONVERSION_FACTOR); //finds launch RPM using initial angle+velocity
     }
 
     public void addToShuffleboard() {
-        ShuffleboardTab tab = Shuffleboard.getTab("Shooter");
-        tab.addNumber(" Angle Setpoint", ()->hoodSetpoint);
-        tab.addNumber("RPM Setpoint", ()->RPMSetpoint);
+        ShuffleboardTab tab = Shuffleboard.getTab(Constants.Shooter.TAB_NAME);
+        tab.addNumber(" Angle Setpoint", ()-> m_hoodSetpoint);
+        tab.addNumber("RPM Setpoint", ()-> m_rpmSetpoint);
     }
 
     private static double getX(double ty, double LLtoPort){
@@ -114,13 +113,11 @@ public class Shoot extends ParallelCommandGroup {
         }
     }
 
-    public static double getHoodSetpoint(double theta){ return Math.PI/2 - theta; } //check if this should be Math.PI/2 or 90
+    public static double getComplement(double theta){ return Math.PI/2 - theta; } //check if this should be Math.PI/2 or 90
 
     public static double getRPM(double v0x, double thetaLaunch, double radius, double rpmConversionFactor){
         double numerator = Math.sqrt( (v0x *v0x) + ((v0x * Math.tan(thetaLaunch)) * (v0x * Math.tan(thetaLaunch))));
         double denominator = radius * rpmConversionFactor;
         return numerator / denominator;
     }
-
-
 }

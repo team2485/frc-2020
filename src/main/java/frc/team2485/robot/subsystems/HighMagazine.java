@@ -1,7 +1,5 @@
 package frc.team2485.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.revrobotics.ControlType;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -42,8 +40,7 @@ public class HighMagazine extends SubsystemBase implements Tunable {
         m_spark.getEncoder().setPositionConversionFactor(Constants.Magazine.HIGH_GEAR_RATIO * Constants.Magazine.ROLLER_DIAMETER * 2 * Math.PI);
         m_spark.getEncoder().setVelocityConversionFactor(Constants.Magazine.HIGH_GEAR_RATIO * Constants.Magazine.ROLLER_DIAMETER * 2 * Math.PI);
         m_spark.setInverted(true);
-        m_spark.enableVoltageCompensation(12);
-
+        m_spark.enableVoltageCompensation(Constants.NOMINAL_VOLTAGE);
 
         m_exitIR = new DigitalInput(Constants.Magazine.EXIT_IR_PORT);
 
@@ -57,9 +54,9 @@ public class HighMagazine extends SubsystemBase implements Tunable {
     }
 
     public void addToShuffleboard() {
-        SendableRegistry.add(m_spark, "High Magazine Talon");
+        SendableRegistry.add(m_spark, "High Magazine Spark");
 
-        ShuffleboardTab tab = Shuffleboard.getTab("Magazine");
+        ShuffleboardTab tab = Shuffleboard.getTab(Constants.Magazine.TAB_NAME);
         tab.add(this);
         tab.addNumber("High Position", this::getEncoderPosition);
         tab.addNumber("High Velocity", this::getEncoderVelocity);
@@ -85,10 +82,9 @@ public class HighMagazine extends SubsystemBase implements Tunable {
         return m_spark.atTarget();
     }
 
-
     /**
      *
-     * @return belt encoder position
+     * @return belt encoder position in inches
      */
     public double getEncoderPosition() {
         return m_spark.getEncoder().getPosition();
@@ -96,10 +92,10 @@ public class HighMagazine extends SubsystemBase implements Tunable {
 
     /**
      *
-     * @return belt encoder velocity
+     * @return belt encoder velocity in inches per second
      */
     public double getEncoderVelocity() {
-        return m_spark.getEncoder().getVelocity();
+        return m_spark.getEncoder().getVelocity() / 60;
     }
 
     /**

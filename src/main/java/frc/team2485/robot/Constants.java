@@ -13,6 +13,10 @@ public final class Constants {
 
     public static final boolean DEBUG_MODE = true;
 
+    public static final double NOMINAL_VOLTAGE = 12;
+
+    public static final String TUNE_ENABLE_LABEL = "Tune Enable";
+
     /**
      * Constants specific to operator interface
      */
@@ -57,6 +61,8 @@ public final class Constants {
         public static final double WHEEL_RADIUS = 3;
 
         public static final int CURRENT_LIMIT = 18;
+
+        public static final String RESET_GYRO_LABEL = "Zero Gyro";
     }
 
     public static final class Magazine {
@@ -82,18 +88,20 @@ public final class Constants {
         public static final double LOW_GEAR_RATIO = 12/30;
 
         //Replace below with actual number
-        public static final double LOW_INTAKE_BY_ONE_POS = 7;
-        public static final double HIGH_INDEX_BY_ONE_POS = 7;
+        public static final double LOW_INTAKE_BY_ONE_POS = -7;
+        public static final double HIGH_INDEX_BY_ONE_POS = -7;
 
         //replace below with actual number
         public static final double LOW_BELT_PWM = -0.7;
         public static final double FAST_INTAKE_PWM = -0.5;
         public static final double NORMAL_BALL_INCREMENT_TIMEOUT = 0.5;
 
-        public static final String HIGH_MAGAZINE_POSITION_CONTROLLER_CONFIGURABLE_LABEL = "highMagazineTalonPositionController";
-        public static final String LOW_MAGAZINE_POSITION_CONTROLLER_CONFIGURABLE_LABEL = "lowMagazineTalonPositionController";
+        public static final String TAB_NAME = "Magazine";
 
-        public static final String LOW_MAGAZINE_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL = "lowMagazineTalonVelocityController";
+        public static final String HIGH_MAGAZINE_POSITION_CONTROLLER_CONFIGURABLE_LABEL = "highMagazineSparkPositionController";
+        public static final String LOW_MAGAZINE_POSITION_CONTROLLER_CONFIGURABLE_LABEL = "lowMagazineSparkPositionController";
+
+        public static final String LOW_MAGAZINE_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL = "lowMagazineSparkVelocityController";
     }
 
     public static final class Shooter {
@@ -104,13 +112,13 @@ public final class Constants {
         public static final double HOOD_DISTANCE_PER_REVOLUTION = 360;
 
         // these are relative to the vertical axis
-        public static final double HOOD_BOTTOM_POSITION = 74;
-        public static final double HOOD_TOP_POSITION = 45;
+        public static final double HOOD_BOTTOM_POSITION_DEG = 74;
+        public static final double HOOD_TOP_POSITION_DEG = 45;
 
         //both in radians relative to horizontal
         //check if these should be in degrees or radians
-        public static final double HOOD_MAX_THETA = Math.PI/4;
-        public static final double HOOD_MIN_THETA = Math.toRadians(16);
+        public static final double HOOD_MAX_THETA = Math.toRadians(90 - HOOD_TOP_POSITION_DEG);
+        public static final double HOOD_MIN_THETA = Math.toRadians(90 - HOOD_BOTTOM_POSITION_DEG);
 
 
         public static final int SPARK_FLYWHEEL_LEFT_PORT = 30;
@@ -121,11 +129,19 @@ public final class Constants {
 
         public static final int SPARK_FEEDER_PORT = 33;
         public static final int SPARK_FEEDER_MAX_CURRENT = 80; //keep this
+        public static final int SPARK_FEEDER_MAX_STALL_CURRENT = 60; //keep this
 
         public static final double RPM_CONVERSION_FACTOR = 0.10472;
         public static final double FLYWHEEL_ENERGY_LOSS_FACTOR = 1;
         public static final double GRAVITY_ACCELERATION_CONSTANT = 9.8; //meters per second
         public static final double LIMELIGHT_ANGLE_FROM_HORIZONTAL = 14.34; //degrees
+
+        public static final String TAB_NAME = "Shooter";
+
+        public static final String FEEDER_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL = "feederSpark";
+        public static final String LEFT_FLYWHEEL_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL = "flywheelsLeftSparkVelocityController";
+        public static final String RIGHT_FLYWHEEL_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL = "flywheelsLeftSparkVelocityController";
+        public static final String HOOD_POSITION_CONTROLLER_CONFIGURABLE_LABEL = "hoodPositionController";
     }
 
     public static final class PowerCell {
@@ -159,8 +175,12 @@ public final class Constants {
         /**
          * In manual mode the max pwm will linearly clamp starting at the buffer zone size before the min or max positions.
          */
-        public static final double BUFFER_ZONE_SIZE = 10; // degrees
+        public static final double BUFFER_ZONE_SIZE = 30; // degrees
 
         public static final double TURRET_PID_TOLERANCE = 2; // degrees
+
+        public static final String TAB_NAME = "Turret";
+        public static final String POSITION_CONTROLLER_CONFIGURABLE_LABEL = "Turret TalonSRX PID";
+        public static final String ZERO_TURRET_LABEL = "Zero Turret";
     }
 }
