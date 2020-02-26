@@ -15,6 +15,8 @@ public final class Constants {
 
     public static final double NOMINAL_VOLTAGE = 12;
 
+    public static final boolean TUNE_MODE = true;
+
     public static final String TUNE_ENABLE_LABEL = "Tune Enable";
 
     /**
@@ -53,22 +55,41 @@ public final class Constants {
         public static final int SPARK_RIGHT_PORT_SLAVE_2 = 15;
         public static final int SPARK_RIGHT_PORT_SLAVE_3 = 16;
 
-        public static final int SPARK_LEFT_ENCODER = 10;
-        public static final int SPARK_RIGHT_ENCODER = 14;
+        public static final int LEFT_ENCODER_SPARK = 10;
+        public static final int RIGHT_ENCODER_SPARK = 14;
 
-        public static final int ENCODER_CPR = 250;
+        public static final int MAX_CURRENT = 18;
 
-        public static final double WHEEL_RADIUS = 3;
+        public static final int PIGEON_IMU_PORT = 1;
 
-        public static final int CURRENT_LIMIT = 18;
+        public static final int ENCODER_CPR = 250 * 4; // 4x encoding
+
+        public static final double WHEEL_RADIUS = 3; // inches
 
         public static final String RESET_GYRO_LABEL = "Zero Gyro";
     }
 
+    public static final class IntakeArm {
+
+        public static final int MAX_CURRENT = 2; //amps
+
+        public static final int TALON_PORT = 20;
+
+        public static final int ENCODER_DIO_PORT = 0;
+
+        public static final double ENCODER_PULSES_PER_REVOLUTION = 174.9;
+
+        public static final double TOP_POSITION_DEGREES = 0;
+
+        public static final double BOTTOM_POSITION_DEGREES = 90; //temp
+
+        public static final double SPEED = 0.5;
+    }
+
     public static final class Magazine {
 
-        public static final int TALON_LOW_MAX_CURRENT = 60;
-        public static final int TALON_HIGH_MAX_CURRENT = 60;
+        public static final int SPARK_LOW_MAX_CURRENT = 60;
+        public static final int SPARK_HIGH_MAX_CURRENT = 60;
 
         //replace ports with real values
         public static final int SPARK_LOW_PORT = 22;
