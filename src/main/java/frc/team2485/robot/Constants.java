@@ -205,4 +205,8 @@ public final class Constants {
         public static final String POSITION_CONTROLLER_CONFIGURABLE_LABEL = "Turret TalonSRX PID";
         public static final String ZERO_TURRET_LABEL = "Zero Turret";
     }
+
+    public static final class Climber {
+        public static final int TALON_PORT = 18;
+    }
 }

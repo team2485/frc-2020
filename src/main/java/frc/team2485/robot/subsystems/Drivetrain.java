@@ -7,14 +7,14 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team2485.WarlordsLib.RampRate;
-import frc.team2485.WarlordsLib.Tunable;
+
 import frc.team2485.WarlordsLib.motorcontrol.WL_SparkMax;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team2485.WarlordsLib.sensors.SparkMaxAlternateEncoder;
 import frc.team2485.robot.Constants;
 
 
-public class Drivetrain extends SubsystemBase implements Tunable {
+public class Drivetrain extends SubsystemBase  {
 
     private DifferentialDrive m_drive;
 
@@ -131,8 +131,5 @@ public class Drivetrain extends SubsystemBase implements Tunable {
     public void periodic() {
     }
 
-    @Override
-    public void tunePeriodic() {
 
-    }
 }

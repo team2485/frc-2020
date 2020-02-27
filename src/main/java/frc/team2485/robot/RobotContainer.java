@@ -16,24 +16,17 @@ import edu.wpi.first.wpilibj2.command.*;
 import frc.team2485.WarlordsLib.oi.Deadband;
 import frc.team2485.WarlordsLib.oi.WL_XboxController;
 import frc.team2485.robot.commands.IncrementHighMagazine;
-import frc.team2485.robot.subsystems.Drivetrain;
-import frc.team2485.robot.subsystems.HighMagazine;
-import frc.team2485.robot.subsystems.LowMagazine;
+import frc.team2485.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import frc.team2485.WarlordsLib.Limelight;
 import frc.team2485.robot.commands.SetHood;
 import frc.team2485.robot.commands.Shoot;
-import frc.team2485.robot.subsystems.Feeder;
-import frc.team2485.robot.subsystems.Flywheels;
-import frc.team2485.robot.subsystems.Hood;
 
 import frc.team2485.robot.commands.TurretFieldCentricAdjust;
 import frc.team2485.robot.commands.TurretSetAngle;
-import frc.team2485.robot.subsystems.Turret;
 import frc.team2485.robot.commands.IntakeArmMove;
 import frc.team2485.robot.subsystems.Drivetrain;
-import frc.team2485.robot.subsystems.IntakeArm;
 
 public class RobotContainer {
 
@@ -46,6 +39,7 @@ public class RobotContainer {
     private Feeder m_feeder;
     private Flywheels m_flywheels;
     private Hood m_hood;
+    private Climber m_climber;
 
     SetHood setHood;
     //    private Drivetrain m_drivetrain;
@@ -68,12 +62,16 @@ public class RobotContainer {
         m_flywheels = new Flywheels();
         m_hood = new Hood(m_feeder.getHoodEncoder());
 
-        m_jack = new WL_XboxController(Constants.OI.JACK_PORT);
-        m_suraj = new WL_XboxController(Constants.OI.SURAJ_PORT);
-//        m_drivetrain = new Drivetrain();
+
         m_turret = new Turret();
         m_intakeArm = new IntakeArm();
 
+        m_climber = new Climber();
+
+
+
+        m_jack = new WL_XboxController(Constants.OI.JACK_PORT);
+        m_suraj = new WL_XboxController(Constants.OI.SURAJ_PORT);
         m_jack = new WL_XboxController(Constants.OI.JACK_PORT);
         m_suraj = new WL_XboxController(Constants.OI.SURAJ_PORT);
 
@@ -268,6 +266,11 @@ public class RobotContainer {
                 })
         );
 
+        m_climber.setDefaultCommand(new RunCommand(() -> {
+            m_climber.setPWM(Deadband.linearScaledDeadband(m_jack.getY(GenericHID.Hand.kRight), Constants.OI.XBOX_DEADBAND));
+        }, m_climber));
+
+
 
         /*
         INTAKE ARM
@@ -315,11 +318,11 @@ public class RobotContainer {
 //                m_highMagazine.tunePeriodic();
             } else {
                 m_lowMagazine.setPWM(-Deadband.linearScaledDeadband(m_jack.getY(GenericHID.Hand.kRight), Constants.OI.XBOX_DEADBAND));
-                m_highMagazine.setPWM(-Deadband.linearScaledDeadband(m_suraj.getY(GenericHID.Hand.kLeft), Constants.OI.XBOX_DEADBAND));
-                m_turret.setUnclampedPWM(Deadband.linearScaledDeadband(m_jack.getX(GenericHID.Hand.kLeft), Constants.OI.XBOX_DEADBAND));
-                m_feeder.setPWM(Deadband.linearScaledDeadband(m_suraj.getY(GenericHID.Hand.kLeft), Constants.OI.XBOX_DEADBAND));
-                m_flywheels.setPWM(-Deadband.linearScaledDeadband(m_suraj.getY(GenericHID.Hand.kRight), Constants.OI.XBOX_DEADBAND));
-                m_hood.setPWM(-Deadband.linearScaledDeadband(m_jack.getY(GenericHID.Hand.kLeft), Constants.OI.XBOX_DEADBAND));
+                m_highMagazine.setPWM(-Deadband.linearScaledDeadband(m_jack.getY(GenericHID.Hand.kLeft), Constants.OI.XBOX_DEADBAND));
+//                m_turret.setUnclampedPWM(Deadband.linearScaledDeadband(m_jack.getX(GenericHID.Hand.kLeft), Constants.OI.XBOX_DEADBAND));
+//                m_feeder.setPWM(Deadband.linearScaledDeadband(m_suraj.getY(GenericHID.Hand.kLeft), Constants.OI.XBOX_DEADBAND));
+//                m_flywheels.setPWM(-Deadband.linearScaledDeadband(m_suraj.getY(GenericHID.Hand.kRight), Constants.OI.XBOX_DEADBAND));
+//                m_hood.setPWM(-Deadband.linearScaledDeadband(m_jack.getY(GenericHID.Hand.kLeft), Constants.OI.XBOX_DEADBAND));
             }
         }
     }
