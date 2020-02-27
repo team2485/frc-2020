@@ -19,6 +19,9 @@ public class HighMagazine extends SubsystemBase implements Tunable {
 
     private DigitalInput m_exitIR;
 
+    public enum MagazineState {
+        INTAKING, FEEDING
+    }
     /**
      * the number of balls currently contained in the high belt
      */
@@ -28,9 +31,8 @@ public class HighMagazine extends SubsystemBase implements Tunable {
 
     private boolean m_transferIRLastVal, m_exitIRLastVal;
 
-//    public enum MagazineState {
-//        INTAKING,
-//    }
+    private MagazineState state;
+
 
     /**
      * High magazine subystem, controlling the top belt stage and outtake rollers.
@@ -127,6 +129,9 @@ public class HighMagazine extends SubsystemBase implements Tunable {
         return m_numBalls;
     }
 
+    public void setMagazineState(MagazineState state) {
+        this.state = state;
+    }
     /**
      * Periodic method updating the number of balls in the high belt using beam break sensors.
      */
@@ -141,17 +146,21 @@ public class HighMagazine extends SubsystemBase implements Tunable {
             }
         }
 
-        if (!getExitIR() && getExitIR() != m_exitIRLastVal) {
-            if (getEncoderVelocity() < 0) {
-                m_numBalls--;
-            } else if (getEncoderVelocity() > 0 ) {
-                m_numBalls++;
+        if (this.state == MagazineState.FEEDING) {
+            if (!getExitIR() && getExitIR() != m_exitIRLastVal) {
+                if (getEncoderVelocity() < 0) {
+                    m_numBalls--;
+                } else if (getEncoderVelocity() > 0 ) {
+                    m_numBalls++;
+                }
             }
+            m_exitIRLastVal = getExitIR();
         }
 
-        m_exitIRLastVal = getExitIR();
+
         m_transferIRLastVal = getTransferIR();
     }
+
 
     public void resetEncoder(double position) {
         m_spark.getEncoder().setPosition(0);
