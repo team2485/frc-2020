@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.team2485.WarlordsLib.RampRate;
 import frc.team2485.WarlordsLib.Tunable;
 import frc.team2485.WarlordsLib.motorcontrol.WL_SparkMax;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -29,6 +30,9 @@ public class Drivetrain extends SubsystemBase implements Tunable {
     private SparkMaxAlternateEncoder m_encoderRight;
 
     private PigeonIMU m_pigeon;
+
+    private RampRate throttleRamp;
+//    private RampRate steeringRamp;
 
     public Drivetrain() {
         this.m_sparkLeft1Master = new WL_SparkMax(Constants.Drivetrain.SPARK_LEFT_PORT_MASTER);
@@ -59,6 +63,9 @@ public class Drivetrain extends SubsystemBase implements Tunable {
 
         SendableRegistry.add(this.m_drive, "DifferentialDrive");
 
+        this.throttleRamp = new RampRate();
+//        this.steeringRamp = new RampRate();
+
         this.addToShuffleboard();
     }
 
@@ -66,6 +73,8 @@ public class Drivetrain extends SubsystemBase implements Tunable {
         ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
         tab.add(this);
         tab.add(this.m_drive);
+        tab.add(this.throttleRamp);
+//        tab.add(this.steeringRamp);
         tab.addNumber("Left Encoder Position", this::getLeftEncoderPosition);
         tab.addNumber("Left Encoder Velocity", this::getLeftEncoderVelocity);
         tab.addNumber("Right Encoder Position", this::getRightEncoderPosition);
@@ -75,7 +84,9 @@ public class Drivetrain extends SubsystemBase implements Tunable {
     }
 
     public void curvatureDrive(double throttle, double steering, boolean isQuickTurn) {
-        m_drive.curvatureDrive(throttle, steering, isQuickTurn);
+        double throttleNextValue = throttleRamp.getNextValue(throttle);
+        m_drive.curvatureDrive(throttleNextValue, steering, isQuickTurn);
+        throttleRamp.setLastValue(throttleNextValue);
     }
 
     /**
