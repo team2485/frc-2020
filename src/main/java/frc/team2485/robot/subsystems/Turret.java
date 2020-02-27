@@ -38,8 +38,8 @@ public class Turret extends SubsystemBase implements Tunable {
         m_talon.setDistancePerPulse(360.0 / Constants.Turret.ENCODER_CPR); // convert to degrees
         m_talon.enableVoltageCompensation(Constants.NOMINAL_VOLTAGE);
         m_talon.setTolerance(Constants.Turret.TURRET_PID_TOLERANCE);
-        this.m_talon.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed);
-        this.m_talon.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed);
+        m_talon.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed);
+        m_talon.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed);
 
         m_limelight = new Limelight();
 
@@ -143,8 +143,17 @@ public class Turret extends SubsystemBase implements Tunable {
         m_talon.configReverseSoftLimitEnable(enable);
     }
 
+    public boolean getForwardLimitSwitch() {
+        return !m_talon.getSensorCollection().isFwdLimitSwitchClosed();
+    }
+
+    public boolean getReverseLimitSwitch() {
+        return !m_talon.getSensorCollection().isRevLimitSwitchClosed();
+    }
+
     @Override
     public void periodic() {
+//        if ()
     }
 
     @Override
