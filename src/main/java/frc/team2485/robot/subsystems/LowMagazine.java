@@ -29,10 +29,11 @@ public class LowMagazine extends SubsystemBase implements Tunable {
      */
     public LowMagazine() {
         m_spark = new PIDSparkMax(Constants.Magazine.SPARK_LOW_PORT, ControlType.kCurrent);
-        m_spark.getEncoder().setPositionConversionFactor(Constants.Magazine.LOW_GEAR_RATIO * Constants.Magazine.ROLLER_DIAMETER * 2 * Math.PI);
-        m_spark.getEncoder().setVelocityConversionFactor(Constants.Magazine.LOW_GEAR_RATIO * Constants.Magazine.ROLLER_DIAMETER * 2 * Math.PI);
+        m_spark.getEncoder().setPositionConversionFactor(Constants.Magazine.LOW_GEAR_RATIO * Constants.Magazine.ROLLER_RADIUS * 2 * Math.PI);
+        m_spark.getEncoder().setVelocityConversionFactor(Constants.Magazine.LOW_GEAR_RATIO * Constants.Magazine.ROLLER_RADIUS * 2 * Math.PI / 60);
         m_spark.setInverted(true);
         m_spark.enableVoltageCompensation(Constants.NOMINAL_VOLTAGE);
+        m_spark.setEncoderPosition(0);
 
         m_entranceIR = new DigitalInput(Constants.Magazine.ENTRANCE_IR_PORT);
         m_transferIR = new DigitalInput(Constants.Magazine.TRANSFER_IR_PORT);
@@ -49,6 +50,7 @@ public class LowMagazine extends SubsystemBase implements Tunable {
     public void addToShuffleboard() {
         SendableRegistry.add(m_spark, "Low Magazine Spark");
         ShuffleboardTab tab = Shuffleboard.getTab(Constants.Magazine.TAB_NAME);
+        tab.add(m_spark);
         tab.addNumber("Low Position", this::getEncoderPosition);
         tab.addNumber("Low Velocity", this::getEncoderVelocity);
         tab.addNumber("Low Current", m_spark::getOutputCurrent);
@@ -67,7 +69,7 @@ public class LowMagazine extends SubsystemBase implements Tunable {
 
 
     public boolean setVelocity(double velocity) {
-        m_spark.runPID(velocity * 60);
+        m_spark.runPID(velocity);
         return m_spark.atTarget();
     }
 
@@ -85,10 +87,10 @@ public class LowMagazine extends SubsystemBase implements Tunable {
 
     /**
      *
-     * @return belt encoder velocity
+     * @return belt encoder velocity in inches per second
      */
     public double getEncoderVelocity() {
-        return m_spark.getEncoder().getVelocity() / 60;
+        return m_spark.getEncoder().getVelocity();
     }
 
     /**

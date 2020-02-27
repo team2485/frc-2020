@@ -83,7 +83,7 @@ public final class Constants {
 
         public static final double BOTTOM_POSITION_DEGREES = 90; //temp
 
-        public static final double SPEED = 0.5;
+        public static final double SPEED = 0.7;
     }
 
     public static final class Magazine {
@@ -103,12 +103,12 @@ public final class Constants {
 
         public static final double ENCODER_VELOCITY_DEADBAND = 0.1;
 
-        public static final double ROLLER_DIAMETER = 0.5;
+        public static final double ROLLER_RADIUS = 1.3 / 2; //inchess
 
-        public static final double HIGH_GEAR_RATIO = 18/24;
-        public static final double LOW_GEAR_RATIO = 12/30;
+//        public static final double HIGH_GEAR_RATIO = 18/24;
+        public static final double HIGH_GEAR_RATIO = 1;
+        public static final double LOW_GEAR_RATIO = 12.0/30;
 
-        //Replace below with actual number
         public static final double LOW_INTAKE_BY_ONE_POS = -7;
         public static final double HIGH_INDEX_BY_ONE_POS = -7;
 
@@ -117,10 +117,11 @@ public final class Constants {
         public static final double FAST_INTAKE_PWM = -0.5;
         public static final double NORMAL_BALL_INCREMENT_TIMEOUT = 0.5;
 
+        public static final double HIGH_MAGAZINE_POSITION_CONTROLLER_THRESHOLD = 1;
+
         public static final String TAB_NAME = "Magazine";
 
         public static final String HIGH_MAGAZINE_POSITION_CONTROLLER_CONFIGURABLE_LABEL = "highMagazineSparkPositionController";
-        public static final String LOW_MAGAZINE_POSITION_CONTROLLER_CONFIGURABLE_LABEL = "lowMagazineSparkPositionController";
 
         public static final String LOW_MAGAZINE_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL = "lowMagazineSparkVelocityController";
     }

@@ -88,10 +88,6 @@ public class Drivetrain extends SubsystemBase implements Tunable {
         m_encoderLeft.setPosition(posRight);
     }
 
-    public double getHeading() {
-        return -m_pigeon.getFusedHeading();
-    }
-
     public double getLeftEncoderPosition() {
         return m_encoderLeft.getPosition();
     }
@@ -114,6 +110,10 @@ public class Drivetrain extends SubsystemBase implements Tunable {
      */
     public void setHeading(double heading) {
         m_pigeon.setFusedHeading(heading);
+    }
+
+    public double getHeading() {
+        return -m_pigeon.getFusedHeading();
     }
 
     @Override

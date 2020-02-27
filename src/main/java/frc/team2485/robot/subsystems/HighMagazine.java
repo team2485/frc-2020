@@ -8,8 +8,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team2485.WarlordsLib.Tunable;
 import frc.team2485.WarlordsLib.motorcontrol.PIDSparkMax;
-import frc.team2485.WarlordsLib.motorcontrol.PIDTalonSRX;
-import frc.team2485.WarlordsLib.oi.Deadband;
 import frc.team2485.WarlordsLib.robotConfigs.RobotConfigs;
 import frc.team2485.robot.Constants;
 
@@ -30,6 +28,10 @@ public class HighMagazine extends SubsystemBase implements Tunable {
 
     private boolean m_transferIRLastVal, m_exitIRLastVal;
 
+//    public enum MagazineState {
+//        INTAKING,
+//    }
+
     /**
      * High magazine subystem, controlling the top belt stage and outtake rollers.
      * @param transferIR boolean supplier for the beam break sensor at the intersection of
@@ -37,10 +39,12 @@ public class HighMagazine extends SubsystemBase implements Tunable {
      */
     public HighMagazine(BooleanSupplier transferIR)  {
         m_spark = new PIDSparkMax(Constants.Magazine.SPARK_HIGH_PORT, ControlType.kPosition);
-        m_spark.getEncoder().setPositionConversionFactor(Constants.Magazine.HIGH_GEAR_RATIO * Constants.Magazine.ROLLER_DIAMETER * 2 * Math.PI);
-        m_spark.getEncoder().setVelocityConversionFactor(Constants.Magazine.HIGH_GEAR_RATIO * Constants.Magazine.ROLLER_DIAMETER * 2 * Math.PI);
-        m_spark.setInverted(true);
+        m_spark.getEncoder().setPositionConversionFactor(Constants.Magazine.HIGH_GEAR_RATIO * 2 * Math.PI * Constants.Magazine.ROLLER_RADIUS);
+        m_spark.getEncoder().setVelocityConversionFactor(Constants.Magazine.HIGH_GEAR_RATIO * 2 * Math.PI * Constants.Magazine.ROLLER_RADIUS / 60);
+        m_spark.setInverted(false);
         m_spark.enableVoltageCompensation(Constants.NOMINAL_VOLTAGE);
+        m_spark.setEncoderPosition(0);
+        m_spark.setTolerance(Constants.Magazine.HIGH_MAGAZINE_POSITION_CONTROLLER_THRESHOLD);
 
         m_exitIR = new DigitalInput(Constants.Magazine.EXIT_IR_PORT);
 
@@ -58,6 +62,7 @@ public class HighMagazine extends SubsystemBase implements Tunable {
 
         ShuffleboardTab tab = Shuffleboard.getTab(Constants.Magazine.TAB_NAME);
         tab.add(this);
+        tab.add(m_spark);
         tab.addNumber("High Position", this::getEncoderPosition);
         tab.addNumber("High Velocity", this::getEncoderVelocity);
         tab.addNumber("High Current", m_spark::getOutputCurrent);
@@ -95,7 +100,7 @@ public class HighMagazine extends SubsystemBase implements Tunable {
      * @return belt encoder velocity in inches per second
      */
     public double getEncoderVelocity() {
-        return m_spark.getEncoder().getVelocity() / 60;
+        return m_spark.getEncoder().getVelocity();
     }
 
     /**
@@ -136,13 +141,13 @@ public class HighMagazine extends SubsystemBase implements Tunable {
             }
         }
 
-//        if (!getExitIR() && getExitIR() != m_exitIRLastVal) {
-//            if (getEncoderVelocity() < 0) {
-//                m_numBalls--;
-//            } else if (getEncoderVelocity() > 0 ) {
-//                m_numBalls++;
-//            }
-//        }
+        if (!getExitIR() && getExitIR() != m_exitIRLastVal) {
+            if (getEncoderVelocity() < 0) {
+                m_numBalls--;
+            } else if (getEncoderVelocity() > 0 ) {
+                m_numBalls++;
+            }
+        }
 
         m_exitIRLastVal = getExitIR();
         m_transferIRLastVal = getTransferIR();

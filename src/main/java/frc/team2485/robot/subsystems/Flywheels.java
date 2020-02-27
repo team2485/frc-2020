@@ -88,7 +88,6 @@ public class Flywheels extends SubsystemBase implements Tunable {
         return m_sparkRight.getEncoder().getVelocity();
     }
 
-
     @Override
     public void periodic() {
     }

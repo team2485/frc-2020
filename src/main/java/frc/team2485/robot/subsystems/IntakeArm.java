@@ -90,11 +90,11 @@ public class IntakeArm extends SubsystemBase {
     }
 
     public boolean getTopLimitSwitch() {
-        return !m_talon.getSensorCollection().isRevLimitSwitchClosed(); //normally closed switch
+        return !m_talon.getSensorCollection().isFwdLimitSwitchClosed(); //normally closed switch
     }
 
     public boolean getBottomLimitSwitch() {
-        return !m_talon.getSensorCollection().isFwdLimitSwitchClosed(); //normally closed switch
+        return !m_talon.getSensorCollection().isRevLimitSwitchClosed(); //normally closed switch
     }
 
     public double getTopPosition() {
