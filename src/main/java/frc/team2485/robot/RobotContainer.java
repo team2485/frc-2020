@@ -326,5 +326,25 @@ public class RobotContainer {
             }
         }
     }
+
+
+    //All the data the widgets need in networktables for them to work
+    public void widgetNetworkTables() {
+        //for the Heading Widget
+        SmartDashboard.putNumber("Heading/encoder",m_turret.getEncoderPosition()); //In Radians, add this to the Robot's Gyro position
+        SmartDashboard.putNumber("Heading/gyro",m_drivetrain.getHeading()); //In Degrees, make sure this is reset at the beginning
+
+        //Data for the shooter widget is in the Shoot command
+    }
+
+
+    //All the data the widgets need in networktables for them to work
+    public void widgetNetworkTables() {
+        //for the Heading Widget
+        SmartDashboard.putNumber("Heading/encoder",m_turret.getEncoderPosition()); //In Radians, add this to the Robot's Gyro position
+        SmartDashboard.putNumber("Heading/gyro",m_drivetrain.getHeading()); //In Degrees, make sure this is reset at the beginning
+
+        //Data for the shooter widget is in the Shoot command
+    }
 }
 

@@ -2,6 +2,7 @@ package frc.team2485.robot.commands;
 
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.team2485.WarlordsLib.Limelight;
 import frc.team2485.robot.Constants;
@@ -18,6 +19,7 @@ public class Shoot extends ParallelCommandGroup {
     private Limelight m_limelight;
     private Hood m_hood;
     private Flywheels m_flywheels;
+    private double initialVelocity;
 
     public Shoot(Flywheels flywheels, Hood hood, Limelight limelight, DoubleSupplier finalYVelocity) {
         super();
@@ -28,7 +30,7 @@ public class Shoot extends ParallelCommandGroup {
         this.m_hoodSetpoint = 0;
         this.m_rpmSetpoint = 0;
         this.addCommands(new SetFlywheels(flywheels, ()-> m_rpmSetpoint * Constants.Shooter.FLYWHEEL_ENERGY_LOSS_FACTOR), new SetHood(hood, ()-> m_hoodSetpoint));
-
+        this.initialVelocity = 0; // for the widget
         this.addToShuffleboard();
     }
 
@@ -46,6 +48,8 @@ public class Shoot extends ParallelCommandGroup {
 
         double thetaLaunch = getThetaLaunch(v0x, v0y); //finds launch angle using initial component velocities
 
+        //shooter widget
+        initialVelocity = Math.sqrt(v0y*v0y+v0x*v0x); //Finding the initial velocity with the pythagorean theorem
 
         m_hoodSetpoint = Math.toDegrees(getComplement(thetaLaunch)); //accounts for 90 degree shift
         m_rpmSetpoint = - getRPM(v0x, thetaLaunch, Constants.PowerCell.POWER_CELL_RADIUS, Constants.Shooter.RPM_CONVERSION_FACTOR); //finds launch RPM using initial angle+velocity
@@ -55,6 +59,11 @@ public class Shoot extends ParallelCommandGroup {
         ShuffleboardTab tab = Shuffleboard.getTab(Constants.Shooter.TAB_NAME);
         tab.addNumber(" Angle Setpoint", ()-> m_hoodSetpoint);
         tab.addNumber("RPM Setpoint", ()-> m_rpmSetpoint);
+
+        //Data for the Shooter Widget: Initial Velocity and the Pitch of the shooter
+        SmartDashboard.putNumber("Shooter/pitch",m_hood.getHoodTheta());
+        SmartDashboard.putNumber("Shooter/iv",initialVelocity);
+
     }
 
     private static double getX(double ty, double LLtoPort){

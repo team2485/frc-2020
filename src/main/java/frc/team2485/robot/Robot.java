@@ -46,11 +46,13 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
+
+
   }
 
   @Override
   public void autonomousPeriodic() {
-
+    m_robotContainer.widgetNetworkTables();
 
   }
 
