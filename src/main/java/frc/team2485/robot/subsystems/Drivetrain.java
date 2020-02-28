@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.team2485.WarlordsLib.RampRate;
 import frc.team2485.WarlordsLib.Tunable;
 import frc.team2485.WarlordsLib.motorcontrol.WL_SparkMax;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -27,6 +28,8 @@ public class Drivetrain extends SubsystemBase implements Tunable {
 
     private SparkMaxAlternateEncoder m_encoderLeft;
     private SparkMaxAlternateEncoder m_encoderRight;
+
+    private RampRate m_throttleRamp;
 
     private PigeonIMU m_pigeon;
 
@@ -57,8 +60,10 @@ public class Drivetrain extends SubsystemBase implements Tunable {
 
         this.m_pigeon = new PigeonIMU(Constants.Drivetrain.PIGEON_IMU_PORT);
 
-        SendableRegistry.add(this.m_drive, "DifferentialDrive");
+        this.m_throttleRamp = new RampRate();
 
+        SendableRegistry.add(this.m_drive, "DifferentialDrive");
+        m_throttleRamp.setRampRates(Constants.Drivetrain.UP_RAMP_RATE, Constants.Drivetrain.DOWN_RAMP_RATE);
         this.addToShuffleboard();
     }
 
@@ -66,6 +71,9 @@ public class Drivetrain extends SubsystemBase implements Tunable {
         ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
         tab.add(this);
         tab.add(this.m_drive);
+        tab.addNumber("Left PWM", m_sparkLeft1Master::getAppliedOutput);
+        tab.addNumber("Right PWM", m_sparkRight1Master::getAppliedOutput);
+
         tab.addNumber("Left Encoder Position", this::getLeftEncoderPosition);
         tab.addNumber("Left Encoder Velocity", this::getLeftEncoderVelocity);
         tab.addNumber("Right Encoder Position", this::getRightEncoderPosition);
@@ -75,7 +83,9 @@ public class Drivetrain extends SubsystemBase implements Tunable {
     }
 
     public void curvatureDrive(double throttle, double steering, boolean isQuickTurn) {
-        m_drive.curvatureDrive(throttle, steering, isQuickTurn);
+        double nextThrottleValue = m_throttleRamp.getNextValue(throttle);
+        m_drive.curvatureDrive(nextThrottleValue, steering, isQuickTurn);
+        m_throttleRamp.setLastValue(nextThrottleValue);
     }
 
     /**

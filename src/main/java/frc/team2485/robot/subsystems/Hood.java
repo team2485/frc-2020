@@ -59,9 +59,10 @@ public class Hood extends SubsystemBase {
 
     @Override
     public void periodic() {
-        if (getBottomLimitSwitch()) {
-            this.m_hoodEncoder.setPosition(Constants.Shooter.HOOD_BOTTOM_POSITION_DEG);
-        } else if (getTopLimitSwitch()) {
+//        if (getBottomLimitSwitch()) {
+//            this.m_hoodEncoder.setPosition(Constants.Shooter.HOOD_BOTTOM_POSITION_DEG);
+//        } else
+            if (getTopLimitSwitch()) {
             this.m_hoodEncoder.setPosition(Constants.Shooter.HOOD_TOP_POSITION_DEG);
         }
     }

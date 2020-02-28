@@ -26,7 +26,7 @@ public class IntakeArmMove extends CommandBase {
 
     @Override
     public void execute() {
-        int direction = this.m_position == IntakeArmPosition.TOP ? -1 : 1;
+        int direction = this.m_position == IntakeArmPosition.TOP ? 1 : -1;
         this.m_intakeArm.setPWM(Math.copySign(this.m_speed, direction));
     }
 
