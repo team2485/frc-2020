@@ -1,6 +1,7 @@
 package frc.team2485.robot.subsystems;
 
 import com.revrobotics.ControlType;
+import edu.wpi.first.wpilibj.Counter;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -15,15 +16,6 @@ public class LowMagazine extends SubsystemBase implements Tunable {
 
     private PIDSparkMax m_spark;
 
-    private DigitalInput m_entranceIR, m_transferIR;
-
-    /**
-     * the number of balls currently contained in the low belt
-     */
-    private int m_numBalls;
-
-    private boolean m_entranceIRLastVal, m_transferIRLastVal;
-
     /**
      * Low magazine subystem, controlling the intake rollers and low belt.
      */
@@ -31,16 +23,10 @@ public class LowMagazine extends SubsystemBase implements Tunable {
         m_spark = new PIDSparkMax(Constants.Magazine.SPARK_LOW_PORT, ControlType.kCurrent);
         m_spark.getEncoder().setPositionConversionFactor(Constants.Magazine.LOW_GEAR_RATIO * Constants.Magazine.ROLLER_RADIUS * 2 * Math.PI);
         m_spark.getEncoder().setVelocityConversionFactor(Constants.Magazine.LOW_GEAR_RATIO * Constants.Magazine.ROLLER_RADIUS * 2 * Math.PI / 60);
+        m_spark.getEncoder().setPosition(0);
         m_spark.setInverted(true);
         m_spark.enableVoltageCompensation(Constants.NOMINAL_VOLTAGE);
         m_spark.setEncoderPosition(0);
-
-        m_entranceIR = new DigitalInput(Constants.Magazine.ENTRANCE_IR_PORT);
-        m_transferIR = new DigitalInput(Constants.Magazine.TRANSFER_IR_PORT);
-
-        m_numBalls = 0;
-
-        m_entranceIRLastVal = false;
 
         RobotConfigs.getInstance().addConfigurable(Constants.Magazine.LOW_MAGAZINE_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL, m_spark);
 
@@ -54,9 +40,6 @@ public class LowMagazine extends SubsystemBase implements Tunable {
         tab.addNumber("Low Position", this::getEncoderPosition);
         tab.addNumber("Low Velocity", this::getEncoderVelocity);
         tab.addNumber("Low Current", m_spark::getOutputCurrent);
-        tab.addNumber("Low Number of Balls", this::getNumBalls);
-        tab.addBoolean("Entrance IR", this::getEntranceIR);
-        tab.addBoolean("Transfer IR", this::getTransferIR);
     }
 
     /**
@@ -93,55 +76,6 @@ public class LowMagazine extends SubsystemBase implements Tunable {
         return m_spark.getEncoder().getVelocity();
     }
 
-    /**
-     *
-     * @return boolean value of beam break sensor at start of low belt
-     */
-    public boolean getEntranceIR() {
-        return !m_entranceIR.get();
-    }
-
-
-    /**
-     *
-     * @return value of beam break sensor at intersection of low and high belts
-     */
-    public boolean getTransferIR() {
-        return !m_transferIR.get();
-    }
-
-    /**
-     *
-     * @return boolean number of balls currently in the high belt
-     */
-    public int getNumBalls() {
-        return m_numBalls;
-    }
-
-    /**
-     * Periodic method updating the number of balls in the low belt using beam break sensors.
-     */
-    @Override
-    public void periodic() {
-        if (!getEntranceIR() && getEntranceIR() != m_entranceIRLastVal) {
-            if (getEncoderVelocity() < 0) {
-                m_numBalls++;
-            } else if (getEncoderVelocity() > 0) {
-                m_numBalls--;
-            }
-        }
-
-        if (!getTransferIR() && getTransferIR() != m_transferIRLastVal) {
-            if (getEncoderVelocity() < 0) {
-                m_numBalls--;
-            } else if (getEncoderVelocity() > 0) {
-                m_numBalls++;
-            }
-        }
-
-        m_entranceIRLastVal = getEntranceIR();
-        m_transferIRLastVal = getTransferIR();
-    }
 
     /**
      * Should run periodically and run the motor to tune when enabled

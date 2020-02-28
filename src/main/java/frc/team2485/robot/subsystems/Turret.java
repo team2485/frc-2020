@@ -40,6 +40,8 @@ public class Turret extends SubsystemBase implements Tunable {
         m_talon.setTolerance(Constants.Turret.TURRET_PID_TOLERANCE);
         m_talon.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed);
         m_talon.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed);
+        m_talon.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed);
+        m_talon.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed);
 
         m_limelight = new Limelight();
 
@@ -74,6 +76,10 @@ public class Turret extends SubsystemBase implements Tunable {
         } else if (pwm > 0) {
             output = MathUtil.clamp(pwm, 0, Math.pow((MAX_ANGLE - this.getEncoderPosition()) * (1 / BUFFER_ZONE_SIZE), 2));
         }
+
+        SmartDashboard.putNumber("Low Clamp", Math.pow((MIN_ANGLE -  this.getEncoderPosition()) * (-1 / BUFFER_ZONE_SIZE), 2));
+        SmartDashboard.putNumber("High Clamp", Math.pow((MAX_ANGLE - this.getEncoderPosition()) * (1 / BUFFER_ZONE_SIZE), 2));
+
 
         m_talon.set(output);
     }
@@ -153,7 +159,14 @@ public class Turret extends SubsystemBase implements Tunable {
 
     @Override
     public void periodic() {
-//        if ()
+        if (!m_talon.getSensorCollection().isRevLimitSwitchClosed()) {
+            resetEncoderPosition(MIN_ANGLE);
+        } else if (!m_talon.getSensorCollection().isFwdLimitSwitchClosed()) {
+            resetEncoderPosition(MAX_ANGLE);
+        }
+
+        SmartDashboard.putBoolean("forward lim", m_talon.getSensorCollection().isFwdLimitSwitchClosed() );
+        SmartDashboard.putBoolean("rev lim", m_talon.getSensorCollection().isRevLimitSwitchClosed() );
     }
 
     @Override

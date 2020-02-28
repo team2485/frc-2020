@@ -13,10 +13,10 @@ public class Feeder extends SubsystemBase {
     private PIDSparkMax m_spark;
 
     public Feeder() {
-        this.m_spark = new PIDSparkMax(Constants.Shooter.SPARK_FEEDER_PORT, ControlType.kVelocity);
-        this.m_spark.setSmartCurrentLimit(Constants.Shooter.SPARK_FEEDER_MAX_CURRENT);
+        this.m_spark = new PIDSparkMax(Constants.Feeder.SPARK_PORT, ControlType.kVelocity);
+        this.m_spark.setSmartCurrentLimit(Constants.Feeder.MAX_CURRENT);
 
-        RobotConfigs.getInstance().addConfigurable(Constants.Shooter.FEEDER_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL, m_spark);
+        RobotConfigs.getInstance().addConfigurable(Constants.Feeder.VELOCITY_CONTROLLER_CONFIGURABLE_LABEL, m_spark);
     }
 
     public void addToShuffleboard() {

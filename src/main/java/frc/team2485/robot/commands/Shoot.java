@@ -14,20 +14,23 @@ public class Shoot extends ParallelCommandGroup {
 
     private double m_hoodSetpoint;
     private double m_rpmSetpoint;
-    private DoubleSupplier m_finalYVelocity;
+    private DoubleSupplier m_finalYVelocity, m_rpmAdjust, m_hoodAdjust;
     private Limelight m_limelight;
     private Hood m_hood;
     private Flywheels m_flywheels;
 
-    public Shoot(Flywheels flywheels, Hood hood, Limelight limelight, DoubleSupplier finalYVelocity) {
+    public Shoot(Flywheels flywheels, Hood hood, Limelight limelight, DoubleSupplier finalYVelocity, DoubleSupplier rpmAdjust, DoubleSupplier hoodAdjust) {
         super();
         this.m_flywheels = flywheels;
         this.m_hood = hood;
         this.m_limelight = limelight;
         this.m_finalYVelocity = finalYVelocity;
+        this.m_rpmAdjust = rpmAdjust;
+        this.m_hoodAdjust = hoodAdjust;
         this.m_hoodSetpoint = 0;
         this.m_rpmSetpoint = 0;
-        this.addCommands(new SetFlywheels(flywheels, ()-> m_rpmSetpoint * Constants.Shooter.FLYWHEEL_ENERGY_LOSS_FACTOR), new SetHood(hood, ()-> m_hoodSetpoint));
+        this.addCommands(new SetFlywheels(flywheels, ()-> m_rpmSetpoint * Constants.Shooter.FLYWHEEL_ENERGY_LOSS_FACTOR + rpmAdjust.getAsDouble()),
+                new SetHood(hood, ()-> m_hoodSetpoint + hoodAdjust.getAsDouble()));
 
         this.addToShuffleboard();
     }

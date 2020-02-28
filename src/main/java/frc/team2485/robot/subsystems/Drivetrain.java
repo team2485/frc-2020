@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team2485.WarlordsLib.RampRate;
-
 import frc.team2485.WarlordsLib.motorcontrol.WL_SparkMax;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team2485.WarlordsLib.sensors.SparkMaxAlternateEncoder;
@@ -28,6 +27,8 @@ public class Drivetrain extends SubsystemBase  {
 
     private SparkMaxAlternateEncoder m_encoderLeft;
     private SparkMaxAlternateEncoder m_encoderRight;
+
+    private RampRate m_throttleRamp;
 
     private PigeonIMU m_pigeon;
 
@@ -61,10 +62,13 @@ public class Drivetrain extends SubsystemBase  {
 
         this.m_pigeon = new PigeonIMU(Constants.Drivetrain.PIGEON_IMU_PORT);
 
-        SendableRegistry.add(this.m_drive, "DifferentialDrive");
+        this.m_throttleRamp = new RampRate();
 
         this.throttleRamp = new RampRate();
 //        this.steeringRamp = new RampRate();
+
+        SendableRegistry.add(this.m_drive, "DifferentialDrive");
+        m_throttleRamp.setRampRates(Constants.Drivetrain.UP_RAMP_RATE, Constants.Drivetrain.DOWN_RAMP_RATE);
 
         this.addToShuffleboard();
     }
@@ -75,6 +79,8 @@ public class Drivetrain extends SubsystemBase  {
         tab.add(this.m_drive);
         tab.add(this.throttleRamp);
 //        tab.add(this.steeringRamp);
+        tab.addNumber("Left PWM", m_sparkLeft1Master::getAppliedOutput);
+        tab.addNumber("Right PWM", m_sparkRight1Master::getAppliedOutput);
         tab.addNumber("Left Encoder Position", this::getLeftEncoderPosition);
         tab.addNumber("Left Encoder Velocity", this::getLeftEncoderVelocity);
         tab.addNumber("Right Encoder Position", this::getRightEncoderPosition);

@@ -66,6 +66,9 @@ public final class Constants {
 
         public static final double WHEEL_RADIUS = 3; // inches
 
+        public static final double UP_RAMP_RATE = 0.4;
+        public static final double DOWN_RAMP_RATE = 0.1; //pwm deltas
+
         public static final String RESET_GYRO_LABEL = "Zero Gyro";
     }
 
@@ -101,29 +104,41 @@ public final class Constants {
 
         public static final int HIGH_MAGAZINE_BALL_CAPACITY = 4;
 
-        public static final double ENCODER_VELOCITY_DEADBAND = 0.1;
+        public static final double ROLLER_RADIUS = 1.3 / 2;
 
-        public static final double ROLLER_RADIUS = 1.3 / 2; //inchess
-
-//        public static final double HIGH_GEAR_RATIO = 18/24;
         public static final double HIGH_GEAR_RATIO = 1;
+//        public static final double HIGH_GEAR_RATIO = 18.0/24;
         public static final double LOW_GEAR_RATIO = 12.0/30;
 
         public static final double LOW_INTAKE_BY_ONE_POS = -7;
-        public static final double HIGH_INDEX_BY_ONE_POS = -7;
+        public static final double HIGH_INDEX_BY_ONE_POS = -6;
 
         //replace below with actual number
         public static final double LOW_BELT_PWM = -0.7;
         public static final double FAST_INTAKE_PWM = -0.5;
+        public static final double OUTTAKE_PWM = 0.5;
         public static final double NORMAL_BALL_INCREMENT_TIMEOUT = 0.5;
 
         public static final double HIGH_MAGAZINE_POSITION_CONTROLLER_THRESHOLD = 1;
+
+        public static final double COUNTER_MAX_PERIOD = 0.01;
+        public static final int SAMPLES_TO_AVERAGE = 40;
 
         public static final String TAB_NAME = "Magazine";
 
         public static final String HIGH_MAGAZINE_POSITION_CONTROLLER_CONFIGURABLE_LABEL = "highMagazineSparkPositionController";
 
         public static final String LOW_MAGAZINE_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL = "lowMagazineSparkVelocityController";
+    }
+
+    public static final class Feeder {
+        public static final int SPARK_PORT = 33;
+        public static final int MAX_CURRENT = 80; //keep this
+        public static final int SPARK_FEEDER_MAX_STALL_CURRENT = 60; //keep this
+
+        public static final String VELOCITY_CONTROLLER_CONFIGURABLE_LABEL = "feederSpark";
+
+        public static final double OUTTAKE_PWM = 0.5;
     }
 
     public static final class Shooter {
@@ -149,18 +164,17 @@ public final class Constants {
         public static final int SPARK_FLYWHEEL_RIGHT_PORT = 31;
         public static final double SPARK_FLYWHEEL_RIGHT_MAX_CURRENT = 0;
 
-        public static final int SPARK_FEEDER_PORT = 33;
-        public static final int SPARK_FEEDER_MAX_CURRENT = 80; //keep this
-        public static final int SPARK_FEEDER_MAX_STALL_CURRENT = 60; //keep this
-
         public static final double RPM_CONVERSION_FACTOR = 0.10472;
         public static final double FLYWHEEL_ENERGY_LOSS_FACTOR = 1;
         public static final double GRAVITY_ACCELERATION_CONSTANT = 9.8; //meters per second
         public static final double LIMELIGHT_ANGLE_FROM_HORIZONTAL = 14.34; //degrees
 
+        public static final double RPM_ADJUST = 500;
+        public static final double HOOD_ADJUST = 10;
+
         public static final String TAB_NAME = "Shooter";
 
-        public static final String FEEDER_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL = "feederSpark";
+
         public static final String LEFT_FLYWHEEL_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL = "flywheelsLeftSparkVelocityController";
         public static final String RIGHT_FLYWHEEL_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL = "flywheelsLeftSparkVelocityController";
         public static final String HOOD_POSITION_CONTROLLER_CONFIGURABLE_LABEL = "hoodPositionController";
@@ -184,6 +198,8 @@ public final class Constants {
 
         public static final int TALON_PORT = 25;
 
+        public static final double TURRET_ADJUST = 10;
+
         /**
          * counts per revolution of the encoder
          */
@@ -197,7 +213,7 @@ public final class Constants {
         /**
          * In manual mode the max pwm will linearly clamp starting at the buffer zone size before the min or max positions.
          */
-        public static final double BUFFER_ZONE_SIZE = 30; // degrees
+        public static final double BUFFER_ZONE_SIZE = 50; // degrees
 
         public static final double TURRET_PID_TOLERANCE = 2; // degrees
 
