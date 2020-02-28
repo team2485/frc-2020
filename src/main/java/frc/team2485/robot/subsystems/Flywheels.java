@@ -1,15 +1,11 @@
 package frc.team2485.robot.subsystems;
 
-import com.revrobotics.CANEncoder;
 import com.revrobotics.ControlType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team2485.WarlordsLib.Tunable;
 import frc.team2485.WarlordsLib.motorcontrol.PIDSparkMax;
-import frc.team2485.WarlordsLib.motorcontrol.currentmanagement.CurrentSparkMax;
 import frc.team2485.WarlordsLib.robotConfigs.RobotConfigs;
 import frc.team2485.robot.Constants;
 
@@ -19,8 +15,8 @@ public class Flywheels extends SubsystemBase implements Tunable {
     private PIDSparkMax m_sparkRight;
 
     public Flywheels() {
-        this.m_sparkLeft = new PIDSparkMax(Constants.Shooter.SPARK_FLYWHEEL_LEFT_PORT, ControlType.kVelocity);
-        this.m_sparkRight = new PIDSparkMax(Constants.Shooter.SPARK_FLYWHEEL_RIGHT_PORT, ControlType.kVelocity);
+        this.m_sparkLeft = new PIDSparkMax(Constants.Flywheels.SPARK_FLYWHEEL_LEFT_PORT, ControlType.kVelocity);
+        this.m_sparkRight = new PIDSparkMax(Constants.Flywheels.SPARK_FLYWHEEL_RIGHT_PORT, ControlType.kVelocity);
         m_sparkRight.setInverted(true);
 
         m_sparkRight.getEncoder().setVelocityConversionFactor(2);
@@ -29,14 +25,14 @@ public class Flywheels extends SubsystemBase implements Tunable {
         m_sparkLeft.enableVoltageCompensation(Constants.NOMINAL_VOLTAGE);
         m_sparkRight.enableVoltageCompensation(Constants.NOMINAL_VOLTAGE);
 
-        RobotConfigs.getInstance().addConfigurable(Constants.Shooter.LEFT_FLYWHEEL_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL, m_sparkLeft);
-        RobotConfigs.getInstance().addConfigurable(Constants.Shooter.RIGHT_FLYWHEEL_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL, m_sparkRight);
+        RobotConfigs.getInstance().addConfigurable(Constants.Flywheels.LEFT_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL, m_sparkLeft);
+        RobotConfigs.getInstance().addConfigurable(Constants.Flywheels.RIGHT_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL, m_sparkRight);
 
         this.addToShuffleboard();
     }
 
     private void addToShuffleboard() {
-        ShuffleboardTab tab = Shuffleboard.getTab(Constants.Shooter.TAB_NAME);
+        ShuffleboardTab tab = Shuffleboard.getTab(Constants.Flywheels.TAB_NAME);
         tab.addNumber("Flywheels Velocity Setpoint", m_sparkLeft::getSetpoint);
         tab.addNumber("Left Flywheel Velocity", this::getLeftEncoderVelocity);
         tab.addNumber("Right Flywheel Velocity", this::getRightEncoderVelocity);

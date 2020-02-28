@@ -15,21 +15,20 @@ public class Hood extends SubsystemBase {
     private CANEncoder m_hoodEncoder;
 
     public Hood(CANEncoder hoodEncoder) {
-        this.m_spark = new WL_SparkMax(Constants.Shooter.SPARK_HOOD_PORT);
+        this.m_spark = new WL_SparkMax(Constants.Hood.SPARK_PORT);
         this.m_spark.enableVoltageCompensation(Constants.NOMINAL_VOLTAGE);
 
         this.m_spark.getForwardLimitSwitch(CANDigitalInput.LimitSwitchPolarity.kNormallyClosed).enableLimitSwitch(true);
         this.m_spark.getReverseLimitSwitch(CANDigitalInput.LimitSwitchPolarity.kNormallyClosed).enableLimitSwitch(true);
 
         this.m_hoodEncoder = hoodEncoder;
-        this.m_hoodEncoder.setPositionConversionFactor(Constants.Shooter.HOOD_DISTANCE_PER_REVOLUTION);
+        this.m_hoodEncoder.setPositionConversionFactor(Constants.Hood.DISTANCE_PER_REVOLUTION);
 
         this.addToShuffleboard();
-
     }
 
     public void addToShuffleboard() {
-        ShuffleboardTab tab = Shuffleboard.getTab(Constants.Shooter.TAB_NAME);
+        ShuffleboardTab tab = Shuffleboard.getTab(Constants.Hood.TAB_NAME);
         tab.addNumber("Hood Encoder Position", this::getEncoderPosition);
     }
 
@@ -63,7 +62,7 @@ public class Hood extends SubsystemBase {
 //            this.m_hoodEncoder.setPosition(Constants.Shooter.HOOD_BOTTOM_POSITION_DEG);
 //        } else
             if (getTopLimitSwitch()) {
-            this.m_hoodEncoder.setPosition(Constants.Shooter.HOOD_TOP_POSITION_DEG);
+            this.m_hoodEncoder.setPosition(Constants.Hood.HOOD_TOP_POSITION_DEG);
         }
     }
 }

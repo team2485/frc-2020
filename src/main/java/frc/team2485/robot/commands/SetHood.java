@@ -35,15 +35,14 @@ public class SetHood extends CommandBase implements Tunable {
         this.m_controller = new WL_PIDController();
         this.m_finishWhenAtTarget = finishWhenAtTarget;
 
-        RobotConfigs.getInstance().addConfigurable(Constants.Shooter.HOOD_POSITION_CONTROLLER_CONFIGURABLE_LABEL, m_controller);
+        RobotConfigs.getInstance().addConfigurable(Constants.Hood.HOOD_POSITION_CONTROLLER_CONFIGURABLE_LABEL, m_controller);
 
         this.addToShuffleboard();
     }
 
     public void addToShuffleboard() {
         SendableRegistry.add(m_controller, "Hood Position Controller");
-        ShuffleboardTab tab = Shuffleboard.getTab(Constants.Shooter.TAB_NAME);
-//        tab.add(this);
+        ShuffleboardTab tab = Shuffleboard.getTab(Constants.Hood.TAB_NAME);
         tab.add(m_controller);
     }
 

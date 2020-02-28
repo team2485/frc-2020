@@ -25,6 +25,8 @@ public class Turret extends SubsystemBase implements Tunable {
 
     private final double MIN_ANGLE, MAX_ANGLE, BUFFER_ZONE_SIZE;
 
+    private double m_absoluteEncoderOffset;
+
     public Turret() {
 
         m_talon = new PIDTalonSRX(Constants.Turret.TALON_PORT, ControlMode.Position);
@@ -67,7 +69,7 @@ public class Turret extends SubsystemBase implements Tunable {
      * Set PWM of turret motor, clamped based on proximity to limits.
      * @param pwm pwm to set.
      */
-    public void setPWM(double pwm) {
+    public void setClampedPWM(double pwm) {
         double output = 0;
 
         // Set the max pwm output based on proximity to limits
@@ -89,7 +91,7 @@ public class Turret extends SubsystemBase implements Tunable {
      * DON'T USE THIS UNLESS YOU'RE ABSOLUTELY SURE WHAT YOU'RE DOING!
      * @param pwm pwm value to set
      */
-    public void setUnclampedPWM(double pwm) {
+    public void setPWM(double pwm) {
         m_talon.set(pwm);
     }
 
@@ -126,6 +128,10 @@ public class Turret extends SubsystemBase implements Tunable {
      */
     public double getEncoderPosition() {
         return m_talon.getEncoderPosition();
+    }
+
+    public double getAbsoluteEncoderPosition() {
+        return m_talon.getSensorCollection().getPulseWidthPosition() * m_talon.getConversionFactor();
     }
 
     public Limelight getLimelight() {

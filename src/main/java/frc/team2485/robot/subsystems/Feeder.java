@@ -10,6 +10,7 @@ import frc.team2485.WarlordsLib.robotConfigs.RobotConfigs;
 import frc.team2485.robot.Constants;
 
 public class Feeder extends SubsystemBase {
+
     private PIDSparkMax m_spark;
 
     public Feeder() {
@@ -17,10 +18,12 @@ public class Feeder extends SubsystemBase {
         this.m_spark.setSmartCurrentLimit(Constants.Feeder.MAX_CURRENT);
 
         RobotConfigs.getInstance().addConfigurable(Constants.Feeder.VELOCITY_CONTROLLER_CONFIGURABLE_LABEL, m_spark);
+
+        this.addToShuffleboard();
     }
 
     public void addToShuffleboard() {
-        ShuffleboardTab tab = Shuffleboard.getTab(Constants.Shooter.TAB_NAME);
+        ShuffleboardTab tab = Shuffleboard.getTab(Constants.Feeder.TAB_NAME);
         tab.addNumber("Feeder Current", m_spark::getOutputCurrent);
         tab.addNumber("Feeder Velocity", this::getEncoderVelocity);
     }
@@ -38,7 +41,7 @@ public class Feeder extends SubsystemBase {
     }
 
     public CANEncoder getHoodEncoder() {
-        return m_spark.getAlternateEncoder(Constants.Shooter.HOOD_ENCODER_CPR);
+        return m_spark.getAlternateEncoder(Constants.Hood.ENCODER_CPR);
     }
 
     public void tunePeriodic() {
