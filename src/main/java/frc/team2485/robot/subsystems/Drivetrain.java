@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team2485.WarlordsLib.RampRate;
 import frc.team2485.WarlordsLib.motorcontrol.WL_SparkMax;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.team2485.WarlordsLib.robotConfigs.RobotConfigs;
 import frc.team2485.WarlordsLib.sensors.SparkMaxAlternateEncoder;
 import frc.team2485.robot.Constants;
 
@@ -76,6 +77,8 @@ public class Drivetrain extends SubsystemBase  {
 //        this.steeringRamp = new RampRate();
 
         SendableRegistry.add(this.m_drive, "DifferentialDrive");
+
+        RobotConfigs.getInstance().addConfigurable("drivetrainThrottleRamp", m_throttleRamp);
         m_throttleRamp.setRampRates(Constants.Drivetrain.UP_RAMP_RATE, Constants.Drivetrain.DOWN_RAMP_RATE);
 
         this.addToShuffleboard();
@@ -86,7 +89,8 @@ public class Drivetrain extends SubsystemBase  {
         tab.add(this);
         tab.add(this.m_drive);
 
-//        tab.add(this.steeringRamp);
+        tab.add("throttle ramp", this.throttleRamp);
+
         tab.addNumber("Left PWM", m_sparkLeft1Master::getAppliedOutput);
         tab.addNumber("Right PWM", m_sparkRight1Master::getAppliedOutput);
         tab.addNumber("Left Encoder Position", this::getLeftEncoderPosition);

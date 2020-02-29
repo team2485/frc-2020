@@ -5,14 +5,18 @@ import com.revrobotics.CANEncoder;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.team2485.WarlordsLib.Tunable;
 import frc.team2485.WarlordsLib.motorcontrol.WL_SparkMax;
 import frc.team2485.robot.Constants;
+import frc.team2485.robot.commands.SetHood;
 
 
-public class Hood extends SubsystemBase {
+public class Hood extends SubsystemBase implements Tunable {
 
     private WL_SparkMax m_spark;
     private CANEncoder m_hoodEncoder;
+
+    private SetHood m_tuneSetHood;
 
     public Hood(CANEncoder hoodEncoder) {
         this.m_spark = new WL_SparkMax(Constants.Hood.SPARK_PORT);
@@ -24,12 +28,23 @@ public class Hood extends SubsystemBase {
         this.m_hoodEncoder = hoodEncoder;
         this.m_hoodEncoder.setPositionConversionFactor(Constants.Hood.DISTANCE_PER_REVOLUTION);
 
+        m_tuneSetHood = new SetHood(this, 45);
+
         this.addToShuffleboard();
     }
 
     public void addToShuffleboard() {
         ShuffleboardTab tab = Shuffleboard.getTab(Constants.Hood.TAB_NAME);
+        tab.add(m_spark);
         tab.addNumber("Hood Encoder Position", this::getEncoderPosition);
+    }
+
+    /**
+     * Should run periodically and run the motor to tune
+     */
+    @Override
+    public void tunePeriodic() {
+        m_tuneSetHood.tunePeriodic();
     }
 
     public void setPWM(double pwm) {

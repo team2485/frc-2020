@@ -49,8 +49,6 @@ public class RobotContainer {
 
     private Command m_autoCommand;
 
-    private SetHood setHood;
-
     public RobotContainer() {
 
         m_jack = new WL_XboxController(Constants.OI.JACK_PORT);
@@ -73,14 +71,14 @@ public class RobotContainer {
     private void configureCommands() {
 
         this.configureDrivetrainCommands();
-        this.configureIntakeArmCommands();
+//        this.configureIntakeArmCommands();
         this.configureClimberCommands();
         this.configureHoodCommands();
         this.configureTurretCommands();
         this.configureFlywheelsCommands();
 
         this.configureShootingCommands();
-        this.configureIntakingCommands();
+//        this.configureIntakingCommands();
 
         // Toggle Limelight LED
         m_suraj.getJoystickButton(XboxController.Button.kBack).whenPressed(new InstantCommand(() -> {
@@ -96,11 +94,11 @@ public class RobotContainer {
         m_drivetrain.setDefaultCommand(
                 new RunCommand(() -> {
                     m_drivetrain.curvatureDrive(
-                            Deadband.cubicScaledDeadband(
+                            -Deadband.cubicScaledDeadband(
                                     m_jack.getTriggerAxis(GenericHID.Hand.kRight) - m_jack.getTriggerAxis(GenericHID.Hand.kLeft),
                                     Constants.OI.XBOX_DEADBAND),
                             Deadband.cubicScaledDeadband(
-                                    ((m_jack.getX(GenericHID.Hand.kLeft) * m_jack.getX(GenericHID.Hand.kLeft)) * (m_jack.getX(GenericHID.Hand.kLeft) / Math.abs(m_jack.getX(GenericHID.Hand.kLeft)))),
+                                    ((m_jack.getX(GenericHID.Hand.kLeft) * Math.abs(m_jack.getX(GenericHID.Hand.kLeft)))),
                                     Constants.OI.XBOX_DEADBAND)
                                     * Constants.Drivetrain.STEERING_SCALE,
                             m_jack.getXButton());
@@ -255,22 +253,22 @@ public class RobotContainer {
                         , m_turret)
         );
 
-        m_turret.setDefaultCommand(
-                new TurretSetAngle(m_turret,
-                        () -> {
-                            double setpoint = m_turret.getEncoderPosition();
-                            double pwm = getAxis(m_suraj, Axis.kLeftX);
-
-                            if (pwm > 0) {
-                                setpoint += (m_turret.getMaxAngle() - m_turret.getEncoderPosition()) * pwm;
-                            } else if (pwm < 0) {
-
-                            }
-
-                            return setpoint;
-                        }
-                )
-        );
+//        m_turret.setDefaultCommand(
+//                new TurretSetAngle(m_turret,
+//                        () -> {
+//                            double setpoint = m_turret.getEncoderPosition();
+//                            double pwm = getAxis(m_suraj, Axis.kLeftX);
+//
+//                            if (pwm > 0) {
+//                                setpoint += (m_turret.getMaxAngle() - m_turret.getEncoderPosition()) * pwm;
+//                            } else if (pwm < 0) {
+//                                setpoint -= Math.abs((m_turret.getMinAngle() - m_turret.getEncoderPosition()) * pwm);
+//                            }
+//
+//                            return setpoint;
+//                        }
+//                )
+//        );
 
         // Limelight align
 //        m_suraj.getJoystickButton(XboxController.Button.kBumperLeft).whenHeld(
@@ -357,6 +355,7 @@ public class RobotContainer {
 //                m_lowMagazine.tunePeriodic();
                 m_highMagazine.tunePeriodic();
 //                m_turret.tunePeriodic();
+//                m_hood.tunePeriodic();
             } else {
 //                m_lowMagazine.setPWM(-getAxis(m_jack, Axis.kRightY));
 //                m_highMagazine.setPWM(-getAxis(m_jack, Axis.kLeftY));

@@ -234,6 +234,7 @@ public final class Constants {
 
         public static final String TAB_NAME = "Turret";
         public static final String POSITION_CONTROLLER_CONFIGURABLE_LABEL = "Turret TalonSRX PID";
+        public static final String ENCODER_OFFSET_CONFIGURABLE_LABEL = "turretEncoderOffset";
         public static final String ZERO_TURRET_LABEL = "Zero Turret";
     }
 
