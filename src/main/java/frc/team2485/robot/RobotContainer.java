@@ -13,9 +13,12 @@ import edu.wpi.first.wpilibj.XboxController.Axis;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
 
+import frc.team2485.WarlordsLib.Limelight;
 import frc.team2485.WarlordsLib.oi.Deadband;
 import frc.team2485.WarlordsLib.oi.WL_XboxController;
 import frc.team2485.robot.commands.IncrementHighMagazine;
+import frc.team2485.robot.commands.paths.LineToRightTrenchPath;
+import frc.team2485.robot.commands.paths.RightTrenchToLinePath;
 import frc.team2485.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -41,6 +44,8 @@ public class RobotContainer {
     private Climber m_climber;
     private Turret m_turret;
     private IntakeArm m_intakeArm;
+
+
 
     private Command m_autoCommand;
 
@@ -272,7 +277,7 @@ public class RobotContainer {
 //                new TurretSetAngle(m_turret, () -> {
 //                    return m_turret.getEncoderPosition() + m_turret.getLimelight().getTargetHorizontalOffset(0);
 //                })
-//        );
+////        );
 
 
         // Field Centric Control
@@ -317,6 +322,7 @@ public class RobotContainer {
 
     public Command getAutonomousCommand() {
         // temporary!
+
         m_autoCommand = new RunCommand(() -> {
 
         });

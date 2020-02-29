@@ -7,6 +7,11 @@
 
 package frc.team2485.robot;
 
+import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
+import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
+
 public final class Constants {
 
     public static final String CONFIGS_FILE = "/home/lvuser/constants.csv";
@@ -235,4 +240,58 @@ public final class Constants {
     public static final class Climber {
         public static final int TALON_PORT = 18;
     }
+
+    public static final class Autonomous {
+        public static final double INITIATION_LINE_X = 3.048;
+        public static final double POWER_PORT_X_POS = 0.0254*94.66;
+        public static final double RIGHT_TRENCH_END_Y = -0.71;
+
+        public static final double PORT_ENTRANCE_Y_VELOCITY = 0;
+        public static final double RPM_ADJUST = 0;
+        public static final double HOOD_ADJUST = 0;
+
+        public static final double SHOOTING_WARMUP_DELAY = 1;
+
+
+        public static final DifferentialDriveVoltageConstraint AUTO_VOLTAGE_CONSTRAINT = new DifferentialDriveVoltageConstraint(
+                new SimpleMotorFeedforward(ApolloTerms.KS_VOLTS,
+                        ApolloTerms.KV_VOLT_SECONDS_PER_METER,
+                        ApolloTerms.KA_VOLT_SECONDS_SQUARED_PER_METER), ApolloTerms.K_DRIVE_KINEMATICS, 10);
+
+
+        //create config for trajectory
+
+        public static final TrajectoryConfig TRAJECTORY_CONFIG = new TrajectoryConfig(4, 2)
+                //kinematics to ensure max speed is obeyed + applying voltage constraint
+                .setKinematics(ApolloTerms.K_DRIVE_KINEMATICS).addConstraint(AUTO_VOLTAGE_CONSTRAINT);
+
+        public static final TrajectoryConfig COMPLEX_TRAJECTORY_CONFIG = new TrajectoryConfig(1, 2)
+                //kinematics to ensure max speed is obeyed + applying voltage constraint
+                .setKinematics(ApolloTerms.K_DRIVE_KINEMATICS).addConstraint(AUTO_VOLTAGE_CONSTRAINT); //change the fucking names
+
+
+    }
+
+    public static final class ApolloTerms {
+        public static final double KS_VOLTS = 0.163;
+        public static final double KV_VOLT_SECONDS_PER_METER = 2.62;
+        public static final double KA_VOLT_SECONDS_SQUARED_PER_METER = 0.275;
+        public static final double KP_DRIVE_VEL = 0.001;
+        public static final double K_TRACK_WIDTH_METERS = 0.62;
+
+        public static final DifferentialDriveKinematics K_DRIVE_KINEMATICS = new DifferentialDriveKinematics(K_TRACK_WIDTH_METERS);
+        public static final double K_MAX_SPEED_METERS_PER_SECOND = 3;
+        public static final double K_MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 3;
+
+        //public static final double K_ENCODER_DISTANCE_PER_PULSE= (3 * 2 * Math.PI/250);
+
+        public static final double K_ENCODER_DISTANCE_PER_ROTATION = 2 * Math.PI * 0.0762;
+
+        public static final double K_RAMSETE_B = 2;
+        public static final double K_RAMSETE_ZETA = 0.7;
+
+        public static final double K_PATH_Y = 0.9;
+
+    }
+
 }

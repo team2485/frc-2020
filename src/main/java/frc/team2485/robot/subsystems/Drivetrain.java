@@ -2,6 +2,10 @@ package frc.team2485.robot.subsystems;
 
 import com.ctre.phoenix.sensors.PigeonIMU;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
@@ -16,6 +20,7 @@ import frc.team2485.robot.Constants;
 public class Drivetrain extends SubsystemBase  {
 
     private DifferentialDrive m_drive;
+    public static DifferentialDriveOdometry m_odometry;
 
     private WL_SparkMax m_sparkLeft1Master;
     private WL_SparkMax m_sparkLeft2;
@@ -50,7 +55,10 @@ public class Drivetrain extends SubsystemBase  {
         this.m_sparkLeft1Master.setFollowers(m_sparkLeft2, m_sparkLeft3);
         this.m_sparkRight1Master.setFollowers(m_sparkRight2, m_sparkRight3);
 
+
+        this.m_pigeon = new PigeonIMU(Constants.Drivetrain.PIGEON_IMU_PORT);
         this.m_drive = new DifferentialDrive(m_sparkLeft1Master, m_sparkRight1Master);
+        this.m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(m_pigeon.getFusedHeading()));
 
         this.m_encoderLeft = new SparkMaxAlternateEncoder(Constants.Drivetrain.LEFT_ENCODER_SPARK, Constants.Drivetrain.ENCODER_CPR);
         this.m_encoderRight = new SparkMaxAlternateEncoder(Constants.Drivetrain.RIGHT_ENCODER_SPARK, Constants.Drivetrain.ENCODER_CPR);
@@ -60,7 +68,7 @@ public class Drivetrain extends SubsystemBase  {
         this.m_encoderLeft.setDistancePerRevolution(2 * Math.PI * Constants.Drivetrain.WHEEL_RADIUS);
         this.m_encoderRight.setDistancePerRevolution(2 * Math.PI * Constants.Drivetrain.WHEEL_RADIUS);
 
-        this.m_pigeon = new PigeonIMU(Constants.Drivetrain.PIGEON_IMU_PORT);
+
 
         this.m_throttleRamp = new RampRate();
 
@@ -77,7 +85,7 @@ public class Drivetrain extends SubsystemBase  {
         ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
         tab.add(this);
         tab.add(this.m_drive);
-        tab.add(this.throttleRamp);
+
 //        tab.add(this.steeringRamp);
         tab.addNumber("Left PWM", m_sparkLeft1Master::getAppliedOutput);
         tab.addNumber("Right PWM", m_sparkRight1Master::getAppliedOutput);
@@ -131,6 +139,20 @@ public class Drivetrain extends SubsystemBase  {
 
     public double getHeading() {
         return -m_pigeon.getFusedHeading();
+    }
+
+    public void driveVolts(double leftVolts, double rightVolts) {
+        m_sparkLeft1Master.setVoltage(leftVolts);
+        m_sparkRight1Master.setVoltage(-rightVolts);
+        m_drive.feed();
+    }
+
+    public Pose2d getPose() {
+        return m_odometry.getPoseMeters();
+    }
+
+    public DifferentialDriveWheelSpeeds getWheelSpeeds() {
+        return new DifferentialDriveWheelSpeeds(m_encoderLeft.getVelocity(), m_encoderRight.getVelocity());
     }
 
     @Override
