@@ -86,6 +86,9 @@ public class RobotContainer {
     public Drivetrain getDrivetrain() {
         return m_drivetrain;
     }
+    public Hood getHood() {
+        return m_hood;
+    }
     
     
     private void configureCommands() {
