@@ -17,6 +17,8 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
+  
+  private double time;
 
   @Override
   public void robotInit() {
@@ -46,14 +48,23 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
-
-
+    time = 0;
   }
 
   @Override
   public void autonomousPeriodic() {
+    if(time<0.5) m_robotContainer.getTurret().resetEncoderPosition(0);
+    else if(time<1) m_robotContainer.getTurret().resetEncoderPosition(2*Math.PI/3.0);
+    else if(time<1.5) m_robotContainer.getTurret().resetEncoderPosition(4*Math.PI/3.0);
+    else if(time<2) m_robotContainer.getTurret().resetEncoderPosition(0);
+    else if(time<3) m_robotContainer.getTurret().resetEncoderPosition(m_robotContainer.getTurret().getEncoderPosition()+2*Math.PI/50.0);
+    else if(time<3.5) m_robotContainer.getTurret().setHeading(0);
+    else if(time<4) m_robotContainer.getTurret().setHeading(2*Math.PI/3.0);
+    else if(time<4.5) m_robotContainer.getTurret().setHeading(4*Math.PI/3.0);
+    else if(time<5) m_robotContainer.getTurret().setHeading(0);
+    else if(time<6) m_robotContainer.getTurret().setHeading(m_robotContainer.getTurret().getEncoderPosition()+2*Math.PI/50.0);
+    time+=0.02;
     m_robotContainer.widgetNetworkTables();
-
   }
 
   @Override
