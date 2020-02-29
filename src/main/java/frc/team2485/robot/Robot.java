@@ -48,21 +48,21 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
-    time = 0;
+//     time = 0;
   }
 
   @Override
   public void autonomousPeriodic() {
-    if(time<0.5) m_robotContainer.getTurret().resetEncoderPosition(0);
-    else if(time<1) m_robotContainer.getTurret().resetEncoderPosition(2*Math.PI/3.0);
-    else if(time<1.5) m_robotContainer.getTurret().resetEncoderPosition(4*Math.PI/3.0);
-    else if(time<2) m_robotContainer.getTurret().resetEncoderPosition(0);
-    else if(time<3) m_robotContainer.getTurret().resetEncoderPosition(m_robotContainer.getTurret().getEncoderPosition()+2*Math.PI/50.0);
-    else if(time<3.5) m_robotContainer.getDrivetrain().setHeading(0);
-    else if(time<4) m_robotContainer.getDrivetrain().setHeading(2*Math.PI/3.0);
-    else if(time<4.5) m_robotContainer.getDrivetrain().setHeading(4*Math.PI/3.0);
-    else if(time<5) m_robotContainer.getDrivetrain().setHeading(0);
-    else if(time<6) m_robotContainer.getDrivetrain().setHeading(m_robotContainer.getDrivetrain().getHeading()+2*Math.PI/50.0);
+//     if(time<0.5) m_robotContainer.getTurret().resetEncoderPosition(0);
+//     else if(time<1) m_robotContainer.getTurret().resetEncoderPosition(2*Math.PI/3.0);
+//     else if(time<1.5) m_robotContainer.getTurret().resetEncoderPosition(4*Math.PI/3.0);
+//     else if(time<2) m_robotContainer.getTurret().resetEncoderPosition(0);
+//     else if(time<3) m_robotContainer.getTurret().resetEncoderPosition(m_robotContainer.getTurret().getEncoderPosition()+2*Math.PI/50.0);
+//     else if(time<3.5) m_robotContainer.getDrivetrain().setHeading(0);
+//     else if(time<4) m_robotContainer.getDrivetrain().setHeading(2*Math.PI/3.0);
+//     else if(time<4.5) m_robotContainer.getDrivetrain().setHeading(4*Math.PI/3.0);
+//     else if(time<5) m_robotContainer.getDrivetrain().setHeading(0);
+//     else if(time<6) m_robotContainer.getDrivetrain().setHeading(m_robotContainer.getDrivetrain().getHeading()+2*Math.PI/50.0);
     
     
 //     if(time<0.5) m_robotContainer.getTurret().resetEncoderPosition(0);
