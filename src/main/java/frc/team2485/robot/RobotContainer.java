@@ -80,10 +80,10 @@ public class RobotContainer {
         configureCommands();
     }
     
-    public void getTurret() {
+    public Turret getTurret() {
         return m_turret;
     }
-    public void getDrivetrain() {
+    public Drivetrain getDrivetrain() {
         return m_drivetrain;
     }
     
