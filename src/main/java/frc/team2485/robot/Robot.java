@@ -76,7 +76,8 @@ public class Robot extends TimedRobot {
 //     else if(time<5) m_robotContainer.getDrivetrain().setHeading(0);
 //     else if(time<6) m_robotContainer.getDrivetrain().setHeading(m_robotContainer.getDrivetrain().getHeading()+2*Math.PI/50.0);
     time+=0.02;
-    m_robotContainer.widgetNetworkTables();
+    m_robotContainer.widget1NetworkTables();
+    m_robotContainer.widget2NetworkTables();
   }
 
   @Override
