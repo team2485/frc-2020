@@ -24,6 +24,7 @@ public class Feeder extends SubsystemBase {
 
     public void addToShuffleboard() {
         ShuffleboardTab tab = Shuffleboard.getTab(Constants.Feeder.TAB_NAME);
+        tab.add(m_spark);
         tab.addNumber("Feeder Current", m_spark::getOutputCurrent);
         tab.addNumber("Feeder Velocity", this::getEncoderVelocity);
     }

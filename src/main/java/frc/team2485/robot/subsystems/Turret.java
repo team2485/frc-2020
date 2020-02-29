@@ -61,6 +61,7 @@ public class Turret extends SubsystemBase implements Tunable {
         SendableRegistry.add(m_talon, "Turret Talon");
         ShuffleboardTab tab = Shuffleboard.getTab(Constants.Turret.TAB_NAME);
         tab.add(this);
+        tab.add(m_talon);
         tab.addNumber("Encoder Position", this::getEncoderPosition);
         tab.addNumber("Current", m_talon::getStatorCurrent);
     }
