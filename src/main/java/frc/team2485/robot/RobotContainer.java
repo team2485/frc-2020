@@ -79,7 +79,12 @@ public class RobotContainer {
 
         configureCommands();
     }
-
+    
+    public void getTurret() {
+        return m_turret;
+    }
+    
+    
     private void configureCommands() {
 
 
