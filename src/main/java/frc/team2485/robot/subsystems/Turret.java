@@ -13,11 +13,14 @@ import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.team2485.WarlordsLib.Limelight;
 import frc.team2485.WarlordsLib.Tunable;
 import frc.team2485.WarlordsLib.motorcontrol.PIDTalonSRX;
+import frc.team2485.WarlordsLib.robotConfigs.Configurable;
+import frc.team2485.WarlordsLib.robotConfigs.LoadableConfigs;
 import frc.team2485.WarlordsLib.robotConfigs.RobotConfigs;
+import frc.team2485.WarlordsLib.robotConfigs.SavableConfigs;
 import frc.team2485.WarlordsLib.sensors.TalonSRXEncoder;
 import frc.team2485.robot.Constants;
 
-public class Turret extends SubsystemBase implements Tunable {
+public class Turret extends SubsystemBase implements Tunable, Configurable {
 
     private PIDTalonSRX m_talon;
 
@@ -53,6 +56,8 @@ public class Turret extends SubsystemBase implements Tunable {
         BUFFER_ZONE_SIZE = Constants.Turret.BUFFER_ZONE_SIZE;
 
         RobotConfigs.getInstance().addConfigurable(Constants.Turret.POSITION_CONTROLLER_CONFIGURABLE_LABEL, m_talon);
+        RobotConfigs.getInstance().addConfigurable(Constants.Turret.ENCODER_OFFSET_CONFIGURABLE_LABEL, this);
+
 
         this.addToShuffleboard();
     }
@@ -63,6 +68,8 @@ public class Turret extends SubsystemBase implements Tunable {
         tab.add(this);
         tab.add(m_talon);
         tab.addNumber("Encoder Position", this::getEncoderPosition);
+        tab.addNumber("Encoder Abs Position", this::getAbsoluteEncoderPosition);
+        tab.addNumber("Encoder Offset", this::getEncoderOffset);
         tab.addNumber("Current", m_talon::getStatorCurrent);
     }
 
@@ -83,7 +90,6 @@ public class Turret extends SubsystemBase implements Tunable {
         SmartDashboard.putNumber("Low Clamp", Math.pow((MIN_ANGLE -  this.getEncoderPosition()) * (-1 / BUFFER_ZONE_SIZE), 2));
         SmartDashboard.putNumber("High Clamp", Math.pow((MAX_ANGLE - this.getEncoderPosition()) * (1 / BUFFER_ZONE_SIZE), 2));
 
-
         m_talon.set(output);
     }
 
@@ -102,7 +108,7 @@ public class Turret extends SubsystemBase implements Tunable {
      */
     public void resetEncoderPosition(double position) {
         m_talon.setEncoderPosition(position);
-        m_talon.getSensorCollection().setPulseWidthPosition((int) (position * Constants.Turret.ENCODER_CPR / 360.0), 0);
+        this.m_absoluteEncoderOffset = position - this.getAbsoluteEncoderPosition();
     }
 
     /**
@@ -176,8 +182,27 @@ public class Turret extends SubsystemBase implements Tunable {
         SmartDashboard.putBoolean("rev lim", m_talon.getSensorCollection().isRevLimitSwitchClosed() );
     }
 
+    private void setEncoderOffset(double offset) {
+        m_talon.setEncoderPosition(this.getAbsoluteEncoderPosition() + offset);
+        this.m_absoluteEncoderOffset = offset;
+    }
+
+    private double getEncoderOffset() {
+        return this.m_absoluteEncoderOffset;
+    }
+
     @Override
     public void tunePeriodic() {
         m_talon.runPID();
+    }
+
+    @Override
+    public void loadConfigs(LoadableConfigs configs) {
+        setEncoderOffset(configs.getDouble("encoderOffset", 0));
+    }
+
+    @Override
+    public void saveConfigs(SavableConfigs configs) {
+        configs.put("encoderOffset", m_absoluteEncoderOffset);
     }
 }

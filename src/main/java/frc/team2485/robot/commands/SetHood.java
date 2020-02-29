@@ -41,7 +41,6 @@ public class SetHood extends CommandBase implements Tunable {
     }
 
     public void addToShuffleboard() {
-        SendableRegistry.add(m_controller, "Hood Position Controller");
         ShuffleboardTab tab = Shuffleboard.getTab(Constants.Hood.TAB_NAME);
         tab.add(m_controller);
     }

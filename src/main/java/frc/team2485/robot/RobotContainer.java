@@ -66,14 +66,14 @@ public class RobotContainer {
     private void configureCommands() {
 
         this.configureDrivetrainCommands();
-        this.configureIntakeArmCommands();
+//        this.configureIntakeArmCommands();
         this.configureClimberCommands();
         this.configureHoodCommands();
         this.configureTurretCommands();
         this.configureFlywheelsCommands();
 
         this.configureShootingCommands();
-        this.configureIntakingCommands();
+//        this.configureIntakingCommands();
 
         // Toggle Limelight LED
         m_suraj.getJoystickButton(XboxController.Button.kBack).whenPressed(new InstantCommand(() -> {
@@ -89,11 +89,11 @@ public class RobotContainer {
         m_drivetrain.setDefaultCommand(
                 new RunCommand(() -> {
                     m_drivetrain.curvatureDrive(
-                            Deadband.cubicScaledDeadband(
+                            -Deadband.cubicScaledDeadband(
                                     m_jack.getTriggerAxis(GenericHID.Hand.kRight) - m_jack.getTriggerAxis(GenericHID.Hand.kLeft),
                                     Constants.OI.XBOX_DEADBAND),
                             Deadband.cubicScaledDeadband(
-                                    ((m_jack.getX(GenericHID.Hand.kLeft) * m_jack.getX(GenericHID.Hand.kLeft)) * (m_jack.getX(GenericHID.Hand.kLeft) / Math.abs(m_jack.getX(GenericHID.Hand.kLeft)))),
+                                    ((m_jack.getX(GenericHID.Hand.kLeft) * Math.abs(m_jack.getX(GenericHID.Hand.kLeft)))),
                                     Constants.OI.XBOX_DEADBAND)
                                     * Constants.Drivetrain.STEERING_SCALE,
                             m_jack.getXButton());

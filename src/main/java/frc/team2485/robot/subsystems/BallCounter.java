@@ -15,7 +15,7 @@ public class BallCounter extends SubsystemBase {
 
     private Counter m_entranceCounter, m_transferCounter, m_exitCounter;
 
-    private int m_numBallsLow, m_numBallsHigh;
+    private int m_nBallsLow, m_nBallsHigh;
 
     private DoubleSupplier m_lowEncoderVelocity, m_highEncoderVelocity;
 
@@ -57,19 +57,19 @@ public class BallCounter extends SubsystemBase {
     }
 
     public int getNumBallsLow() {
-        return this.m_numBallsLow;
+        return this.m_nBallsLow;
     }
 
     public int getNumBallsHigh() {
-        return this.m_numBallsHigh;
+        return this.m_nBallsHigh;
     }
 
     public void setNumBallsLow(int num) {
-        this.m_numBallsLow = num;
+        this.m_nBallsLow = num;
     }
 
     public void setNumBallsHigh(int num) {
-        this.m_numBallsHigh = num;
+        this.m_nBallsHigh = num;
     }
 
     public boolean getEntranceIR() {
@@ -91,10 +91,10 @@ public class BallCounter extends SubsystemBase {
         if (!m_entranceIR.get() && m_entranceLastVal) {
             if (m_lowEncoderVelocity.getAsDouble() < 0) {
 //                m_numBallsLow+= m_entranceCounter.get();
-                m_numBallsLow++;
+                m_nBallsLow++;
             } else if (m_lowEncoderVelocity.getAsDouble() > 0) {
 //                m_numBallsLow-= m_entranceCounter.get();
-                m_numBallsLow--;
+                m_nBallsLow--;
             }
             m_entranceCounter.reset();
         }
@@ -103,18 +103,18 @@ public class BallCounter extends SubsystemBase {
         if (!m_transferIR.get() && m_transferLastVal) {
             if (m_highEncoderVelocity.getAsDouble() < 0) {
 //                m_numBallsHigh += m_transferCounter.get();
-                m_numBallsHigh++;
+                m_nBallsHigh++;
             } else if (m_highEncoderVelocity.getAsDouble() > 0) {
 //                m_numBallsHigh -= m_transferCounter.get();
-                m_numBallsHigh--;
+                m_nBallsHigh--;
             }
 
             if (m_lowEncoderVelocity.getAsDouble() < 0) {
 //                m_numBallsLow-= m_transferCounter.get();
-                m_numBallsLow--;
+                m_nBallsLow--;
             } else if (m_lowEncoderVelocity.getAsDouble() > 0) {
 //                m_numBallsLow += m_transferCounter.get();
-                m_numBallsLow++;
+                m_nBallsLow++;
             }
 
             m_transferCounter.reset();
@@ -124,10 +124,10 @@ public class BallCounter extends SubsystemBase {
         if (!m_exitIR.get() && m_exitLastVal) {
             if (m_highEncoderVelocity.getAsDouble() < 0) {
 //                m_numBallsHigh -= m_transferCounter.get();
-                m_numBallsHigh--;
+                m_nBallsHigh--;
             } else if (m_highEncoderVelocity.getAsDouble() > 0) {
 //                m_numBallsHigh += m_transferCounter.get();
-                m_numBallsHigh++;
+                m_nBallsHigh++;
             }
             m_exitCounter.reset();
         }
@@ -137,12 +137,12 @@ public class BallCounter extends SubsystemBase {
         m_exitLastVal = m_exitIR.get();
 
 
-        if (m_numBallsHigh < 0) {
-            m_numBallsHigh = 0;
+        if (m_nBallsHigh < 0) {
+            m_nBallsHigh = 0;
         }
 
-        if (m_numBallsLow < 0) {
-            m_numBallsLow = 0;
+        if (m_nBallsLow < 0) {
+            m_nBallsLow = 0;
         }
     }
 }
