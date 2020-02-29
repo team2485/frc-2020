@@ -65,6 +65,15 @@ public class Shoot extends ParallelCommandGroup {
         SmartDashboard.putNumber("Shooter/iv",initialVelocity);
 
     }
+    public Hood getHood() {
+        return m_hood;
+    }
+    public void setInitialVelocity(double newVal) {
+        initalVelocity = newVal;
+    }
+    public void getInitialVelocity() {
+        return initalVelocity;
+    }
 
     private static double getX(double ty, double LLtoPort){
         return LLtoPort / Math.tan(Math.toRadians(ty));
