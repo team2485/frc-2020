@@ -48,33 +48,35 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
-//     time = 0;
+    time = 0;
   }
 
   @Override
   public void autonomousPeriodic() {
-//     if(time<0.5) m_robotContainer.getTurret().resetEncoderPosition(0);
-//     else if(time<1) m_robotContainer.getTurret().resetEncoderPosition(2*Math.PI/3.0);
-//     else if(time<1.5) m_robotContainer.getTurret().resetEncoderPosition(4*Math.PI/3.0);
-//     else if(time<2) m_robotContainer.getTurret().resetEncoderPosition(0);
-//     else if(time<3) m_robotContainer.getTurret().resetEncoderPosition(m_robotContainer.getTurret().getEncoderPosition()+2*Math.PI/50.0);
-//     else if(time<3.5) m_robotContainer.getDrivetrain().setHeading(0);
-//     else if(time<4) m_robotContainer.getDrivetrain().setHeading(2*Math.PI/3.0);
-//     else if(time<4.5) m_robotContainer.getDrivetrain().setHeading(4*Math.PI/3.0);
-//     else if(time<5) m_robotContainer.getDrivetrain().setHeading(0);
-//     else if(time<6) m_robotContainer.getDrivetrain().setHeading(m_robotContainer.getDrivetrain().getHeading()+2*Math.PI/50.0);
+    //all of this is just for testing
+    if(time<0.5) m_robotContainer.sendWidget1data(0,0);
+    else if(time<1) m_robotContainer.sendWidget1data(0,120);
+    else if(time<1.5)  m_robotContainer.sendWidget1data(0,240);
+    else if(time<2)  m_robotContainer.sendWidget1data(0,0);
+    else if(time<3) m_robotContainer.sendWidget1data(0,(time-3)*360);
+    else if(time<3.5)  m_robotContainer.sendWidget1data(0,0);
+    else if(time<4)  m_robotContainer.sendWidget1data(120,0);
+    else if(time<4.5) m_robotContainer.sendWidget1data(240,0);
+    else if(time<5) m_robotContainer.sendWidget1data(0,0);
+    else if(time<6) m_robotContainer.sendWidget1data((time-6)*360,0);
     
     
-//     if(time<0.5) m_robotContainer.getTurret().resetEncoderPosition(0);
-//     else if(time<1) m_robotContainer.getTurret().resetEncoderPosition(2*Math.PI/3.0);
-//     else if(time<1.5) m_robotContainer.getTurret().resetEncoderPosition(4*Math.PI/3.0);
-//     else if(time<2) m_robotContainer.getTurret().resetEncoderPosition(0);
-//     else if(time<3) m_robotContainer.getTurret().resetEncoderPosition(m_robotContainer.getTurret().getEncoderPosition()+2*Math.PI/50.0);
-//     else if(time<3.5) m_robotContainer.getDrivetrain().setHeading(0);
-//     else if(time<4) m_robotContainer.getDrivetrain().setHeading(2*Math.PI/3.0);
-//     else if(time<4.5) m_robotContainer.getDrivetrain().setHeading(4*Math.PI/3.0);
-//     else if(time<5) m_robotContainer.getDrivetrain().setHeading(0);
-//     else if(time<6) m_robotContainer.getDrivetrain().setHeading(m_robotContainer.getDrivetrain().getHeading()+2*Math.PI/50.0);
+    if(time<0.5) m_robotContainer.sendWidget1data(Math.PI/4.0,5);
+    else if(time<1) m_robotContainer.sendWidget1data(Math.PI/4.0,10);
+    else if(time<1.5)  m_robotContainer.sendWidget1data(Math.PI/4.0,20);
+    else if(time<2)  m_robotContainer.sendWidget1data(Math.PI/4.0,30);
+    else if(time<3) m_robotContainer.sendWidget1data(Math.PI/4.0,(time-3)*30);
+    else if(time<3.5)  m_robotContainer.sendWidget1data(0,15);
+    else if(time<4)  m_robotContainer.sendWidget1data(Math.PI/6.0,15);
+    else if(time<4.5) m_robotContainer.sendWidget1data(Math.PI/3.0,15);
+    else if(time<5) m_robotContainer.sendWidget1data(Math.PI/2.0,15);
+    else if(time<6) m_robotContainer.sendWidget1data((time-6)*Math.PI/2.0,15);
+    //end of testing code, comment out later
     time+=0.02;
     m_robotContainer.widget1NetworkTables();
     m_robotContainer.widget2NetworkTables();
