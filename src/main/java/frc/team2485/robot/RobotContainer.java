@@ -364,5 +364,13 @@ public class RobotContainer {
         SmartDashboard.putNumber("Shooter/pitch",m_hood.getEncoderPosition()); // shouldn't we just get this from v0x & v0y?
         SmartDashboard.putNumber("Shooter/iv",initialVelocity);
     }
+    public void sendWidget1data(double encoderVal, double gyroVal) { //for testing
+        SmartDashboard.putNumber("Heading/encoder",encoderVal); //In Radians, add this to the Robot's Gyro position
+        SmartDashboard.putNumber("Heading/gyro",gyroVal); //In Degrees, make sure this is reset at the beginning
+    }
+    public void sendWidget2data(double pitchVal, double ivVal) { //for testing
+        SmartDashboard.putNumber("Shooter/pitch",pitchVal); // shouldn't we just get this from v0x & v0y?
+        SmartDashboard.putNumber("Shooter/iv",ivVal);
+    }
 }
 
