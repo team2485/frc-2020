@@ -340,7 +340,7 @@ public class RobotContainer {
 
 
     //All the data the widgets need in networktables for them to work
-    public void widgetNetworkTables() {
+    public void widget1NetworkTables() {
         //for the Heading Widget
         SmartDashboard.putNumber("Heading/encoder",m_turret.getEncoderPosition()); //In Radians, add this to the Robot's Gyro position
         SmartDashboard.putNumber("Heading/gyro",m_drivetrain.getHeading()); //In Degrees, make sure this is reset at the beginning
@@ -350,12 +350,18 @@ public class RobotContainer {
 
 
     //All the data the widgets need in networktables for them to work
-    public void widgetNetworkTables() {
-        //for the Heading Widget
-        SmartDashboard.putNumber("Heading/encoder",m_turret.getEncoderPosition()); //In Radians, add this to the Robot's Gyro position
-        SmartDashboard.putNumber("Heading/gyro",m_drivetrain.getHeading()); //In Degrees, make sure this is reset at the beginning
-
-        //Data for the shooter widget is in the Shoot command
+    public void widget2NetworkTables() {
+        
+        double vfy = m_finalYVelocity.getAsDouble();
+        double ty = m_limelight.getTargetVerticalOffset(Constants.Robot.LIMELIGHT_TY_DEFAULT_VALUE) + Constants.Shooter.LIMELIGHT_ANGLE_FROM_HORIZONTAL; //gets vertical angle from m_limelight
+        double xDist = getX(ty, Constants.Robot.HEIGHT_FROM_LL_TO_PORT); //finds x distance (horizontal) to port
+        double v0y = getv0y(vfy, Constants.Robot.HEIGHT_FROM_LL_TO_PORT, Constants.Shooter.GRAVITY_ACCELERATION_CONSTANT); //finds initial y velocity based on final y velocity and height changes
+        double timeOfTrajectory = gettimeOfTraj(v0y, vfy, Constants.Shooter.GRAVITY_ACCELERATION_CONSTANT, Constants.Robot.HEIGHT_FROM_SHOOTER_TO_PORT); //finds time of trajectory based on y velocities, distances, and accelerations
+        double vfx = getvfX(xDist, timeOfTrajectory); //finds final x velocity from time of trajectory and distance traversed
+        double v0x = getv0xFromVfx(timeOfTrajectory, vfx, Constants.PowerCell.POWER_CELL_DRAG_COEFF, Constants.PowerCell.POWER_CELL_MASS);
+        
+        SmartDashboard.putNumber("Shooter/pitch",m_hood.getEncoderPosition());
+        SmartDashboard.putNumber("Shooter/iv",initialVelocity);
     }
 }
 
