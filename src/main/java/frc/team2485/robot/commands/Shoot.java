@@ -48,20 +48,37 @@ public class Shoot extends ParallelCommandGroup {
 
         double thetaLaunch = getThetaLaunch(v0x, v0y); //finds launch angle using initial component velocities
 
-        //shooter widget
-        initialVelocity = Math.sqrt(v0y*v0y+v0x*v0x); //Finding the initial velocity with the pythagorean theorem
 
         m_hoodSetpoint = Math.toDegrees(getComplement(thetaLaunch)); //accounts for 90 degree shift
         m_rpmSetpoint = - getRPM(v0x, thetaLaunch, Constants.PowerCell.POWER_CELL_RADIUS, Constants.Shooter.RPM_CONVERSION_FACTOR); //finds launch RPM using initial angle+velocity
     }
+    public double getInitialVelocity() {
+        double v0y = getv0y(vfy, Constants.Robot.HEIGHT_FROM_LL_TO_PORT, Constants.Shooter.GRAVITY_ACCELERATION_CONSTANT); //finds initial y velocity based on final y velocity and height changes
+        
+        double v0x = getv0xFromVfx(timeOfTrajectory, vfx, Constants.PowerCell.POWER_CELL_DRAG_COEFF, Constants.PowerCell.POWER_CELL_MASS); //finds initial x velocity using drag
+        //both copied from execute()
+        
+        //shooter widget
+        initialVelocity = Math.sqrt(v0y*v0y+v0x*v0x); //Finding the initial velocity with the pythagorean theorem
+        return initialVelocity;
+    }
 
+    public double getInitialVelocity(double v0xVal, double v0yVal) { //just for testing
+        double v0y = v0yVal;
+        double v0x = v0xVal;
+        m_hood.setEncoderPosition(Math.atan2(v0y,v0x));
+        //shooter widget
+        initialVelocity = Math.sqrt(v0y*v0y+v0x*v0x); //Finding the initial velocity with the pythagorean theorem
+        return initialVelocity;
+    }
+    
     public void addToShuffleboard() {
         ShuffleboardTab tab = Shuffleboard.getTab(Constants.Shooter.TAB_NAME);
         tab.addNumber(" Angle Setpoint", ()-> m_hoodSetpoint);
         tab.addNumber("RPM Setpoint", ()-> m_rpmSetpoint);
 
         //Data for the Shooter Widget: Initial Velocity and the Pitch of the shooter
-        SmartDashboard.putNumber("Shooter/pitch",m_hood.getHoodTheta());
+        SmartDashboard.putNumber("Shooter/pitch",m_hood.getEncoderPosition());
         SmartDashboard.putNumber("Shooter/iv",initialVelocity);
 
     }
@@ -70,9 +87,6 @@ public class Shoot extends ParallelCommandGroup {
     }
     public void setInitialVelocity(double newVal) {
         initalVelocity = newVal;
-    }
-    public void getInitialVelocity() {
-        return initalVelocity;
     }
 
     private static double getX(double ty, double LLtoPort){
