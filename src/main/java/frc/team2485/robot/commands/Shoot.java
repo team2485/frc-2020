@@ -66,20 +66,21 @@ public class Shoot extends ParallelCommandGroup {
     public Hood getHood() {
         return m_hood;
     }
+
     public void setInitialVelocity(double newVal) {
-        initalVelocity = newVal;
+        initialVelocity = newVal;
     }
 
-    private static double getX(double ty, double LLtoPort){
+    public static double getX(double ty, double LLtoPort){
         return LLtoPort / Math.tan(Math.toRadians(ty));
     }
 
-    private static double getv0y(double vfy, double LLtoPort, double g){
+    public static double getv0y(double vfy, double LLtoPort, double g){
         double twogy = 2 * g * LLtoPort;
         return Math.sqrt((vfy * vfy) + twogy); //what if vfy is negative
     }
 
-    private static double gettimeOfTraj(double v0y, double vfy, double shooterToPort, double g) {
+    public static double gettimeOfTraj(double v0y, double vfy, double shooterToPort, double g) {
         double plusTime;
         double minusTime;
         double t1;
@@ -103,11 +104,11 @@ public class Shoot extends ParallelCommandGroup {
     }
 
     //changed to getvfx from get v0x --> check with Aditya
-    private static double getvfX(double x, double t){
+    public static double getvfX(double x, double t){
         return x / t;
     }
 
-    private static double getv0xFromVfx(double timeOfTraj, double vfx, double dragCoeff, double mass){
+    public static double getv0xFromVfx(double timeOfTraj, double vfx, double dragCoeff, double mass){
         return vfx / (Math.pow(Math.E, (-dragCoeff * timeOfTraj) / mass));
     }
 
