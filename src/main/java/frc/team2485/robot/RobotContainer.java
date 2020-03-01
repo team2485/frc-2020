@@ -132,13 +132,13 @@ public class RobotContainer {
         // Increment high magazine
         m_jack.getJoystickButton(XboxController.Button.kA).whileHeld(
                 new ConditionalCommand(
-                        new IncrementHighMagazine(m_highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS).withInterrupt(() -> !m_ballCounter.getTransferIR()),
+                        new IncrementHighMagazine(m_highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS),//.withInterrupt(() -> !m_ballCounter.getTransferIR()),
                         new InstantCommand(() -> {
                             m_highMagazine.setPWM(0);
                         }),
                         () -> {
-                            return m_ballCounter.getTransferIR()
-                                    && (m_ballCounter.getNumBallsHigh() <= Constants.Magazine.HIGH_MAGAZINE_BALL_CAPACITY);
+                            return m_ballCounter.getTransferIR();
+//                                    && (m_ballCounter.getNumBallsHigh() <= Constants.Magazine.HIGH_MAGAZINE_BALL_CAPACITY);
                         }
                 )
         ).whenReleased(
@@ -151,8 +151,9 @@ public class RobotContainer {
         m_jack.getJoystickButton(XboxController.Button.kA).whileHeld(
                 new ConditionalCommand(
                         new InstantCommand(() -> {
-//                            m_lowMagazine.setPWM(Constants.Magazine.LOW_BELT_INTAKE_PWM);
-                            m_lowMagazine.runVelocityPID(-50);
+                            m_lowMagazine.setPWM(Constants.Magazine.LOW_BELT_INTAKE_PWM);
+//                            m_lowMagazine.runVelocityPID(-50);
+
                         }),
                         new InstantCommand(() -> {
                             m_lowMagazine.setPWM(0);
@@ -437,7 +438,7 @@ public class RobotContainer {
             boolean enable = SmartDashboard.getBoolean(Constants.TUNE_ENABLE_LABEL, false);
             if (enable) {
 //                m_lowMagazine.tunePeriodic(0);
-//                m_highMagazine.tunePeriodic(1);
+                m_highMagazine.tunePeriodic(0);
 //                m_turret.tunePeriodic(1);
 //                m_hood.tunePeriodic(1);
 //                m_flywheels.tunePeriodic(0);
@@ -446,11 +447,11 @@ public class RobotContainer {
 //                m_flywheels.setPWM(0);
 //                m_highMagazine.setPWM(0);
 //                m_lowMagazine.setPWM(-getAxis(m_jack, Axis.kLeftY));
-//                m_highMagazine.setPWM(-getAxis(m_jack, Axis.kLeftY));
+                m_highMagazine.setPWM(-getAxis(m_jack, Axis.kLeftY));
 //                m_turret.setPWM(getAxis(m_suraj, Axis.kLeftX));
 //                m_feeder.setPWM(-getAxis(m_jack, Axis.kLeftY));
 //                m_intakeArm.setPWM(getAxis(m_jack, Axis.kRightY));
-                m_hood.setPWM(-Deadband.linearScaledDeadband(m_jack.getY(GenericHID.Hand.kLeft), Constants.OI.XBOX_DEADBAND));
+//                m_hood.setPWM(-Deadband.linearScaledDeadband(m_jack.getY(GenericHID.Hand.kLeft), Constants.OI.XBOX_DEADBAND));
 
 //                m_feeder.setPWM(-getAxis(m_jack, Axis.kLeftY));
 //                m_flywheels.setPWM(-Deadband.linearScaledDeadband(m_suraj.getY(GenericHID.Hand.kRight), Constants.OI.XBOX_DEADBAND));

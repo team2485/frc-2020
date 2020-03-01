@@ -137,10 +137,10 @@ public final class Constants {
         public static final double HIGH_DISTANCE_PER_REVOLUTION = HIGH_GEAR_RATIO * 2 * Math.PI * ROLLER_RADIUS;
 
         public static final double LOW_INTAKE_BY_ONE_POS = -7;
-        public static final double HIGH_INDEX_BY_ONE_POS = -7.3;
+        public static final double HIGH_INDEX_BY_ONE_POS = -7.5;
 
         //replace below with actual number
-        public static final double LOW_BELT_INTAKE_PWM = -0.5;
+        public static final double LOW_BELT_INTAKE_PWM = -0.6;
         public static final double OUTTAKE_PWM = 0.5;
         public static final double NORMAL_BALL_INCREMENT_TIMEOUT = 0.5; //seconds
 

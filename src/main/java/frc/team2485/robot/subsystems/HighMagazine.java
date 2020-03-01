@@ -38,7 +38,7 @@ public class HighMagazine extends SubsystemBase implements PositionPIDSubsystem,
      *
      */
     public HighMagazine() {
-        m_spark = new PIDSparkMax(Constants.Magazine.SPARK_HIGH_PORT, ControlType.kVelocity);
+        m_spark = new PIDSparkMax(Constants.Magazine.SPARK_HIGH_PORT, ControlType.kPosition);
 
         m_spark.getEncoder().setPositionConversionFactor(Constants.Magazine.HIGH_DISTANCE_PER_REVOLUTION);
         m_spark.getEncoder().setVelocityConversionFactor(Constants.Magazine.HIGH_DISTANCE_PER_REVOLUTION / 60);
@@ -66,7 +66,7 @@ public class HighMagazine extends SubsystemBase implements PositionPIDSubsystem,
 
         ShuffleboardTab tab = Shuffleboard.getTab(Constants.Magazine.TAB_NAME);
         tab.add(this);
-        tab.add("High Velocity Controller", m_spark);
+        tab.add("High Spark Controller", m_spark);
         tab.add("High Position Controller", m_positionController);
         tab.addString("Magazine State", m_state::toString);
         tab.addNumber("High Position", this::getEncoderPosition);
@@ -96,7 +96,7 @@ public class HighMagazine extends SubsystemBase implements PositionPIDSubsystem,
 
     @Override
     public void runPositionPID(double position) {
-        runVelocityPID(m_positionController.calculate(getEncoderPosition(), position));
+        m_spark.runPID(position);
     }
 
     /**
