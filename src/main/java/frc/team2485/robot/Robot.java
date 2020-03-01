@@ -17,6 +17,8 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
+  
+  private double time;
 
   @Override
   public void robotInit() {
@@ -46,14 +48,38 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
-
-
+    time = 0;
   }
 
   @Override
   public void autonomousPeriodic() {
-    m_robotContainer.widgetNetworkTables();
-
+    //all of this is just for testing
+    if(time<0.5) m_robotContainer.sendWidget1data(0,0);
+    else if(time<1) m_robotContainer.sendWidget1data(0,120);
+    else if(time<1.5)  m_robotContainer.sendWidget1data(0,240);
+    else if(time<2)  m_robotContainer.sendWidget1data(0,0);
+    else if(time<3) m_robotContainer.sendWidget1data(0,(time-3)*360);
+    else if(time<3.5)  m_robotContainer.sendWidget1data(0,0);
+    else if(time<4)  m_robotContainer.sendWidget1data(120,0);
+    else if(time<4.5) m_robotContainer.sendWidget1data(240,0);
+    else if(time<5) m_robotContainer.sendWidget1data(0,0);
+    else if(time<6) m_robotContainer.sendWidget1data((time-6)*360,0);
+    
+    
+    if(time<0.5) m_robotContainer.sendWidget2data(Math.PI/4.0,5);
+    else if(time<1) m_robotContainer.sendWidget2data(Math.PI/4.0,10);
+    else if(time<1.5)  m_robotContainer.sendWidget2data(Math.PI/4.0,20);
+    else if(time<2)  m_robotContainer.sendWidget2data(Math.PI/4.0,30);
+    else if(time<3) m_robotContainer.sendWidget2data(Math.PI/4.0,(time-3)*30);
+    else if(time<3.5)  m_robotContainer.sendWidget2data(0,15);
+    else if(time<4)  m_robotContainer.sendWidget2data(Math.PI/6.0,15);
+    else if(time<4.5) m_robotContainer.sendWidget2data(Math.PI/3.0,15);
+    else if(time<5) m_robotContainer.sendWidget2data(Math.PI/2.0,15);
+    else if(time<6) m_robotContainer.sendWidget2data((time-6)*Math.PI/2.0,15);
+    //end of testing code, comment out later
+    time+=0.02;
+//     m_robotContainer.widget1NetworkTables();
+//     m_robotContainer.widget2NetworkTables();
   }
 
   @Override
