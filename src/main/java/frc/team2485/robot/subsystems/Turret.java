@@ -11,18 +11,21 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.team2485.WarlordsLib.Limelight;
-import frc.team2485.WarlordsLib.Tunable;
+import frc.team2485.WarlordsLib.PositionPIDSubsystem;
+import frc.team2485.WarlordsLib.VelocityPIDSubsystem;
+import frc.team2485.WarlordsLib.control.WL_PIDController;
 import frc.team2485.WarlordsLib.motorcontrol.PIDTalonSRX;
 import frc.team2485.WarlordsLib.robotConfigs.Configurable;
 import frc.team2485.WarlordsLib.robotConfigs.LoadableConfigs;
 import frc.team2485.WarlordsLib.robotConfigs.RobotConfigs;
 import frc.team2485.WarlordsLib.robotConfigs.SavableConfigs;
-import frc.team2485.WarlordsLib.sensors.TalonSRXEncoder;
 import frc.team2485.robot.Constants;
 
-public class Turret extends SubsystemBase implements Tunable, Configurable {
+public class Turret extends SubsystemBase implements VelocityPIDSubsystem, PositionPIDSubsystem, Configurable {
 
     private PIDTalonSRX m_talon;
+
+    private WL_PIDController m_positionController;
 
     private Limelight m_limelight;
 
@@ -32,14 +35,13 @@ public class Turret extends SubsystemBase implements Tunable, Configurable {
 
     public Turret() {
 
-        m_talon = new PIDTalonSRX(Constants.Turret.TALON_PORT, ControlMode.Position);
+        m_talon = new PIDTalonSRX(Constants.Turret.TALON_PORT, ControlMode.Velocity);
         m_talon.configNominalOutputForward(0);
         m_talon.configNominalOutputReverse(0);
         m_talon.configPeakOutputForward(1);
         m_talon.configPeakOutputReverse(-1);
         m_talon.enableVoltageCompensation();
         m_talon.setFeedbackDeviceType(FeedbackDevice.CTRE_MagEncoder_Relative);
-        m_talon.setSelectedSensorPosition(m_talon.getSensorCollection().getPulseWidthPosition());
         m_talon.setDistancePerPulse(360.0 / Constants.Turret.ENCODER_CPR); // convert to degrees
         m_talon.enableVoltageCompensation(Constants.NOMINAL_VOLTAGE);
         m_talon.setTolerance(Constants.Turret.TURRET_PID_TOLERANCE);
@@ -48,6 +50,8 @@ public class Turret extends SubsystemBase implements Tunable, Configurable {
         m_talon.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed);
         m_talon.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed);
 
+        m_positionController = new WL_PIDController();
+
         m_limelight = new Limelight();
 
         MIN_ANGLE = Constants.Turret.MIN_POSITION;
@@ -55,9 +59,9 @@ public class Turret extends SubsystemBase implements Tunable, Configurable {
 
         BUFFER_ZONE_SIZE = Constants.Turret.BUFFER_ZONE_SIZE;
 
+        RobotConfigs.getInstance().addConfigurable(Constants.Turret.VELOCITY_CONTROLLER_CONFIGURABLE_LABEL, m_talon);
         RobotConfigs.getInstance().addConfigurable(Constants.Turret.POSITION_CONTROLLER_CONFIGURABLE_LABEL, m_talon);
         RobotConfigs.getInstance().addConfigurable(Constants.Turret.ENCODER_OFFSET_CONFIGURABLE_LABEL, this);
-
 
         this.addToShuffleboard();
     }
@@ -66,8 +70,10 @@ public class Turret extends SubsystemBase implements Tunable, Configurable {
         SendableRegistry.add(m_talon, "Turret Talon");
         ShuffleboardTab tab = Shuffleboard.getTab(Constants.Turret.TAB_NAME);
         tab.add(this);
-        tab.add(m_talon);
+        tab.add("Velocity Controller", m_talon);
+        tab.add("Position Controller", m_positionController);
         tab.addNumber("Encoder Position", this::getEncoderPosition);
+        tab.addNumber("Encoder Velocity", this::getEncoderVelocity);
         tab.addNumber("Encoder Abs Position", this::getAbsoluteEncoderPosition);
         tab.addNumber("Encoder Offset", this::getEncoderOffset);
         tab.addNumber("Current", m_talon::getStatorCurrent);
@@ -111,31 +117,40 @@ public class Turret extends SubsystemBase implements Tunable, Configurable {
         this.m_absoluteEncoderOffset = position - this.getAbsoluteEncoderPosition();
     }
 
-    /**
-     * Set a position using the turret's talon's pid.
-     * @param setpoint position to set (degrees)
-     * @return true if pid is at target within threshold.
-     */
-    public boolean runPID(double setpoint) {
-        m_talon.runPID(MathUtil.clamp(setpoint, this.MIN_ANGLE, this.MAX_ANGLE));
-        return m_talon.atTarget();
+    @Override
+    public void runVelocityPID(double velocity) {
+        m_talon.runPID(velocity / 10.0);
+    }
+
+    @Override
+    public void runPositionPID(double position) {
+        m_positionController.setSetpoint(MathUtil.clamp(position, MIN_ANGLE, MAX_ANGLE));
+        this.runVelocityPID(m_positionController.calculate(this.getEncoderPosition()));
     }
 
     /**
      * Whether the turret's talon's pid is at target based on threhold.
      * @return true if pid is at target within threshold.
      */
-    public boolean atPIDTarget() {
+    @Override
+    public boolean atVelocitySetpoint() {
         return m_talon.atTarget();
     }
+
+    @Override
+    public boolean atPositionSetpoint() { return m_positionController.atSetpoint(); }
 
     /**
      * Get turret encoder position
      * @return encoder position in radians
      */
+    @Override
     public double getEncoderPosition() {
         return m_talon.getEncoderPosition();
     }
+
+    @Override
+    public double getEncoderVelocity() { return m_talon.getEncoderVelocity() * 10; }
 
     public double getAbsoluteEncoderPosition() {
         return m_talon.getSensorCollection().getPulseWidthPosition() * m_talon.getConversionFactor();
@@ -155,6 +170,7 @@ public class Turret extends SubsystemBase implements Tunable, Configurable {
 
     public void resetPID() {
         this.m_talon.resetPID();
+        m_positionController.reset();
     }
 
     public void enableSoftLimits(boolean enable) {
@@ -172,14 +188,11 @@ public class Turret extends SubsystemBase implements Tunable, Configurable {
 
     @Override
     public void periodic() {
-        if (!m_talon.getSensorCollection().isRevLimitSwitchClosed()) {
-            resetEncoderPosition(MIN_ANGLE);
-        } else if (!m_talon.getSensorCollection().isFwdLimitSwitchClosed()) {
-            resetEncoderPosition(MAX_ANGLE);
-        }
-
-        SmartDashboard.putBoolean("forward lim", m_talon.getSensorCollection().isFwdLimitSwitchClosed() );
-        SmartDashboard.putBoolean("rev lim", m_talon.getSensorCollection().isRevLimitSwitchClosed() );
+//        if (getReverseLimitSwitch()) {
+//            resetEncoderPosition(MIN_ANGLE);
+//        } else if (getForwardLimitSwitch()) {
+//            resetEncoderPosition(MAX_ANGLE);
+//        }
     }
 
     private void setEncoderOffset(double offset) {
@@ -192,8 +205,12 @@ public class Turret extends SubsystemBase implements Tunable, Configurable {
     }
 
     @Override
-    public void tunePeriodic() {
-        m_talon.runPID();
+    public void tunePeriodic(int layer) {
+        if (layer == 0) {
+            m_talon.runPID();
+        } else if (layer == 1) {
+            this.runVelocityPID(m_positionController.calculate(this.getEncoderPosition()));
+        }
     }
 
     @Override

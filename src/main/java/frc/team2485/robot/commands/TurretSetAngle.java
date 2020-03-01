@@ -49,7 +49,12 @@ public class TurretSetAngle extends CommandBase {
 
     @Override
     public void execute() {
-        this.m_isAtTarget = m_turret.runPID(m_angleSetpoint.getAsDouble());
+        m_turret.runPositionPID(m_angleSetpoint.getAsDouble());
+        this.m_isAtTarget = m_turret.atPositionSetpoint();
+//        if (m_isAtTarget) {
+//            m_turret.setPWM(0);
+//            m_turret.resetPID();
+//        }
     }
 
     public boolean isAtTarget() {

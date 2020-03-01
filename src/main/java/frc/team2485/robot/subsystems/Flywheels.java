@@ -33,8 +33,8 @@ public class Flywheels extends SubsystemBase implements Tunable {
 
     private void addToShuffleboard() {
         ShuffleboardTab tab = Shuffleboard.getTab(Constants.Flywheels.TAB_NAME);
-        tab.add("Left Spark", m_sparkLeft);
-        tab.add("Right Spark", m_sparkRight);
+        tab.add("Left Flywheel Vel Ctrl", m_sparkLeft);
+        tab.add("Right Flywheel Vel Ctrl", m_sparkRight);
         tab.addNumber("Flywheels Velocity Setpoint", m_sparkLeft::getSetpoint);
         tab.addNumber("Left Flywheel Velocity", this::getLeftEncoderVelocity);
         tab.addNumber("Right Flywheel Velocity", this::getRightEncoderVelocity);
@@ -91,7 +91,7 @@ public class Flywheels extends SubsystemBase implements Tunable {
     }
 
     @Override
-    public void tunePeriodic() {
+    public void tunePeriodic(int layer) {
         m_sparkLeft.runPID();
         m_sparkRight.runPID();
     }

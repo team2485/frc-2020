@@ -24,7 +24,7 @@ public class IncrementHighMagazine extends CommandBase {
 
     @Override
     public void execute() {
-        m_highMagazine.setPosition(m_distanceSetpoint);
+        m_highMagazine.runPositionPID(m_distanceSetpoint);
     }
 
     @Override

@@ -60,8 +60,8 @@ public class Shoot extends ParallelCommandGroup {
 
     public void addToShuffleboard() {
         ShuffleboardTab tab = Shuffleboard.getTab(Constants.Flywheels.TAB_NAME);
-        tab.addNumber(" Angle Setpoint", ()-> m_hoodSetpoint);
-        tab.addNumber("RPM Setpoint", ()-> m_rpmSetpoint);
+//        tab.addNumber("Shoot Command Angle Setpoint", ()-> m_hoodSetpoint);
+//        tab.addNumber("Shoot Command RPM Setpoint", ()-> m_rpmSetpoint);
     }
 
     private static double getX(double ty, double LLtoPort){

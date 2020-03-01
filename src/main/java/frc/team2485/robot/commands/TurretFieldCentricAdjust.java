@@ -1,8 +1,6 @@
 package frc.team2485.robot.commands;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.team2485.robot.subsystems.Turret;
 
 import java.util.function.DoubleSupplier;
@@ -58,6 +56,6 @@ public class TurretFieldCentricAdjust extends CommandBase {
             m_setpoint = m_turret.getMinAngle() + m_headingSource.getAsDouble();
         }
 
-        m_turret.runPID(m_setpoint - m_headingSource.getAsDouble());
+        m_turret.runPositionPID(m_setpoint - m_headingSource.getAsDouble());
     }
 }

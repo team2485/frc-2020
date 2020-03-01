@@ -1,0 +1,80 @@
+feederSpark,p,0.0
+feederSpark,rampRate,0.0
+feederSpark,closedLoopRampRate,0.0
+feederSpark,d,0.0
+feederSpark,f,0.0
+feederSpark,iZone,0.0
+feederSpark,i,0.0
+feederSpark,kFilter,0.0
+feederSpark,iMaxAccum,0.0
+turretEncoderOffset,encoderOffset,-430.169921875
+Turret TalonSRX PID,p,0.0
+Turret TalonSRX PID,rampRate,0.0
+Turret TalonSRX PID,d,0.0
+Turret TalonSRX PID,f,0.0
+Turret TalonSRX PID,iZone,0.0
+Turret TalonSRX PID,i,0.0
+Turret TalonSRX PID,iMaxAccum,0.0
+turretVelocityPID,p,8.0
+turretVelocityPID,rampRate,0.0
+turretVelocityPID,d,0.0
+turretVelocityPID,f,8.0
+turretVelocityPID,iZone,0.0
+turretVelocityPID,i,0.0
+turretVelocityPID,iMaxAccum,0.0
+lowMagazineSparkVelocityController,p,0.0
+lowMagazineSparkVelocityController,rampRate,0.0
+lowMagazineSparkVelocityController,closedLoopRampRate,0.0
+lowMagazineSparkVelocityController,d,0.0
+lowMagazineSparkVelocityController,f,0.0
+lowMagazineSparkVelocityController,iZone,0.0
+lowMagazineSparkVelocityController,i,0.0
+lowMagazineSparkVelocityController,kFilter,0.0
+lowMagazineSparkVelocityController,iMaxAccum,0.0
+lowMagazineTalon,p,0.0
+lowMagazineTalon,rampRate,0.0
+lowMagazineTalon,d,0.0
+lowMagazineTalon,f,0.0
+lowMagazineTalon,iZone,0.0
+lowMagazineTalon,i,0.0
+lowMagazineTalon,iMaxAccum,0.0
+highMagazineSparkPositionController,p,0.0
+highMagazineSparkPositionController,rampRate,0.0
+highMagazineSparkPositionController,closedLoopRampRate,0.0
+highMagazineSparkPositionController,d,0.0
+highMagazineSparkPositionController,f,0.0
+highMagazineSparkPositionController,iZone,0.0
+highMagazineSparkPositionController,i,0.0
+highMagazineSparkPositionController,kFilter,0.0
+highMagazineSparkPositionController,iMaxAccum,0.0
+flywheelsLeftSparkVelocityController,p,0.0
+flywheelsLeftSparkVelocityController,rampRate,0.0
+flywheelsLeftSparkVelocityController,closedLoopRampRate,0.0
+flywheelsLeftSparkVelocityController,d,0.0
+flywheelsLeftSparkVelocityController,f,0.0
+flywheelsLeftSparkVelocityController,iZone,0.0
+flywheelsLeftSparkVelocityController,i,0.0
+flywheelsLeftSparkVelocityController,kFilter,0.0
+flywheelsLeftSparkVelocityController,iMaxAccum,0.0
+highMagazineTalon,p,0.0
+highMagazineTalon,rampRate,0.0
+highMagazineTalon,d,0.0
+highMagazineTalon,f,0.0
+highMagazineTalon,iZone,0.0
+highMagazineTalon,i,0.0
+highMagazineTalon,iMaxAccum,0.0
+drivetrainThrottleRamp,upRampRate,0.4
+drivetrainThrottleRamp,downRampRate,0.1
+hoodPositionController,p,0.0
+hoodPositionController,d,0.0
+hoodPositionController,f,0.0
+hoodPositionController,i,0.0
+flywheelsRightSparkVelocityController,p,0.0
+flywheelsRightSparkVelocityController,rampRate,0.0
+flywheelsRightSparkVelocityController,closedLoopRampRate,0.0
+flywheelsRightSparkVelocityController,d,0.0
+flywheelsRightSparkVelocityController,f,0.0
+flywheelsRightSparkVelocityController,iZone,0.0
+flywheelsRightSparkVelocityController,i,0.0
+flywheelsRightSparkVelocityController,kFilter,0.0
+flywheelsRightSparkVelocityController,iMaxAccum,0.0

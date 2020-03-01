@@ -113,8 +113,8 @@ public final class Constants {
 
     public static final class Magazine {
 
-        public static final int SPARK_LOW_MAX_CURRENT = 60;
-        public static final int SPARK_HIGH_MAX_CURRENT = 60;
+        public static final int SPARK_LOW_MAX_CURRENT = 50;
+        public static final int SPARK_HIGH_MAX_CURRENT = 50;
 
         //replace ports with real values
         public static final int SPARK_LOW_PORT = 22;
@@ -128,9 +128,11 @@ public final class Constants {
 
         public static final double ROLLER_RADIUS = 1.3 / 2;
 
-        public static final double HIGH_GEAR_RATIO = 1;
-//        public static final double HIGH_GEAR_RATIO = 18.0/24;
+//        public static final double HIGH_GEAR_RATIO = 1;
+        public static final double HIGH_GEAR_RATIO = 18.0/24;
         public static final double LOW_GEAR_RATIO = 12.0/30;
+
+        public static final double HIGH_DISTANCE_PER_REVOLUTION = HIGH_GEAR_RATIO * 2 * Math.PI * ROLLER_RADIUS;
 
         public static final double LOW_INTAKE_BY_ONE_POS = -7;
         public static final double HIGH_INDEX_BY_ONE_POS = -6;
@@ -147,15 +149,22 @@ public final class Constants {
 
         public static final String TAB_NAME = "Magazine";
 
-        public static final String HIGH_MAGAZINE_POSITION_CONTROLLER_CONFIGURABLE_LABEL = "highMagazineSparkPositionController";
+        public static final String HIGH_MAGAZINE_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL = "highMagazineVelocityController";
+        public static final String HIGH_MAGAZINE_POSITION_CONTROLLER_CONFIGURABLE_LABEL = "highMagazinePositionController";
 
-        public static final String LOW_MAGAZINE_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL = "lowMagazineSparkVelocityController";
+        public static final String LOW_MAGAZINE_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL = "lowMagazineVelocityController";
     }
 
     public static final class Feeder {
         public static final int SPARK_PORT = 33;
         public static final int MAX_CURRENT = 80; //keep this
         public static final int SPARK_FEEDER_MAX_STALL_CURRENT = 60; //keep this
+
+        public static final double GEAR_RATIO = 1.0 / 3;
+
+        public static final double RADIUS = 1.4 / 2;
+
+        public static final double DISTANCE_PER_REVOLUTION = GEAR_RATIO * 2 * Math.PI * RADIUS;
 
         public static final String VELOCITY_CONTROLLER_CONFIGURABLE_LABEL = "feederSpark";
 
@@ -173,8 +182,8 @@ public final class Constants {
         public static final double DISTANCE_PER_REVOLUTION = 360;
 
         // these are relative to the vertical axis
-        public static final double HOOD_BOTTOM_POSITION_DEG = 74;
-        public static final double HOOD_TOP_POSITION_DEG = 45;
+        public static final double HOOD_BOTTOM_POSITION_DEG = 79;
+        public static final double HOOD_TOP_POSITION_DEG = 49;
 
         public static final String TAB_NAME = "Shooter";
 
@@ -183,8 +192,11 @@ public final class Constants {
         public static final double MAX_THETA = Math.toRadians(90 - HOOD_TOP_POSITION_DEG);
         public static final double MIN_THETA = Math.toRadians(90 - HOOD_BOTTOM_POSITION_DEG);
 
-        public static final double HOOD_MANUAL_ADJUST = 10;
+        public static final double AUTO_HOOD_MANUAL_ADJUST = 10;
 
+        public static final double MANUAL_ANGLE_SCALE = 20;
+
+        public static final String HOOD_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL = "hoodVelocityController";
         public static final String HOOD_POSITION_CONTROLLER_CONFIGURABLE_LABEL = "hoodPositionController";
     }
 
@@ -202,8 +214,8 @@ public final class Constants {
 
         public static final String TAB_NAME = "Shooter";
 
-        public static final String LEFT_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL = "flywheelsLeftSparkVelocityController";
-        public static final String RIGHT_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL = "flywheelsLeftSparkVelocityController";
+        public static final String LEFT_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL = "flywheelsLeftVelocityController";
+        public static final String RIGHT_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL = "flywheelsRightVelocityController";
 
     }
 
@@ -213,7 +225,7 @@ public final class Constants {
 
         public static final int TALON_PORT = 25;
 
-        public static final double TURRET_ADJUST = 10;
+        public static final double AUTO_TURRET_MANUAL_ADJUST = 10;
 
         /**
          * counts per revolution of the encoder
@@ -222,18 +234,21 @@ public final class Constants {
 
         public static final double TURRET_SPEED = 360.0 * 0.02; // degrees per ~20 milliseconds
 
-        public static final double MIN_POSITION = -135; // degrees
-        public static final double MAX_POSITION = 170; // degrees
+        public static final double MIN_POSITION = -136; // degrees
+        public static final double MAX_POSITION = 160; // degrees
 
         /**
          * In manual mode the max pwm will linearly clamp starting at the buffer zone size before the min or max positions.
          */
-        public static final double BUFFER_ZONE_SIZE = 50; // degrees
+        public static final double BUFFER_ZONE_SIZE = 30; // degrees
 
-        public static final double TURRET_PID_TOLERANCE = 2; // degrees
+        public static final double MANUAL_ANGLE_SCALE = 100;
+
+        public static final double TURRET_PID_TOLERANCE = 1; // degrees
 
         public static final String TAB_NAME = "Turret";
-        public static final String POSITION_CONTROLLER_CONFIGURABLE_LABEL = "Turret TalonSRX PID";
+        public static final String POSITION_CONTROLLER_CONFIGURABLE_LABEL = "turretPositionController";
+        public static final String VELOCITY_CONTROLLER_CONFIGURABLE_LABEL = "turretVelocityController";
         public static final String ENCODER_OFFSET_CONFIGURABLE_LABEL = "turretEncoderOffset";
         public static final String ZERO_TURRET_LABEL = "Zero Turret";
     }
