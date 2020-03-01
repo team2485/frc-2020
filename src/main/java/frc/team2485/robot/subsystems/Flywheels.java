@@ -4,6 +4,7 @@ import com.revrobotics.ControlType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.team2485.WarlordsLib.Tunable;
 import frc.team2485.WarlordsLib.motorcontrol.PIDSparkMax;
 import frc.team2485.WarlordsLib.robotConfigs.RobotConfigs;
@@ -62,14 +63,15 @@ public class Flywheels extends SubsystemBase implements Tunable {
     }
 
     private void setLeftVelocity(double velocity) {
-        m_sparkLeft.runPID(velocity);
+        m_sparkLeft.runPID(MathUtil.clamp(velocity, Constants.Flywheels.FLYWHEELS_MIN_VELOCITY, Constants.Flywheels.FLYWHEELS_MAX_VELOCITY));
     }
 
     private void setRightVelocity(double velocity) {
-        m_sparkRight.runPID(velocity);
+        m_sparkRight.runPID(MathUtil.clamp(velocity, Constants.Flywheels.FLYWHEELS_MIN_VELOCITY, Constants.Flywheels.FLYWHEELS_MAX_VELOCITY));
     }
 
     public void setVelocity(double velocity) {
+
         setVelocity(velocity, velocity);
     }
 

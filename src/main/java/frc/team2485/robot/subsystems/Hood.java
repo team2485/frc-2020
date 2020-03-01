@@ -59,7 +59,7 @@ public class Hood extends SubsystemBase implements PositionPIDSubsystem, Velocit
 
     @Override
     public void runVelocityPID(double velocity) {
-        this.setPWM(m_velocityController.calculate(this.getEncoderVelocity(), velocity));
+        this.setPWM(m_velocityController.calculate(this.getEncoderVelocity(), MathUtil.clamp(velocity, Constants.Hood.HOOD_MIN_VELOCITY, Constants.Hood.HOOD_MAX_VELOCITY)));
     }
 
     @Override
@@ -101,6 +101,11 @@ public class Hood extends SubsystemBase implements PositionPIDSubsystem, Velocit
 
     public boolean getBottomLimitSwitch() {
         return m_spark.getForwardLimitSwitch(CANDigitalInput.LimitSwitchPolarity.kNormallyClosed).get();
+    }
+
+    public void resetPID() {
+        m_velocityController.reset();
+        m_positionController.reset();
     }
 
     @Override

@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.team2485.WarlordsLib.Tunable;
 import frc.team2485.WarlordsLib.VelocityPIDSubsystem;
 import frc.team2485.WarlordsLib.motorcontrol.PIDSparkMax;
@@ -74,7 +75,7 @@ public class LowMagazine extends SubsystemBase implements VelocityPIDSubsystem {
 
     @Override
     public void runVelocityPID(double velocity) {
-        m_spark.runPID(velocity);
+        m_spark.runPID(MathUtil.clamp(velocity, Constants.Magazine.MAGAZINE_MIN_VELOCITY, Constants.Magazine.MAGAZINE_MAX_VELOCITY));
     }
 
 

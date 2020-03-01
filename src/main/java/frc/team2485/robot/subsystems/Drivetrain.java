@@ -1,6 +1,7 @@
 package frc.team2485.robot.subsystems;
 
 import com.ctre.phoenix.sensors.PigeonIMU;
+import com.revrobotics.CANEncoder;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
@@ -149,6 +150,10 @@ public class Drivetrain extends SubsystemBase  {
         m_sparkLeft1Master.setVoltage(leftVolts);
         m_sparkRight1Master.setVoltage(-rightVolts);
         m_drive.feed();
+    }
+
+    public CANEncoder getIntakeArmEncoder() {
+        return m_sparkLeft3.getEncoder();
     }
 
     public Pose2d getPose() {

@@ -119,7 +119,7 @@ public class Turret extends SubsystemBase implements VelocityPIDSubsystem, Posit
 
     @Override
     public void runVelocityPID(double velocity) {
-        m_talon.runPID(velocity / 10.0);
+        m_talon.runPID(MathUtil.clamp(velocity/10.0, Constants.Turret.TURRET_MIN_VELOCITY, Constants.Turret.TURRET_MAX_VELOCITY));
     }
 
     @Override

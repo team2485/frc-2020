@@ -109,6 +109,8 @@ public final class Constants {
         public static final double BOTTOM_POSITION_DEGREES = 90; //temp
 
         public static final double SPEED = 0.7;
+
+
     }
 
     public static final class Magazine {
@@ -135,10 +137,10 @@ public final class Constants {
         public static final double HIGH_DISTANCE_PER_REVOLUTION = HIGH_GEAR_RATIO * 2 * Math.PI * ROLLER_RADIUS;
 
         public static final double LOW_INTAKE_BY_ONE_POS = -7;
-        public static final double HIGH_INDEX_BY_ONE_POS = -6;
+        public static final double HIGH_INDEX_BY_ONE_POS = -7.3;
 
         //replace below with actual number
-        public static final double LOW_BELT_INTAKE_PWM = -0.7;
+        public static final double LOW_BELT_INTAKE_PWM = -0.5;
         public static final double OUTTAKE_PWM = 0.5;
         public static final double NORMAL_BALL_INCREMENT_TIMEOUT = 0.5; //seconds
 
@@ -153,6 +155,9 @@ public final class Constants {
         public static final String HIGH_MAGAZINE_POSITION_CONTROLLER_CONFIGURABLE_LABEL = "highMagazinePositionController";
 
         public static final String LOW_MAGAZINE_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL = "lowMagazineVelocityController";
+
+        public static final double MAGAZINE_MAX_VELOCITY = 300;
+        public static final double MAGAZINE_MIN_VELOCITY = -300;
     }
 
     public static final class Feeder {
@@ -170,6 +175,9 @@ public final class Constants {
 
         public static final double OUTTAKE_PWM = 0.5;
         public static final double INTAKE_PWM = -0.8;
+
+        public static final double FEEDER_MAX_VELOCITY = 1000;
+        public static final double FEEDER_MIN_VELOCITY = 0;
 
         public static final String TAB_NAME = "Shooter";
     }
@@ -198,6 +206,9 @@ public final class Constants {
 
         public static final String HOOD_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL = "hoodVelocityController";
         public static final String HOOD_POSITION_CONTROLLER_CONFIGURABLE_LABEL = "hoodPositionController";
+
+        public static final double HOOD_MAX_VELOCITY = 100;
+        public static final double HOOD_MIN_VELOCITY = 0;
     }
 
     public static final class Flywheels {
@@ -216,6 +227,9 @@ public final class Constants {
 
         public static final String LEFT_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL = "flywheelsLeftVelocityController";
         public static final String RIGHT_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL = "flywheelsRightVelocityController";
+
+        public static final double FLYWHEELS_MAX_VELOCITY = 6000;
+        public static final double FLYWHEELS_MIN_VELOCITY = 0;
 
     }
 
@@ -251,10 +265,15 @@ public final class Constants {
         public static final String VELOCITY_CONTROLLER_CONFIGURABLE_LABEL = "turretVelocityController";
         public static final String ENCODER_OFFSET_CONFIGURABLE_LABEL = "turretEncoderOffset";
         public static final String ZERO_TURRET_LABEL = "Zero Turret";
+
+        public static final double TURRET_MAX_VELOCITY = 40;
+        public static final double TURRET_MIN_VELOCITY = 0;
     }
 
     public static final class Climber {
         public static final int TALON_PORT = 18;
+
+        public static final double DEFAULT_PWM = -0.5;
     }
 
     public static final class Autonomous {

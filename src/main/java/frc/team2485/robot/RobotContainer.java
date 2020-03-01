@@ -26,6 +26,10 @@ import frc.team2485.robot.commands.TurretSetAngle;
 import frc.team2485.robot.commands.IntakeArmMove;
 import frc.team2485.robot.subsystems.Drivetrain;
 
+import java.time.Instant;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.BooleanSupplier;
+
 public class RobotContainer {
 
     private WL_XboxController m_jack;
@@ -58,7 +62,7 @@ public class RobotContainer {
         m_flywheels = new Flywheels();
         m_hood = new Hood(m_feeder.getHoodEncoder());
         m_turret = new Turret();
-        m_intakeArm = new IntakeArm();
+        m_intakeArm = new IntakeArm(m_drivetrain.getIntakeArmEncoder());
         m_climber = new Climber();
 
         this.configureCommands();
@@ -113,6 +117,7 @@ public class RobotContainer {
 
         m_jack.getJoystickButton(XboxController.Button.kBumperRight)
                 .whenHeld(new IntakeArmMove(m_intakeArm, IntakeArmMove.IntakeArmPosition.BOTTOM, Constants.IntakeArm.SPEED));
+//        .whenReleased(new IntakeArmMove(m_intakeArm, IntakeArmMove.IntakeArmPosition.TOP, Constants.IntakeArm.SPEED));
     }
 
     public void configureIntakingCommands() {
@@ -146,16 +151,17 @@ public class RobotContainer {
         m_jack.getJoystickButton(XboxController.Button.kA).whileHeld(
                 new ConditionalCommand(
                         new InstantCommand(() -> {
-                            m_lowMagazine.setPWM(Constants.Magazine.LOW_BELT_INTAKE_PWM);
-//                            m_lowMagazine.setVelocity(-30);
+//                            m_lowMagazine.setPWM(Constants.Magazine.LOW_BELT_INTAKE_PWM);
+                            m_lowMagazine.runVelocityPID(-50);
                         }),
                         new InstantCommand(() -> {
                             m_lowMagazine.setPWM(0);
                         }),
                         () -> {
                             return !((m_ballCounter.getNumBallsHigh() >= Constants.Magazine.HIGH_MAGAZINE_BALL_CAPACITY
-                                    || m_ballCounter.getNumBallsHigh() >= 3 && m_ballCounter.getExitIR())
+                                   || m_ballCounter.getNumBallsHigh() >= 3 && m_ballCounter.getExitIR())
                                     && m_ballCounter.getTransferIR());
+                         //return true;
 
                         }
                 )
@@ -184,6 +190,15 @@ public class RobotContainer {
 
     public void configureShootingCommands() {
 
+
+
+//        m_suraj.getJoystickButton(XboxController.Button.kBumperRight).whenPressed(
+//                new ConditionalCommand(
+//                        new RunCommand(()->m_highMagazine.runVelocityPID(-10)),
+//                        null,
+//                        ()->!m_ballCounter.getExitIR()
+//                )
+//        );
         // Increment ball into shooter
         m_suraj.getJoystickButton(XboxController.Button.kBumperRight).whileHeld(
                 new SequentialCommandGroup(
@@ -191,14 +206,16 @@ public class RobotContainer {
                             m_lowMagazine.setPWM(-0.5);
                             m_feeder.setPWM(-0.8);
                         }).alongWith(
-                                new IncrementHighMagazine(m_highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS)),
+                                new IncrementHighMagazine(m_highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS),
                         new WaitCommand(Constants.Magazine.NORMAL_BALL_INCREMENT_TIMEOUT)
                 )
-        ).whenReleased(
+        )).whenReleased(
                 new InstantCommand(() -> {
                     m_lowMagazine.setPWM(0);
                     m_highMagazine.setPWM(0);
                     m_feeder.setPWM(0);
+                    m_ballCounter.setNumBallsLow(0);
+                    m_ballCounter.setNumBallsHigh(0);
                 }
                 )
         );
@@ -243,34 +260,34 @@ public class RobotContainer {
 
     public void configureTurretCommands() {
         // Turret manual control
-//        m_turret.setDefaultCommand(
-//                new RunCommand(() ->
-//                        m_turret.setClampedPWM(
-//                                0.7 * Deadband.cubicScaledDeadband(
-//                                        m_suraj.getX(GenericHID.Hand.kLeft),
-//                                        Constants.OI.XBOX_DEADBAND)
-//                        )
-//                        , m_turret)
-//        );
-
         m_turret.setDefaultCommand(
-                new TurretSetAngle(m_turret,
-                        () -> {
-                            double setpoint = m_turret.getEncoderPosition();
-                            double pwm = getAxis(m_suraj, Axis.kLeftX);
-
-                            setpoint += pwm * Constants.Turret.MANUAL_ANGLE_SCALE;
-
-//                            if (pwm > 0) {
-//                                setpoint += (m_turret.getMaxAngle() - m_turret.getEncoderPosition()) * pwm;
-//                            } else if (pwm < 0) {
-//                                setpoint -= Math.abs((m_turret.getMinAngle() - m_turret.getEncoderPosition()) * pwm);
-//                            }
-
-                            return setpoint;
-                        }
-                )
+                new RunCommand(() ->
+                        m_turret.setClampedPWM(
+                                0.7 * Deadband.cubicScaledDeadband(
+                                        m_suraj.getX(GenericHID.Hand.kLeft),
+                                        Constants.OI.XBOX_DEADBAND)
+                        )
+                        , m_turret)
         );
+
+//        m_turret.setDefaultCommand(
+//                new TurretSetAngle(m_turret,
+//                        () -> {
+//                            double setpoint = m_turret.getEncoderPosition();
+//                            double pwm = getAxis(m_suraj, Axis.kLeftX);
+//
+//                            setpoint += pwm * Constants.Turret.MANUAL_ANGLE_SCALE;
+//
+////                            if (pwm > 0) {
+////                                setpoint += (m_turret.getMaxAngle() - m_turret.getEncoderPosition()) * pwm;
+////                            } else if (pwm < 0) {
+////                                setpoint -= Math.abs((m_turret.getMinAngle() - m_turret.getEncoderPosition()) * pwm);
+////                            }
+//
+//                            return setpoint;
+//                        }
+//                )
+//        );
 
         // Limelight align
 //        m_suraj.getJoystickButton(XboxController.Button.kX).whenHeld(
@@ -317,22 +334,22 @@ public class RobotContainer {
     }
 
     public void configureHoodCommands() {
-//        m_hood.setDefaultCommand(new RunCommand(
-//                () -> {
-//                    m_hood.setPWM(-Deadband.linearScaledDeadband(m_suraj.getY(GenericHID.Hand.kRight), Constants.OI.XBOX_DEADBAND));
-//                }, m_hood
-//        ));
+        m_hood.setDefaultCommand(new RunCommand(
+                () -> {
+                    m_hood.setPWM(-Deadband.linearScaledDeadband(m_suraj.getY(GenericHID.Hand.kRight), Constants.OI.XBOX_DEADBAND));
+                }, m_hood
+        ));
 
-        m_hood.setDefaultCommand(
-                new SetHood(m_hood, () -> {
-                    return m_hood.getEncoderPosition() - getAxis(m_suraj, Axis.kRightY) * Constants.Hood.MANUAL_ANGLE_SCALE;
-                }, false)
-        );
+//        m_hood.setDefaultCommand(
+//                new SetHood(m_hood, () -> {
+//                    return m_hood.getEncoderPosition() - getAxis(m_suraj, Axis.kRightY) * Constants.Hood.MANUAL_ANGLE_SCALE;
+//                }, false)
+//        );
 
         m_suraj.getJoystickButton(XboxController.Button.kX).whileHeld(new ConditionalCommand(
                         new SetHood(m_hood, () -> {
                             return 90 - (90 - m_hood.getEncoderPosition()
-                                    + Constants.Robot.LIMELIGHT_ANGLE_FROM_HORIZONTAL
+                                    - Constants.Robot.LIMELIGHT_ANGLE_FROM_HORIZONTAL
                                     + m_turret.getLimelight().getTargetVerticalOffset(0)
                                     - Deadband.cubicScaledDeadband(
                                     m_suraj.getY(GenericHID.Hand.kRight),
@@ -347,6 +364,8 @@ public class RobotContainer {
     }
 
     public void configureFlywheelsCommands() {
+        SmartDashboard.putNumber("RPM Setpoint", 0);
+
         m_flywheels.setDefaultCommand(
                 new RunCommand(() -> {
                     double output = 0;
@@ -362,14 +381,23 @@ public class RobotContainer {
 
                 }, m_flywheels)
         );
+
+        m_suraj.getJoystickButton(XboxController.Button.kB).whileHeld(
+                new RunCommand(() -> {
+                    m_flywheels.setVelocity(SmartDashboard.getNumber("RPM Setpoint", 0));
+                })
+        ).whenReleased(new InstantCommand(() -> m_flywheels.setPWM(0)));
     }
 
     public void configureClimberCommands() {
+//        m_jack.getJoystickButton(XboxController.Button.kY).whileHeld(
+//                new RunCommand(() -> {
+//                    m_climber.setPWM(Deadband.linearScaledDeadband(m_jack.getY(GenericHID.Hand.kRight), Constants.OI.XBOX_DEADBAND));
+//                })
+//        );
+
         m_jack.getJoystickButton(XboxController.Button.kY).whileHeld(
-                new RunCommand(() -> {
-                    m_climber.setPWM(Deadband.linearScaledDeadband(m_jack.getY(GenericHID.Hand.kRight), Constants.OI.XBOX_DEADBAND));
-                })
-        );
+                new InstantCommand(()->m_climber.setPWM(Constants.Climber.DEFAULT_PWM)));
     }
 
     public Command getAutonomousCommand() {

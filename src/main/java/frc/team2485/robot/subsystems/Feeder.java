@@ -5,6 +5,7 @@ import com.revrobotics.ControlType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.team2485.WarlordsLib.VelocityPIDSubsystem;
 import frc.team2485.WarlordsLib.control.WL_PIDController;
 import frc.team2485.WarlordsLib.motorcontrol.PIDSparkMax;
@@ -40,7 +41,7 @@ public class Feeder extends SubsystemBase implements VelocityPIDSubsystem {
 
     @Override
     public void runVelocityPID(double velocity) {
-        m_spark.runPID(velocity);
+        m_spark.runPID(MathUtil.clamp(velocity, Constants.Feeder.FEEDER_MIN_VELOCITY, Constants.Feeder.FEEDER_MAX_VELOCITY));
     }
 
     @Override
