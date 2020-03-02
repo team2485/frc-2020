@@ -115,9 +115,8 @@ public final class Constants {
 
     public static final class Magazine {
 
-        public static final int SPARK_LOW_MAX_CURRENT = 50;
-        public static final int SPARK_HIGH_MAX_CURRENT = 50;
-
+        public static final int SPARK_LOW_MAX_CURRENT = 80;
+        public static final int SPARK_HIGH_MAX_CURRENT = 80;
         //replace ports with real values
         public static final int SPARK_LOW_PORT = 22;
         public static final int SPARK_HIGH_PORT = 23;
@@ -137,12 +136,12 @@ public final class Constants {
         public static final double HIGH_DISTANCE_PER_REVOLUTION = HIGH_GEAR_RATIO * 2 * Math.PI * ROLLER_RADIUS;
 
         public static final double LOW_INTAKE_BY_ONE_POS = -7;
-        public static final double HIGH_INDEX_BY_ONE_POS = -7.5;
+        public static final double HIGH_INDEX_BY_ONE_POS = -7;
 
         //replace below with actual number
         public static final double LOW_BELT_INTAKE_PWM = -0.6;
         public static final double OUTTAKE_PWM = 0.5;
-        public static final double NORMAL_BALL_INCREMENT_TIMEOUT = 0.5; //seconds
+        public static final double NORMAL_BALL_INCREMENT_TIMEOUT = 1; //seconds
 
         public static final double HIGH_MAGAZINE_POSITION_CONTROLLER_THRESHOLD = 1;
 
@@ -177,7 +176,7 @@ public final class Constants {
         public static final double INTAKE_PWM = -0.8;
 
         public static final double FEEDER_MAX_VELOCITY = 1000;
-        public static final double FEEDER_MIN_VELOCITY = 0;
+        public static final double FEEDER_MIN_VELOCITY = -1000;
 
         public static final String TAB_NAME = "Shooter";
     }
@@ -208,7 +207,7 @@ public final class Constants {
         public static final String HOOD_POSITION_CONTROLLER_CONFIGURABLE_LABEL = "hoodPositionController";
 
         public static final double HOOD_MAX_VELOCITY = 100;
-        public static final double HOOD_MIN_VELOCITY = 0;
+        public static final double HOOD_MIN_VELOCITY = -100;
     }
 
     public static final class Flywheels {
@@ -219,9 +218,11 @@ public final class Constants {
         public static final double SPARK_FLYWHEEL_RIGHT_MAX_CURRENT = 0;
 
         public static final double RPM_CONVERSION_FACTOR = 0.10472;
-        public static final double FLYWHEEL_ENERGY_LOSS_FACTOR = 1;
+        public static final double FLYWHEEL_ENERGY_LOSS_FACTOR = 0.9;
 
-        public static final double RPM_ADJUST = 500;
+        public static final double FYWHEEL_OUTTAKE_PWM = 0.3;
+
+        public static final double RPM_ADJUST = 0;
 
         public static final String TAB_NAME = "Shooter";
 
@@ -229,7 +230,7 @@ public final class Constants {
         public static final String RIGHT_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL = "flywheelsRightVelocityController";
 
         public static final double FLYWHEELS_MAX_VELOCITY = 6000;
-        public static final double FLYWHEELS_MIN_VELOCITY = 0;
+        public static final double FLYWHEELS_MIN_VELOCITY = -6000;
 
     }
 
@@ -267,7 +268,7 @@ public final class Constants {
         public static final String ZERO_TURRET_LABEL = "Zero Turret";
 
         public static final double TURRET_MAX_VELOCITY = 40;
-        public static final double TURRET_MIN_VELOCITY = 0;
+        public static final double TURRET_MIN_VELOCITY = -40;
     }
 
     public static final class Climber {

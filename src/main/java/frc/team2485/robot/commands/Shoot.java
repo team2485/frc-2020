@@ -2,6 +2,7 @@ package frc.team2485.robot.commands;
 
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.team2485.WarlordsLib.Limelight;
 import frc.team2485.robot.Constants;
@@ -60,8 +61,11 @@ public class Shoot extends ParallelCommandGroup {
 
     public void addToShuffleboard() {
         ShuffleboardTab tab = Shuffleboard.getTab(Constants.Flywheels.TAB_NAME);
-//        tab.addNumber("Shoot Command Angle Setpoint", ()-> m_hoodSetpoint);
-//        tab.addNumber("Shoot Command RPM Setpoint", ()-> m_rpmSetpoint);
+        SmartDashboard.putNumber("Shoot Command Angle Setpoint" ,m_hoodSetpoint);
+        SmartDashboard.putNumber("Shoot Command RPM Setpoint", m_rpmSetpoint);
+//       tab.addNumber("Shoot Command Angle Setpo
+//       int 1", ()-> m_hoodSetpoint);
+//        tab.addNumber("Shoot Command RPM Setpoint 1", ()-> m_rpmSetpoint);
     }
 
     private static double getX(double ty, double LLtoPort){

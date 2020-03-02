@@ -52,6 +52,7 @@ public class BallCounter extends SubsystemBase {
         tab.addBoolean("Entrance IR", this::getEntranceIR);
         tab.addBoolean("Transfer IR", this::getTransferIR);
         tab.addBoolean("Exit IR", this::getExitIR);
+//        tab.addBoolean("Entrance Falling Edge", this::getEntranceFallingEdge);
         tab.add("Entrance Counter", m_entranceCounter);
         tab.add("Transfer Counter", m_transferCounter);
         tab.add("Exit Counter", m_exitCounter);
@@ -81,9 +82,14 @@ public class BallCounter extends SubsystemBase {
         return !m_transferIR.get();
     }
 
+    public boolean getEntranceLastVal() {
+        return !m_entranceLastVal;
+    }
+
     public boolean getExitIR() {
         return !m_exitIR.get();
     }
+
 
 
     @Override
