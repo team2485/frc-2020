@@ -86,6 +86,9 @@ public class Hood extends SubsystemBase implements PositionPIDSubsystem, Velocit
     public double getEncoderPosition() {
         return m_hoodEncoder.getPosition();
     }
+    public void setEncoderPosition(double newVal) {
+        this.m_hoodEncoder.setPosition(newVal);
+    }
 
     /**
      * Returns the hood position relative to the horizontal in radians.
