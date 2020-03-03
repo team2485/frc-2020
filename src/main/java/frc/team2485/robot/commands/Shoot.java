@@ -56,7 +56,7 @@ public class Shoot extends ParallelCommandGroup {
        // m_hoodSetpoint = Math.toDegrees(getComplement(thetaLaunch))
                // + m_hoodAdjust.getAsDouble(); //accounts for 90 degree shift
         System.out.println("hood" + Math.toDegrees(getComplement(thetaLaunch)));
-        m_hoodSetpoint = Math.toDegrees(getComplement(thetaLaunch)) + Constants.Hood.HOOD_DEFAULT_INCREMENT; //accounts for 90 degree shift
+        m_hoodSetpoint = Math.toDegrees(thetaLaunch) + Constants.Hood.HOOD_DEFAULT_INCREMENT; //accounts for 90 degree shift
         m_rpmSetpoint = - getRPM(v0x, thetaLaunch, Constants.PowerCell.POWER_CELL_RADIUS, Constants.Flywheels.RPM_CONVERSION_FACTOR)
                 + m_rpmAdjust.getAsDouble(); //finds launch RPM using initial angle+velocity
 

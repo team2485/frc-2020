@@ -190,15 +190,15 @@ public final class Constants {
         public static final double DISTANCE_PER_REVOLUTION = 360;
 
         // these are relative to the vertical axis
-        public static final double HOOD_BOTTOM_POSITION_DEG = 79;
-        public static final double HOOD_TOP_POSITION_DEG = 49;
+        public static final double HOOD_BOTTOM_POSITION_DEG = 11;
+        public static final double HOOD_TOP_POSITION_DEG = 45;
 
         public static final String TAB_NAME = "Shooter";
 
         //both in radians relative to horizontal
         //check if these should be in degrees or radians
-        public static final double MAX_THETA = Math.toRadians(90 - HOOD_TOP_POSITION_DEG);
-        public static final double MIN_THETA = Math.toRadians(90 - HOOD_BOTTOM_POSITION_DEG);
+        public static final double MAX_THETA = Math.toRadians(HOOD_TOP_POSITION_DEG);
+        public static final double MIN_THETA = Math.toRadians(HOOD_BOTTOM_POSITION_DEG);
 
         public static final double AUTO_HOOD_MANUAL_ADJUST = 0;
 

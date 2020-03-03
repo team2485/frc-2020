@@ -82,6 +82,10 @@ public class IntakeArm extends SubsystemBase implements PositionPIDSubsystem, Ve
         m_talon.set(pwm);
         m_lastPWM = pwm;
     }
+
+    @Override
+    public void resetPIDs() {
+    }
 //
 //    public double getEncoderCounts() {
 //        return this.m_encoderCounts;

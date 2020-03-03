@@ -62,6 +62,12 @@ public class Flywheels extends SubsystemBase implements Tunable {
         setPWM(pwm, pwm);
     }
 
+    @Override
+    public void resetPIDs() {
+        m_sparkLeft.resetPID();
+        m_sparkRight.resetPID();
+    }
+
     private void setLeftVelocity(double velocity) {
         m_sparkLeft.runPID(MathUtil.clamp(velocity, Constants.Flywheels.FLYWHEELS_MIN_VELOCITY, Constants.Flywheels.FLYWHEELS_MAX_VELOCITY));
     }

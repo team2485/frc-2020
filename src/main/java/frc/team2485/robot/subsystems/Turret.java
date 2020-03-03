@@ -108,17 +108,9 @@ public class Turret extends SubsystemBase implements VelocityPIDSubsystem, Posit
         m_talon.set(pwm);
     }
 
-    /**
-     * Reset the encoder position to a given position
-     * @param position position to set to.
-     */
-    public void resetEncoderPosition(double position) {
-        m_talon.setEncoderPosition(position);
-        this.m_absoluteEncoderOffset = position - this.getAbsoluteEncoderPosition();
-    }
-
     @Override
     public void runVelocityPID(double velocity) {
+        // velocity / 10 to convert from per 100ms to 1 second
         m_talon.runPID(MathUtil.clamp(velocity/10.0, Constants.Turret.TURRET_MIN_VELOCITY, Constants.Turret.TURRET_MAX_VELOCITY));
     }
 
@@ -184,6 +176,22 @@ public class Turret extends SubsystemBase implements VelocityPIDSubsystem, Posit
 
     public boolean getReverseLimitSwitch() {
         return !m_talon.getSensorCollection().isRevLimitSwitchClosed();
+    }
+
+
+    @Override
+    public void resetPIDs() {
+        m_talon.resetPID();
+        m_positionController.reset();
+    }
+
+    /**
+     * Reset the encoder position to a given position
+     * @param position position to set to.
+     */
+    public void resetEncoderPosition(double position) {
+        m_talon.setEncoderPosition(position);
+        this.m_absoluteEncoderOffset = position - this.getAbsoluteEncoderPosition();
     }
 
     @Override

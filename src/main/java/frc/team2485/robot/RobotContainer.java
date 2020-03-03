@@ -26,10 +26,6 @@ import frc.team2485.robot.commands.TurretSetAngle;
 import frc.team2485.robot.commands.IntakeArmMove;
 import frc.team2485.robot.subsystems.Drivetrain;
 
-import java.time.Instant;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.BooleanSupplier;
-
 public class RobotContainer {
 
     private WL_XboxController m_jack;
@@ -540,9 +536,9 @@ public class RobotContainer {
 //                m_turret.setPWM(getAxis(m_suraj, Axis.kLeftX));
 //                m_feeder.setPWM(-getAxis(m_jack, Axis.kLeftY));
 //                m_intakeArm.setPWM(getAxis(m_jack, Axis.kRightY));
-//                m_hood.setPWM(-Deadband.linearScaledDeadband(m_jack.getY(GenericHID.Hand.kLeft), Constants.OI.XBOX_DEADBAND));
+                m_hood.setPWM(-Deadband.linearScaledDeadband(m_jack.getY(GenericHID.Hand.kLeft), Constants.OI.XBOX_DEADBAND));
 
-                m_hood.setPWM(0);
+//                m_hood.setPWM(0);
 
 //                m_feeder.setPWM(-getAxis(m_jack, Axis.kLeftY));
                 //m_flywheels.setPWM(-Deadband.linearScaledDeadband(m_suraj.getY(GenericHID.Hand.kRight), Constants.OI.XBOX_DEADBAND));
@@ -561,8 +557,8 @@ public class RobotContainer {
             }
 
             if (m_jack.getXButton()) {
-                if (!m_hood.getTopLimitSwitch()) {
-                    m_hood.runVelocityPID(-600);
+                if (!m_hood.getReverseLimitSwitch()) {
+                    m_hood.runVelocityPID(600);
                 } else {
                     m_hood.setEncoderPosition(45);
                     m_hood.setPWM(0);

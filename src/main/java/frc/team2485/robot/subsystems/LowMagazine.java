@@ -37,7 +37,6 @@ public class LowMagazine extends SubsystemBase implements VelocityPIDSubsystem {
     }
 
     public void addToShuffleboard() {
-        SendableRegistry.add(m_spark, "Low Magazine Spark");
         ShuffleboardTab tab = Shuffleboard.getTab(Constants.Magazine.TAB_NAME);
         tab.add(m_spark);
         tab.addNumber("Low Position", this::getEncoderPosition);
@@ -51,6 +50,11 @@ public class LowMagazine extends SubsystemBase implements VelocityPIDSubsystem {
      */
     public void setPWM(double pwm) {
         m_spark.set(pwm);
+    }
+
+    @Override
+    public void resetPIDs() {
+        m_spark.resetPID();
     }
 
     /**

@@ -2,7 +2,6 @@ package frc.team2485.robot.subsystems;
 
 import com.revrobotics.CANDigitalInput;
 import com.revrobotics.CANEncoder;
-import com.revrobotics.ControlType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -10,7 +9,6 @@ import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.team2485.WarlordsLib.PositionPIDSubsystem;
 import frc.team2485.WarlordsLib.VelocityPIDSubsystem;
 import frc.team2485.WarlordsLib.control.WL_PIDController;
-import frc.team2485.WarlordsLib.motorcontrol.PIDSparkMax;
 import frc.team2485.WarlordsLib.motorcontrol.WL_SparkMax;
 import frc.team2485.WarlordsLib.robotConfigs.RobotConfigs;
 import frc.team2485.robot.Constants;
@@ -29,10 +27,13 @@ public class Hood extends SubsystemBase implements PositionPIDSubsystem, Velocit
         this.m_spark = new WL_SparkMax(Constants.Hood.SPARK_PORT);
         this.m_spark.enableVoltageCompensation(Constants.NOMINAL_VOLTAGE);
 
+        m_spark.setInverted(true);
+
         this.m_spark.getForwardLimitSwitch(CANDigitalInput.LimitSwitchPolarity.kNormallyClosed).enableLimitSwitch(true);
         this.m_spark.getReverseLimitSwitch(CANDigitalInput.LimitSwitchPolarity.kNormallyClosed).enableLimitSwitch(true);
 
         this.m_hoodEncoder = hoodEncoder;
+        hoodEncoder.setInverted(true);
         this.m_hoodEncoder.setPositionConversionFactor(Constants.Hood.DISTANCE_PER_REVOLUTION);
         this.m_hoodEncoder.setVelocityConversionFactor(Constants.Hood.DISTANCE_PER_REVOLUTION);
 
@@ -57,6 +58,12 @@ public class Hood extends SubsystemBase implements PositionPIDSubsystem, Velocit
 
     public void setPWM(double pwm) {
         m_spark.set(pwm);
+    }
+
+    @Override
+    public void resetPIDs() {
+        m_velocityController.reset();
+        m_positionController.reset();
     }
 
     @Override
@@ -95,14 +102,14 @@ public class Hood extends SubsystemBase implements PositionPIDSubsystem, Velocit
      * @return position in radians
      */
     public double getHoodTheta() {
-        return Math.toRadians(90 - getEncoderPosition());
+        return Math.toRadians(getEncoderPosition());
     }
 
-    public boolean getTopLimitSwitch() {
+    public boolean getReverseLimitSwitch() {
         return m_spark.getReverseLimitSwitch(CANDigitalInput.LimitSwitchPolarity.kNormallyClosed).get();
     }
 
-    public boolean getBottomLimitSwitch() {
+    public boolean getForwardLimitSwitch() {
         return m_spark.getForwardLimitSwitch(CANDigitalInput.LimitSwitchPolarity.kNormallyClosed).get();
     }
 
@@ -111,19 +118,18 @@ public class Hood extends SubsystemBase implements PositionPIDSubsystem, Velocit
         m_positionController.reset();
     }
 
-    @Override
-    public void periodic() {
-        if (getBottomLimitSwitch()) {
-            this.m_hoodEncoder.setPosition(Constants.Hood.HOOD_BOTTOM_POSITION_DEG);
-        }
-        else
-            if (getTopLimitSwitch()) {
-            this.m_hoodEncoder.setPosition(Constants.Hood.HOOD_TOP_POSITION_DEG);
-        }
-    }
-
     public void setEncoderPosition(double position) {
         m_hoodEncoder.setPosition(position);
+    }
+
+    @Override
+    public void periodic() {
+        if (getForwardLimitSwitch()) {
+            this.m_hoodEncoder.setPosition(Constants.Hood.HOOD_BOTTOM_POSITION_DEG);
+        }
+        else if (getReverseLimitSwitch()) {
+            this.m_hoodEncoder.setPosition(Constants.Hood.HOOD_TOP_POSITION_DEG);
+        }
     }
 
 
@@ -139,5 +145,4 @@ public class Hood extends SubsystemBase implements PositionPIDSubsystem, Velocit
 
         }
     }
-
 }

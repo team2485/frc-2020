@@ -83,6 +83,12 @@ public class HighMagazine extends SubsystemBase implements PositionPIDSubsystem,
         m_spark.set(pwm);
     }
 
+    @Override
+    public void resetPIDs() {
+        m_spark.resetPID();
+        m_positionController.reset();
+    }
+
     public boolean atPositionSetpoint() {
         return m_positionController.atSetpoint();
     }
