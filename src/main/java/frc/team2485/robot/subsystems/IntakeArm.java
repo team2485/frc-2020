@@ -50,8 +50,8 @@ public class IntakeArm extends SubsystemBase implements PositionPIDSubsystem, Ve
 
         this.m_encoder = encoder;
 
-        this.m_talon.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed);
-        this.m_talon.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed);
+//        this.m_talon.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed);
+//        this.m_talon.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed);
 
         this.m_talon.configContinuousCurrentLimit(Constants.IntakeArm.MAX_CURRENT);
 

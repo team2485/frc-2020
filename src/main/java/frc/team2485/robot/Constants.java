@@ -89,7 +89,8 @@ public final class Constants {
         public static final double UP_RAMP_RATE = 0.4;
         public static final double DOWN_RAMP_RATE = 0.1; //pwm deltas
 
-        public static final double STEERING_SCALE = 0.6;
+        public static final double STEERING_SCALE = 0.8;
+        public static final double THROTTLE_SCALE = 0.8;
 
         public static final String RESET_GYRO_LABEL = "Zero Gyro";
     }
@@ -139,7 +140,7 @@ public final class Constants {
         public static final double HIGH_INDEX_BY_ONE_POS = -6.5;
 
         //replace below with actual number
-        public static final double LOW_BELT_INTAKE_PWM = -0.6;
+        public static final double LOW_BELT_INTAKE_PWM = -0.4;
         public static final double OUTTAKE_PWM = 0.5;
         public static final double NORMAL_BALL_INCREMENT_TIMEOUT = 1; //seconds
 
@@ -199,15 +200,17 @@ public final class Constants {
         public static final double MAX_THETA = Math.toRadians(90 - HOOD_TOP_POSITION_DEG);
         public static final double MIN_THETA = Math.toRadians(90 - HOOD_BOTTOM_POSITION_DEG);
 
-        public static final double AUTO_HOOD_MANUAL_ADJUST = 10;
+        public static final double AUTO_HOOD_MANUAL_ADJUST = 0;
 
         public static final double MANUAL_ANGLE_SCALE = 20;
 
         public static final String HOOD_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL = "hoodVelocityController";
         public static final String HOOD_POSITION_CONTROLLER_CONFIGURABLE_LABEL = "hoodPositionController";
 
-        public static final double HOOD_MAX_VELOCITY = 100;
-        public static final double HOOD_MIN_VELOCITY = -100;
+        public static final double HOOD_MAX_VELOCITY = 8000;
+        public static final double HOOD_MIN_VELOCITY = -8000;
+
+        public static final double HOOD_DEFAULT_INCREMENT = -10;
     }
 
     public static final class Flywheels {
@@ -217,7 +220,10 @@ public final class Constants {
         public static final int SPARK_FLYWHEEL_RIGHT_PORT = 31;
         public static final double SPARK_FLYWHEEL_RIGHT_MAX_CURRENT = 0;
 
+        public static final double ARC_ADJUST = 5;
+
         public static final double RPM_CONVERSION_FACTOR = 0.10472;
+
         public static final double FLYWHEEL_ENERGY_LOSS_FACTOR = 0.9;
 
         public static final double FYWHEEL_OUTTAKE_PWM = 0.1;

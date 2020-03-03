@@ -2,6 +2,7 @@ package frc.team2485.robot.subsystems;
 
 import com.revrobotics.CANDigitalInput;
 import com.revrobotics.CANEncoder;
+import com.revrobotics.ControlType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -9,6 +10,7 @@ import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.team2485.WarlordsLib.PositionPIDSubsystem;
 import frc.team2485.WarlordsLib.VelocityPIDSubsystem;
 import frc.team2485.WarlordsLib.control.WL_PIDController;
+import frc.team2485.WarlordsLib.motorcontrol.PIDSparkMax;
 import frc.team2485.WarlordsLib.motorcontrol.WL_SparkMax;
 import frc.team2485.WarlordsLib.robotConfigs.RobotConfigs;
 import frc.team2485.robot.Constants;
@@ -59,6 +61,7 @@ public class Hood extends SubsystemBase implements PositionPIDSubsystem, Velocit
 
     @Override
     public void runVelocityPID(double velocity) {
+        //m_spark.runPID(MathUtil.clamp(velocity, Constants.Hood.HOOD_MIN_VELOCITY, Constants.Hood.HOOD_MAX_VELOCITY));
         this.setPWM(m_velocityController.calculate(this.getEncoderVelocity(), MathUtil.clamp(velocity, Constants.Hood.HOOD_MIN_VELOCITY, Constants.Hood.HOOD_MAX_VELOCITY)));
     }
 
@@ -79,7 +82,7 @@ public class Hood extends SubsystemBase implements PositionPIDSubsystem, Velocit
 
     @Override
     public double getEncoderVelocity() {
-        return m_hoodEncoder.getVelocity();
+        return m_spark.getEncoder().getVelocity();
     }
 
     @Override
@@ -119,6 +122,10 @@ public class Hood extends SubsystemBase implements PositionPIDSubsystem, Velocit
         }
     }
 
+    public void setEncoderPosition(double position) {
+        m_hoodEncoder.setPosition(position);
+    }
+
 
     /**
      * Should run periodically and run the motor to tune
@@ -126,9 +133,10 @@ public class Hood extends SubsystemBase implements PositionPIDSubsystem, Velocit
     @Override
     public void tunePeriodic(int layer) {
         if (layer == 0) {
-            m_spark.set(m_velocityController.calculate(this.getEncoderVelocity()));
+            setPWM(m_velocityController.calculate(this.getEncoderVelocity()));
         } else if (layer == 1) {
             runVelocityPID(m_positionController.calculate(this.getEncoderPosition()));
+
         }
     }
 
