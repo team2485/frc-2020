@@ -495,54 +495,6 @@ public class RobotContainer {
     //All the data the widgets need in networktables for them to work
     public void widget1NetworkTables() {
         //for the Heading Widget
-        SmartDashboard.putNumber("Heading/encoder",m_turret.getEncoderPosition());
-        //In Radians, add this to the Robot's Gyro position
-        SmartDashboard.putNumber("Heading/gyro",m_drivetrain.getHeading());
-        //In Degrees, make sure this is reset at the beginning
-        // Data for the shooter widget is in the Shoot command
-        }
-        // All the data the widgets need in networktables for them to work
-    public void widget2NetworkTables() {
-        double vfy = -m_suraj.getY(GenericHID.Hand.kRight);
-        double ty = m_turret.getLimelight().getTargetVerticalOffset(Constants.Robot.LIMELIGHT_TY_DEFAULT_VALUE) + Constants.Shooter.LIMELIGHT_ANGLE_FROM_HORIZONTAL;
-        //gets vertical angle from m_limelight
-        double xDist = Shoot.getX(ty, Constants.Robot.HEIGHT_FROM_LL_TO_PORT);
-        //finds x distance (horizontal) to port
-        double v0y = Shoot.getv0y(vfy, Constants.Robot.HEIGHT_FROM_LL_TO_PORT, Constants.Shooter.GRAVITY_ACCELERATION_CONSTANT);
-        //finds initial y velocity based on final y velocity and height changes
-        double timeOfTrajectory = Shoot.gettimeOfTraj(v0y, vfy, Constants.Shooter.GRAVITY_ACCELERATION_CONSTANT, Constants.Robot.HEIGHT_FROM_SHOOTER_TO_PORT);
-        //finds time of trajectory based on y velocities, distances, and accelerations
-        double vfx = Shoot.getvfX(xDist, timeOfTrajectory);
-        //finds final x velocity from time of trajectory and distance traversed
-        double v0x = Shoot.getv0xFromVfx(timeOfTrajectory, vfx, Constants.PowerCell.POWER_CELL_DRAG_COEFF, Constants.PowerCell.POWER_CELL_MASS);
-        //taken from Shoot.java
-        double initialVelocity = Math.sqrt(v0x*v0x+v0y*v0y);
-        SmartDashboard.putNumber("Shooter/pitch",m_hood.getEncoderPosition());
-        // shouldn't we just get this from v0x & v0y?
-        SmartDashboard.putNumber("Shooter/iv",initialVelocity);
-    }
-
-<<<<<<< HEAD
-    public void sendWidget1data(double encoderVal, double gyroVal) {
-        //for testing
-        SmartDashboard.putNumber("Heading/encoder",encoderVal);
-        // In Radians, add this to the Robot's Gyro position
-        SmartDashboard.putNumber("Heading/gyro",gyroVal);
-        // In Degrees, make sure this is reset at the beginning
-    }
-
-    public void sendWidget2data(double pitchVal, double ivVal) {
-        //for testing
-        SmartDashboard.putNumber("Shooter/pitch",pitchVal);
-        // shouldn't we just get this from v0x & v0y?
-        SmartDashboard.putNumber("Shooter/iv",ivVal);
-    }
-
-=======
-
-    //All the data the widgets need in networktables for them to work
-    public void widget1NetworkTables() {
-        //for the Heading Widget
         SmartDashboard.putNumber("Heading/encoder",m_turret.getEncoderPosition()); //In Radians, add this to the Robot's Gyro position
         SmartDashboard.putNumber("Heading/gyro",m_drivetrain.getHeading()); //In Degrees, make sure this is reset at the beginning
 
@@ -571,6 +523,5 @@ public class RobotContainer {
         SmartDashboard.putNumber("Shooter/pitch",pitchVal); // shouldn't we just get this from v0x & v0y?
         SmartDashboard.putNumber("Shooter/iv",ivVal);
     }
->>>>>>> 3026135d9d4215d24e358273b03b94b6d31aa40b
 }
 

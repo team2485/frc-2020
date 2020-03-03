@@ -31,14 +31,8 @@ public class Shoot extends ParallelCommandGroup {
         this.m_hoodAdjust = hoodAdjust;
         this.m_hoodSetpoint = 0;
         this.m_rpmSetpoint = 0;
-<<<<<<< HEAD
         this.addCommands(new SetFlywheels(flywheels, ()-> m_rpmSetpoint * Constants.Flywheels.FLYWHEEL_ENERGY_LOSS_FACTOR),
                 new SetHood(hood, ()-> m_hoodSetpoint + hoodAdjust.getAsDouble()));
-
-=======
-        this.addCommands(new SetFlywheels(flywheels, ()-> m_rpmSetpoint * Constants.Shooter.FLYWHEEL_ENERGY_LOSS_FACTOR), new SetHood(hood, ()-> m_hoodSetpoint));
-        this.initialVelocity = 0; // for the widget
->>>>>>> 3026135d9d4215d24e358273b03b94b6d31aa40b
         this.addToShuffleboard();
         this.initialVelocity = 0; // for Widget
     }
@@ -67,31 +61,19 @@ public class Shoot extends ParallelCommandGroup {
     }
     
     public void addToShuffleboard() {
-<<<<<<< HEAD
-        ShuffleboardTab tab = Shuffleboard.getTab(Constants.Flywheels.TAB_NAME);
-        SmartDashboard.putNumber("Shoot Command Angle Setpoint" ,m_hoodSetpoint);
-        SmartDashboard.putNumber("Shoot Command RPM Setpoint", m_rpmSetpoint);
-//       tab.addNumber("Shoot Command Angle Setpo
-//       int 1", ()-> m_hoodSetpoint);
-//        tab.addNumber("Shoot Command RPM Setpoint 1", ()-> m_rpmSetpoint);
-=======
         ShuffleboardTab tab = Shuffleboard.getTab(Constants.Shooter.TAB_NAME);
         tab.addNumber(" Angle Setpoint", ()-> m_hoodSetpoint);
         tab.addNumber("RPM Setpoint", ()-> m_rpmSetpoint);
->>>>>>> 3026135d9d4215d24e358273b03b94b6d31aa40b
 
         //Data for the Shooter Widget: Initial Velocity and the Pitch of the shooter
         SmartDashboard.putNumber("Shooter/pitch",m_hood.getEncoderPosition());
         SmartDashboard.putNumber("Shooter/iv",initialVelocity);
 
     }
-<<<<<<< HEAD
-=======
     public Hood getHood() {
         return m_hood;
     }
->>>>>>> 3026135d9d4215d24e358273b03b94b6d31aa40b
-
+    
     public void setInitialVelocity(double newVal) {
         initialVelocity = newVal;
     }

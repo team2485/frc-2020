@@ -20,8 +20,6 @@ public class Robot extends TimedRobot {
   
   private double time;
 
-  private double time;
-
   @Override
   public void robotInit() {
     RobotConfigs.getInstance().loadConfigsFromFile(Constants.CONFIGS_FILE);
@@ -50,19 +48,11 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
-<<<<<<< HEAD
-
-=======
->>>>>>> 3026135d9d4215d24e358273b03b94b6d31aa40b
     time = 0;
   }
 
   @Override
   public void autonomousPeriodic() {
-<<<<<<< HEAD
-
-=======
->>>>>>> 3026135d9d4215d24e358273b03b94b6d31aa40b
     //all of this is just for testing
     if(time<0.5) m_robotContainer.sendWidget1data(0,0);
     else if(time<1) m_robotContainer.sendWidget1data(0,120);
@@ -74,13 +64,7 @@ public class Robot extends TimedRobot {
     else if(time<4.5) m_robotContainer.sendWidget1data(240,0);
     else if(time<5) m_robotContainer.sendWidget1data(0,0);
     else if(time<6) m_robotContainer.sendWidget1data((time-6)*360,0);
-<<<<<<< HEAD
 
-
-=======
-    
-    
->>>>>>> 3026135d9d4215d24e358273b03b94b6d31aa40b
     if(time<0.5) m_robotContainer.sendWidget2data(Math.PI/4.0,5);
     else if(time<1) m_robotContainer.sendWidget2data(Math.PI/4.0,10);
     else if(time<1.5)  m_robotContainer.sendWidget2data(Math.PI/4.0,20);
@@ -95,10 +79,6 @@ public class Robot extends TimedRobot {
     time+=0.02;
 //     m_robotContainer.widget1NetworkTables();
 //     m_robotContainer.widget2NetworkTables();
-<<<<<<< HEAD
-
-=======
->>>>>>> 3026135d9d4215d24e358273b03b94b6d31aa40b
   }
 
   @Override
