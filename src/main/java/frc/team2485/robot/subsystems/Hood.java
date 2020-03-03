@@ -60,8 +60,13 @@ public class Hood extends SubsystemBase implements PositionPIDSubsystem, Velocit
     }
 
     @Override
+    public void resetPIDs() {
+        m_velocityController.reset();
+        m_positionController.reset();
+    }
+
+    @Override
     public void runVelocityPID(double velocity) {
-        //m_spark.runPID(MathUtil.clamp(velocity, Constants.Hood.HOOD_MIN_VELOCITY, Constants.Hood.HOOD_MAX_VELOCITY));
         this.setPWM(m_velocityController.calculate(this.getEncoderVelocity(), MathUtil.clamp(velocity, Constants.Hood.HOOD_MIN_VELOCITY, Constants.Hood.HOOD_MAX_VELOCITY)));
     }
 

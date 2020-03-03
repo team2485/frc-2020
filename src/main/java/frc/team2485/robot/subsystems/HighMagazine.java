@@ -43,7 +43,6 @@ public class HighMagazine extends SubsystemBase implements PositionPIDSubsystem,
         m_spark.getEncoder().setPositionConversionFactor(Constants.Magazine.HIGH_DISTANCE_PER_REVOLUTION);
         m_spark.getEncoder().setVelocityConversionFactor(Constants.Magazine.HIGH_DISTANCE_PER_REVOLUTION / 60);
         m_spark.getEncoder().setPosition(0);
-//                m_spark.setInverted(true);
         m_spark.enableVoltageCompensation(Constants.NOMINAL_VOLTAGE);
         m_spark.setEncoderPosition(0);
         m_spark.setTolerance(Constants.Magazine.HIGH_MAGAZINE_POSITION_CONTROLLER_THRESHOLD);
@@ -81,6 +80,12 @@ public class HighMagazine extends SubsystemBase implements PositionPIDSubsystem,
      */
     public void setPWM(double pwm) {
         m_spark.set(pwm);
+    }
+
+    @Override
+    public void resetPIDs() {
+        m_spark.resetPID();
+        m_positionController.reset();
     }
 
     public boolean atPositionSetpoint() {

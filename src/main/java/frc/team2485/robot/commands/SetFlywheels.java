@@ -22,6 +22,10 @@ public class SetFlywheels extends CommandBase {
         this(flywheels, velocity, velocity);
     }
 
+    @Override
+    public void initialize() {
+        m_flywheels.resetPIDs();
+    }
 
     public void execute() {
         System.out.println("left vel: " + m_leftVelocity.getAsDouble());

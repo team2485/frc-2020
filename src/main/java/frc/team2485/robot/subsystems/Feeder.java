@@ -40,6 +40,11 @@ public class Feeder extends SubsystemBase implements VelocityPIDSubsystem {
     }
 
     @Override
+    public void resetPIDs() {
+        m_spark.resetPID();
+    }
+
+    @Override
     public void runVelocityPID(double velocity) {
         m_spark.runPID(MathUtil.clamp(velocity, Constants.Feeder.FEEDER_MIN_VELOCITY, Constants.Feeder.FEEDER_MAX_VELOCITY));
     }
@@ -59,6 +64,10 @@ public class Feeder extends SubsystemBase implements VelocityPIDSubsystem {
         return m_spark.getEncoder().getVelocity();
     }
 
+    /**
+     * The hood encoder is wired to the feeder Spark Max
+     * @return CANEncoder hood encoder
+     */
     public CANEncoder getHoodEncoder() {
         return m_spark.getAlternateEncoder(Constants.Hood.ENCODER_CPR);
     }

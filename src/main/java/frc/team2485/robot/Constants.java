@@ -65,8 +65,6 @@ public final class Constants {
 
     public static final class Drivetrain {
 
-        public static final boolean TUNING_MODE = false;
-
         public static final int SPARK_LEFT_PORT_MASTER = 10;
         public static final int SPARK_LEFT_PORT_SLAVE_2 = 11;
         public static final int SPARK_LEFT_PORT_SLAVE_3 = 12;
@@ -78,13 +76,15 @@ public final class Constants {
         public static final int LEFT_ENCODER_SPARK = 10;
         public static final int RIGHT_ENCODER_SPARK = 14;
 
-        public static final int MAX_CURRENT = 18;
-
         public static final int PIGEON_IMU_PORT = 1;
+
+        public static final int MAX_CURRENT = 18;
 
         public static final int ENCODER_CPR = 250 * 4; // 4x encoding
 
         public static final double WHEEL_RADIUS = 3; // inches
+
+        public static final double DISTANCE_PER_REVOLUTION = 2 * Math.PI * WHEEL_RADIUS;
 
         public static final double UP_RAMP_RATE = 0.4;
         public static final double DOWN_RAMP_RATE = 0.1; //pwm deltas
@@ -158,6 +158,8 @@ public final class Constants {
 
         public static final double MAGAZINE_MAX_VELOCITY = 50;
         public static final double MAGAZINE_MIN_VELOCITY = -50;
+
+        public static final int MAX_DEBOUNCE_TIME = 3;
     }
 
     public static final class Feeder {
@@ -229,6 +231,8 @@ public final class Constants {
         public static final double FYWHEEL_OUTTAKE_PWM = 0.1;
 
         public static final double RPM_ADJUST = 0;
+
+        public static final double GEAR_RATIO = 2/1;
 
         public static final String TAB_NAME = "Shooter";
 

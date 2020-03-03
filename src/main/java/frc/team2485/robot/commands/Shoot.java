@@ -38,6 +38,12 @@ public class Shoot extends ParallelCommandGroup {
     }
 
     @Override
+    public void initialize() {
+        m_flywheels.resetPIDs();
+        m_hood.resetPID();
+    }
+
+    @Override
     public void execute() {
         super.execute();
         double vfy = m_finalYVelocity.getAsDouble();

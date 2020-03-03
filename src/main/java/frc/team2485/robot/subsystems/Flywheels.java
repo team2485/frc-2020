@@ -20,8 +20,8 @@ public class Flywheels extends SubsystemBase implements Tunable {
         this.m_sparkRight = new PIDSparkMax(Constants.Flywheels.SPARK_FLYWHEEL_RIGHT_PORT, ControlType.kVelocity);
         m_sparkRight.setInverted(true);
 
-        m_sparkRight.getEncoder().setVelocityConversionFactor(2);
-        m_sparkLeft.getEncoder().setVelocityConversionFactor(2);
+        m_sparkRight.getEncoder().setVelocityConversionFactor(Constants.Flywheels.GEAR_RATIO);
+        m_sparkLeft.getEncoder().setVelocityConversionFactor(Constants.Flywheels.GEAR_RATIO);
 
         m_sparkLeft.enableVoltageCompensation(Constants.NOMINAL_VOLTAGE);
         m_sparkRight.enableVoltageCompensation(Constants.NOMINAL_VOLTAGE);
@@ -36,13 +36,10 @@ public class Flywheels extends SubsystemBase implements Tunable {
         ShuffleboardTab tab = Shuffleboard.getTab(Constants.Flywheels.TAB_NAME);
         tab.add("Left Flywheel Vel Ctrl", m_sparkLeft);
         tab.add("Right Flywheel Vel Ctrl", m_sparkRight);
-        tab.addNumber("Flywheels Velocity Setpoint", m_sparkLeft::getSetpoint);
         tab.addNumber("Left Flywheel Velocity", this::getLeftEncoderVelocity);
         tab.addNumber("Right Flywheel Velocity", this::getRightEncoderVelocity);
         tab.addNumber("Left Flywheel Current", m_sparkLeft::getOutputCurrent);
         tab.addNumber("Right Flywheel Current", m_sparkRight::getOutputCurrent);
-        tab.add("Flywheels Left Spark", m_sparkLeft);
-        tab.add("Flywheels Right Spark", m_sparkRight);
     }
 
     private void setLeftPWM(double pwm) {
@@ -60,6 +57,12 @@ public class Flywheels extends SubsystemBase implements Tunable {
 
     public void setPWM(double pwm) {
         setPWM(pwm, pwm);
+    }
+
+    @Override
+    public void resetPIDs() {
+        m_sparkLeft.resetPID();
+        m_sparkRight.resetPID();
     }
 
     private void setLeftVelocity(double velocity) {

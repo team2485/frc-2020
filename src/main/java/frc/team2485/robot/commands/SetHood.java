@@ -29,6 +29,11 @@ public class SetHood extends CommandBase {
     }
 
     @Override
+    public void initialize() {
+        m_hood.resetPID();
+    }
+
+    @Override
     public void execute() {
         m_hood.runPositionPID(m_angle.getAsDouble());
     }

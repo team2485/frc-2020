@@ -26,10 +26,6 @@ import frc.team2485.robot.commands.TurretSetAngle;
 import frc.team2485.robot.commands.IntakeArmMove;
 import frc.team2485.robot.subsystems.Drivetrain;
 
-import java.time.Instant;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.BooleanSupplier;
-
 public class RobotContainer {
 
     private WL_XboxController m_jack;
@@ -150,14 +146,14 @@ public class RobotContainer {
         m_jack.getJoystickButton(XboxController.Button.kA).whileHeld(
 
                 new ConditionalCommand(
-                        new IncrementHighMagazine(m_highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS),//.withInterrupt(() -> !m_ballCounter.getTransferIR()),
+                        new IncrementHighMagazine(m_highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS),//.withInterrupt(() -> !m_ballCounter.transferIRHasBall()),
                         new InstantCommand(() -> {
                             m_highMagazine.setPWM(0);
                         }),
                         () -> {
                             return
-                                    // !m_ballCounter.getEntranceIR() && m_ballCounter.getEntranceLastVal()
-                                    m_ballCounter.getTransferIR() &&
+                                    // !m_ballCounter.entranceIRHasBall() && m_ballCounter.getEntranceLastVal()
+                                    m_ballCounter.transferIRHasBall() &&
                                             (m_ballCounter.getNumBallsHigh() <= Constants.Magazine.HIGH_MAGAZINE_BALL_CAPACITY);
                         }
                 )
@@ -170,14 +166,14 @@ public class RobotContainer {
 //        m_highMagazine.setDefaultCommand(
 //                new ScheduleCommand(
 //                        new ConditionalCommand(
-//                                new IncrementHighMagazine(m_highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS),//.withInterrupt(() -> !m_ballCounter.getTransferIR()),
+//                                new IncrementHighMagazine(m_highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS),//.withInterrupt(() -> !m_ballCounter.transferIRHasBall()),
 //                                new InstantCommand(() -> {
 //                                    m_highMagazine.setPWM(0);
 //                                }, m_highMagazine),
 //                                () -> {
 //                                    return
-//                                            // !m_ballCounter.getEntranceIR() && m_ballCounter.getEntranceLastVal()
-//                                            m_ballCounter.getTransferIR();
+//                                            // !m_ballCounter.entranceIRHasBall() && m_ballCounter.getEntranceLastVal()
+//                                            m_ballCounter.transferIRHasBall();
 ////                                                    (m_ballCounter.getNumBallsHigh() <= Constants.Magazine.HIGH_MAGAZINE_BALL_CAPACITY);
 //                                }
 //                        )
@@ -210,8 +206,8 @@ public class RobotContainer {
                         }),
                         () -> {
 //                            return !((m_ballCounter.getNumBallsHigh() >= Constants.Magazine.HIGH_MAGAZINE_BALL_CAPACITY
-//                                    || m_ballCounter.getNumBallsHigh() >= 3 && m_ballCounter.getExitIR())
-//                                    && m_ballCounter.getTransferIR());
+//                                    || m_ballCounter.getNumBallsHigh() >= 3 && m_ballCounter.exitIRHasBall())
+//                                    && m_ballCounter.transferIRHasBall());
                             return true;
                         }
                 )
@@ -247,7 +243,7 @@ public class RobotContainer {
 //                new ConditionalCommand(
 //                        new RunCommand(()->m_highMagazine.runVelocityPID(-10)),
 //                        null,
-//                        ()->!m_ballCounter.getExitIR()
+//                        ()->!m_ballCounter.exitIRHasBall()
 //                )
 //        );
         // Increment ball into shooter
@@ -490,8 +486,12 @@ public class RobotContainer {
         SmartDashboard.putBoolean(Constants.Turret.ZERO_TURRET_LABEL, false);
         SmartDashboard.putBoolean(Constants.Drivetrain.RESET_GYRO_LABEL, false);
 
-        m_turret.resetPID();
+        m_turret.resetPIDs();
         m_hood.resetPID();
+        m_highMagazine.resetPIDs();
+        m_lowMagazine.resetPIDs();
+        m_flywheels.resetPIDs();
+        m_feeder.resetPIDs();
     }
 
     public void testPeriodic() {

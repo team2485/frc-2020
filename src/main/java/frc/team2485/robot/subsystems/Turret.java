@@ -108,6 +108,12 @@ public class Turret extends SubsystemBase implements VelocityPIDSubsystem, Posit
         m_talon.set(pwm);
     }
 
+    @Override
+    public void resetPIDs() {
+         m_talon.resetPID();
+         m_positionController.reset();
+    }
+
     /**
      * Reset the encoder position to a given position
      * @param position position to set to.
@@ -166,11 +172,6 @@ public class Turret extends SubsystemBase implements VelocityPIDSubsystem, Posit
 
     public double getMaxAngle() {
         return this.MAX_ANGLE;
-    }
-
-    public void resetPID() {
-        this.m_talon.resetPID();
-        m_positionController.reset();
     }
 
     public void enableSoftLimits(boolean enable) {

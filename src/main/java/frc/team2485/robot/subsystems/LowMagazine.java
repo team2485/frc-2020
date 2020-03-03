@@ -53,6 +53,11 @@ public class LowMagazine extends SubsystemBase implements VelocityPIDSubsystem {
         m_spark.set(pwm);
     }
 
+    @Override
+    public void resetPIDs() {
+        m_spark.resetPID();
+    }
+
     /**
      * @return belt encoder position
      */
