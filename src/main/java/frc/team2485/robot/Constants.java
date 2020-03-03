@@ -57,6 +57,46 @@ public final class Constants {
         public static final double LIMELIGHT_ANGLE_FROM_HORIZONTAL = 14.34; //degrees
     }
 
+    public static final class Shooter {
+        public static final int SPARK_HOOD_PORT = 32;
+        public static final double SPARK_HOOD_MAX_CURRENT = 0;
+
+        public static final int HOOD_ENCODER_CPR = 1000 * 4; //4x encoding
+        public static final double HOOD_DISTANCE_PER_REVOLUTION = 360;
+
+        // these are relative to the vertical axis
+        public static final double HOOD_BOTTOM_POSITION_DEG = 74;
+        public static final double HOOD_TOP_POSITION_DEG = 45;
+
+        //both in radians relative to horizontal
+        //check if these should be in degrees or radians
+        public static final double HOOD_MAX_THETA = Math.toRadians(90 - HOOD_TOP_POSITION_DEG);
+        public static final double HOOD_MIN_THETA = Math.toRadians(90 - HOOD_BOTTOM_POSITION_DEG);
+
+
+        public static final int SPARK_FLYWHEEL_LEFT_PORT = 30;
+        public static final double SPARK_FLYWHEEL_LEFT_MAX_CURRENT = 0;
+
+        public static final int SPARK_FLYWHEEL_RIGHT_PORT = 31;
+        public static final double SPARK_FLYWHEEL_RIGHT_MAX_CURRENT = 0;
+
+        public static final int SPARK_FEEDER_PORT = 33;
+        public static final int SPARK_FEEDER_MAX_CURRENT = 80; //keep this
+        public static final int SPARK_FEEDER_MAX_STALL_CURRENT = 60; //keep this
+
+        public static final double RPM_CONVERSION_FACTOR = 0.10472;
+        public static final double FLYWHEEL_ENERGY_LOSS_FACTOR = 1;
+        public static final double GRAVITY_ACCELERATION_CONSTANT = 9.8; //meters per second
+        public static final double LIMELIGHT_ANGLE_FROM_HORIZONTAL = 14.34; //degrees
+
+        public static final String TAB_NAME = "Shooter";
+
+        public static final String FEEDER_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL = "feederSpark";
+        public static final String LEFT_FLYWHEEL_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL = "flywheelsLeftSparkVelocityController";
+        public static final String RIGHT_FLYWHEEL_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL = "flywheelsLeftSparkVelocityController";
+        public static final String HOOD_POSITION_CONTROLLER_CONFIGURABLE_LABEL = "hoodPositionController";
+    }
+
     public static final class PowerCell {
         public static final double POWER_CELL_MASS = 0.141748; //kg
         public static final double POWER_CELL_DRAG_COEFF = 0.116;

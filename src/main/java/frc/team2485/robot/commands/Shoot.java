@@ -19,6 +19,7 @@ public class Shoot extends ParallelCommandGroup {
     private Limelight m_limelight;
     private Hood m_hood;
     private Flywheels m_flywheels;
+    private double initialVelocity;
 
     public Shoot(Flywheels flywheels, Hood hood, Limelight limelight, DoubleSupplier finalYVelocity, DoubleSupplier rpmAdjust, DoubleSupplier hoodAdjust) {
         super();
@@ -34,6 +35,7 @@ public class Shoot extends ParallelCommandGroup {
                 new SetHood(hood, ()-> m_hoodSetpoint + hoodAdjust.getAsDouble()));
 
         this.addToShuffleboard();
+        this.initialVelocity = 0; // for Widget
     }
 
     public void execute() {
@@ -66,18 +68,27 @@ public class Shoot extends ParallelCommandGroup {
 //       tab.addNumber("Shoot Command Angle Setpo
 //       int 1", ()-> m_hoodSetpoint);
 //        tab.addNumber("Shoot Command RPM Setpoint 1", ()-> m_rpmSetpoint);
+
+        //Data for the Shooter Widget: Initial Velocity and the Pitch of the shooter
+        SmartDashboard.putNumber("Shooter/pitch",m_hood.getEncoderPosition());
+        SmartDashboard.putNumber("Shooter/iv",initialVelocity);
+
     }
 
-    private static double getX(double ty, double LLtoPort){
+    public void setInitialVelocity(double newVal) {
+        initialVelocity = newVal;
+    }
+
+    public static double getX(double ty, double LLtoPort){
         return LLtoPort / Math.tan(Math.toRadians(ty));
     }
 
-    private static double getv0y(double vfy, double LLtoPort, double g){
+    public static double getv0y(double vfy, double LLtoPort, double g){
         double twogy = 2 * g * LLtoPort;
         return Math.sqrt((vfy * vfy) + twogy); //what if vfy is negative
     }
 
-    private static double gettimeOfTraj(double v0y, double vfy, double shooterToPort, double g) {
+    public static double gettimeOfTraj(double v0y, double vfy, double shooterToPort, double g) {
         double plusTime;
         double minusTime;
         double t1;
@@ -101,11 +112,11 @@ public class Shoot extends ParallelCommandGroup {
     }
 
     //changed to getvfx from get v0x --> check with Aditya
-    private static double getvfX(double x, double t){
+    public static double getvfX(double x, double t){
         return x / t;
     }
 
-    private static double getv0xFromVfx(double timeOfTraj, double vfx, double dragCoeff, double mass){
+    public static double getv0xFromVfx(double timeOfTraj, double vfx, double dragCoeff, double mass){
         return vfx / (Math.pow(Math.E, (-dragCoeff * timeOfTraj) / mass));
     }
 
