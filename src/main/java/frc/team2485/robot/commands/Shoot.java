@@ -2,6 +2,7 @@ package frc.team2485.robot.commands;
 
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.team2485.WarlordsLib.Limelight;
 import frc.team2485.robot.Constants;
@@ -29,12 +30,14 @@ public class Shoot extends ParallelCommandGroup {
         this.m_hoodAdjust = hoodAdjust;
         this.m_hoodSetpoint = 0;
         this.m_rpmSetpoint = 0;
+
         this.addCommands(new SetFlywheels(flywheels, ()-> m_rpmSetpoint * Constants.Flywheels.FLYWHEEL_ENERGY_LOSS_FACTOR),
-                new SetHood(hood, ()-> m_hoodSetpoint + hoodAdjust.getAsDouble()));
+                new SetHood(hood, ()-> m_hoodSetpoint));
 
         this.addToShuffleboard();
     }
 
+    @Override
     public void execute() {
         super.execute();
         double vfy = m_finalYVelocity.getAsDouble();
@@ -50,10 +53,15 @@ public class Shoot extends ParallelCommandGroup {
         double thetaLaunch = getThetaLaunch(v0x, v0y); //finds launch angle using initial component velocities
 
 
-        m_hoodSetpoint = Math.toDegrees(getComplement(thetaLaunch))
-                + m_hoodAdjust.getAsDouble(); //accounts for 90 degree shift
+       // m_hoodSetpoint = Math.toDegrees(getComplement(thetaLaunch))
+               // + m_hoodAdjust.getAsDouble(); //accounts for 90 degree shift
+        System.out.println("hood" + Math.toDegrees(getComplement(thetaLaunch)));
+        m_hoodSetpoint = Math.toDegrees(getComplement(thetaLaunch)) + Constants.Hood.HOOD_DEFAULT_INCREMENT; //accounts for 90 degree shift
         m_rpmSetpoint = - getRPM(v0x, thetaLaunch, Constants.PowerCell.POWER_CELL_RADIUS, Constants.Flywheels.RPM_CONVERSION_FACTOR)
                 + m_rpmAdjust.getAsDouble(); //finds launch RPM using initial angle+velocity
+
+
+
 
         this.addToShuffleboard();
     }
@@ -62,6 +70,8 @@ public class Shoot extends ParallelCommandGroup {
         ShuffleboardTab tab = Shuffleboard.getTab(Constants.Flywheels.TAB_NAME);
 //        tab.addNumber("Shoot Command Angle Setpoint", ()-> m_hoodSetpoint);
 //        tab.addNumber("Shoot Command RPM Setpoint", ()-> m_rpmSetpoint);
+        SmartDashboard.putNumber("Energy Factor", Constants.Flywheels.FLYWHEEL_ENERGY_LOSS_FACTOR);
+        SmartDashboard.putNumber("Hood Increment", Constants.Hood.HOOD_DEFAULT_INCREMENT);
     }
 
     private static double getX(double ty, double LLtoPort){

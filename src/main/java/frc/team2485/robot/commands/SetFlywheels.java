@@ -24,6 +24,8 @@ public class SetFlywheels extends CommandBase {
 
 
     public void execute() {
+        System.out.println("left vel: " + m_leftVelocity.getAsDouble());
+        System.out.println("right vel: " + m_rightVelocity.getAsDouble());
         m_flywheels.setVelocity(m_leftVelocity.getAsDouble(), m_rightVelocity.getAsDouble());
     }
 

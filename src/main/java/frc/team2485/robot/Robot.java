@@ -59,6 +59,7 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+    m_robotContainer.gameInit();
   }
 
   @Override
@@ -70,10 +71,15 @@ public class Robot extends TimedRobot {
   public void testInit() {
     CommandScheduler.getInstance().cancelAll();
     m_robotContainer.testInit();
+    m_robotContainer.gameInit();
+
   }
 
   @Override
   public void testPeriodic() {
     m_robotContainer.testPeriodic();
+
+
+
   }
 }

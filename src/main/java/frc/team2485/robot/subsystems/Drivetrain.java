@@ -67,6 +67,7 @@ public class Drivetrain extends SubsystemBase  {
 
         this.m_encoderRight.setInverted(true);
 
+
         this.m_encoderLeft.setDistancePerRevolution(2 * Math.PI * Constants.Drivetrain.WHEEL_RADIUS);
         this.m_encoderRight.setDistancePerRevolution(2 * Math.PI * Constants.Drivetrain.WHEEL_RADIUS);
 
@@ -100,6 +101,10 @@ public class Drivetrain extends SubsystemBase  {
         tab.addNumber("Right Encoder Velocity", this::getRightEncoderVelocity);
         tab.addNumber("Left Spark Master Current", m_sparkLeft1Master::getOutputCurrent);
         tab.addNumber("Right Spark Master Current", m_sparkRight1Master::getOutputCurrent);
+        tab.addNumber("Left Spark 2 Current", m_sparkLeft2::getOutputCurrent);
+        tab.addNumber("Right Spark 2 Current", m_sparkRight2::getOutputCurrent);
+        tab.addNumber("Left Spark 3 Current", m_sparkLeft3::getOutputCurrent);
+        tab.addNumber("Right Spark 3 Current", m_sparkRight3::getOutputCurrent);
     }
 
     public void curvatureDrive(double throttle, double steering, boolean isQuickTurn) {

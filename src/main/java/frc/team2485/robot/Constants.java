@@ -90,6 +90,7 @@ public final class Constants {
         public static final double DOWN_RAMP_RATE = 0.1; //pwm deltas
 
         public static final double STEERING_SCALE = 0.8;
+        public static final double THROTTLE_SCALE = 0.8;
 
         public static final String RESET_GYRO_LABEL = "Zero Gyro";
     }
@@ -140,7 +141,7 @@ public final class Constants {
         public static final double HIGH_INDEX_BY_ONE_POS = -7.5;
 
         //replace below with actual number
-        public static final double LOW_BELT_INTAKE_PWM = -0.6;
+        public static final double LOW_BELT_INTAKE_PWM = -0.4;
         public static final double OUTTAKE_PWM = 0.5;
         public static final double NORMAL_BALL_INCREMENT_TIMEOUT = 0.5; //seconds
 
@@ -200,15 +201,17 @@ public final class Constants {
         public static final double MAX_THETA = Math.toRadians(90 - HOOD_TOP_POSITION_DEG);
         public static final double MIN_THETA = Math.toRadians(90 - HOOD_BOTTOM_POSITION_DEG);
 
-        public static final double AUTO_HOOD_MANUAL_ADJUST = 10;
+        public static final double AUTO_HOOD_MANUAL_ADJUST = 0;
 
         public static final double MANUAL_ANGLE_SCALE = 20;
 
         public static final String HOOD_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL = "hoodVelocityController";
         public static final String HOOD_POSITION_CONTROLLER_CONFIGURABLE_LABEL = "hoodPositionController";
 
-        public static final double HOOD_MAX_VELOCITY = 100;
-        public static final double HOOD_MIN_VELOCITY = 0;
+        public static final double HOOD_MAX_VELOCITY = 8000;
+        public static final double HOOD_MIN_VELOCITY = -8000;
+
+        public static final double HOOD_DEFAULT_INCREMENT = -10;
     }
 
     public static final class Flywheels {
@@ -218,10 +221,12 @@ public final class Constants {
         public static final int SPARK_FLYWHEEL_RIGHT_PORT = 31;
         public static final double SPARK_FLYWHEEL_RIGHT_MAX_CURRENT = 0;
 
-        public static final double RPM_CONVERSION_FACTOR = 0.10472;
-        public static final double FLYWHEEL_ENERGY_LOSS_FACTOR = 1;
+        public static final double ARC_ADJUST = 5;
 
-        public static final double RPM_ADJUST = 500;
+        public static final double RPM_CONVERSION_FACTOR = 0.10472;
+        public static final double FLYWHEEL_ENERGY_LOSS_FACTOR = 1.25;
+
+        public static final double RPM_ADJUST = 0;
 
         public static final String TAB_NAME = "Shooter";
 
@@ -229,7 +234,7 @@ public final class Constants {
         public static final String RIGHT_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL = "flywheelsRightVelocityController";
 
         public static final double FLYWHEELS_MAX_VELOCITY = 6000;
-        public static final double FLYWHEELS_MIN_VELOCITY = 0;
+        public static final double FLYWHEELS_MIN_VELOCITY = -6000;
 
     }
 
@@ -267,7 +272,7 @@ public final class Constants {
         public static final String ZERO_TURRET_LABEL = "Zero Turret";
 
         public static final double TURRET_MAX_VELOCITY = 40;
-        public static final double TURRET_MIN_VELOCITY = 0;
+        public static final double TURRET_MIN_VELOCITY = -40;
     }
 
     public static final class Climber {
