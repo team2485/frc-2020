@@ -39,7 +39,6 @@ public class Drivetrain extends SubsystemBase  {
 
     private PigeonIMU m_pigeon;
 
-    private RampRate throttleRamp;
 //    private RampRate steeringRamp;
 
     public Drivetrain() {
@@ -74,13 +73,12 @@ public class Drivetrain extends SubsystemBase  {
 
         this.m_throttleRamp = new RampRate();
 
-        this.throttleRamp = new RampRate();
+        this.m_throttleRamp = new RampRate();
 //        this.steeringRamp = new RampRate();
 
         SendableRegistry.add(this.m_drive, "DifferentialDrive");
 
         RobotConfigs.getInstance().addConfigurable("drivetrainThrottleRamp", m_throttleRamp);
-        m_throttleRamp.setRampRates(Constants.Drivetrain.UP_RAMP_RATE, Constants.Drivetrain.DOWN_RAMP_RATE);
 
         this.addToShuffleboard();
     }
@@ -90,7 +88,7 @@ public class Drivetrain extends SubsystemBase  {
         tab.add(this);
         tab.add(this.m_drive);
 
-        tab.add("throttle ramp", this.throttleRamp);
+        tab.add("throttle ramp", this.m_throttleRamp);
 
         tab.addNumber("Left PWM", m_sparkLeft1Master::getAppliedOutput);
         tab.addNumber("Right PWM", m_sparkRight1Master::getAppliedOutput);
@@ -103,9 +101,9 @@ public class Drivetrain extends SubsystemBase  {
     }
 
     public void curvatureDrive(double throttle, double steering, boolean isQuickTurn) {
-        double throttleNextValue = throttleRamp.getNextValue(throttle);
+        double throttleNextValue = m_throttleRamp.getNextValue(throttle);
         m_drive.curvatureDrive(throttleNextValue, steering, isQuickTurn);
-        throttleRamp.setLastValue(throttleNextValue);
+        m_throttleRamp.setLastValue(throttleNextValue);
     }
 
     /**

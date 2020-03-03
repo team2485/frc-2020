@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.team2485.WarlordsLib.Debounce;
 import frc.team2485.robot.Constants;
 
 import java.util.function.DoubleSupplier;
@@ -21,6 +22,10 @@ public class BallCounter extends SubsystemBase {
 
     private boolean m_entranceLastVal, m_transferLastVal, m_exitLastVal;
 
+    private Debounce m_entranceDebounce, m_transferDebounce, m_exitDebounce;
+
+    private boolean m_entranceVal, m_transferVal, m_exitVal;
+
     public BallCounter(DoubleSupplier lowEncoderVelocity, DoubleSupplier highEncoderVelocity) {
         m_lowEncoderVelocity = lowEncoderVelocity;
         m_highEncoderVelocity = highEncoderVelocity;
@@ -29,14 +34,17 @@ public class BallCounter extends SubsystemBase {
         m_transferIR = new DigitalInput(Constants.Magazine.TRANSFER_IR_PORT);
         m_exitIR = new DigitalInput(Constants.Magazine.EXIT_IR_PORT);
 
-        m_entranceCounter = new Counter(m_entranceIR);
-        m_transferCounter = new Counter(m_transferIR);
-        m_exitCounter = new Counter(m_exitIR);
+        m_entranceDebounce = new Debounce(m_entranceIR.get(), 3);
+        m_transferDebounce = new Debounce(m_transferIR.get(), 3);
+        m_exitDebounce = new Debounce(m_exitIR.get(), 3);
 
-        m_entranceCounter.setMaxPeriod(Constants.Magazine.COUNTER_MAX_PERIOD);
-        m_transferCounter.setMaxPeriod(Constants.Magazine.COUNTER_MAX_PERIOD);
-        m_exitCounter.setMaxPeriod(Constants.Magazine.COUNTER_MAX_PERIOD);
-
+//        m_entranceCounter = new Counter(m_entranceIR);
+//        m_transferCounter = new Counter(m_transferIR);
+//        m_exitCounter = new Counter(m_exitIR);
+//
+//        m_entranceCounter.setMaxPeriod(Constants.Magazine.COUNTER_MAX_PERIOD);
+//        m_transferCounter.setMaxPeriod(Constants.Magazine.COUNTER_MAX_PERIOD);
+//        m_exitCounter.setMaxPeriod(Constants.Magazine.COUNTER_MAX_PERIOD);
 
 //        m_entranceCounter.setSamplesToAverage(Constants.Magazine.SAMPLES_TO_AVERAGE);
 //        m_transferCounter.setSamplesToAverage(Constants.Magazine.SAMPLES_TO_AVERAGE);
@@ -90,79 +98,58 @@ public class BallCounter extends SubsystemBase {
         return !m_exitIR.get();
     }
 
-
-
     @Override
     public void periodic() {
 
-//        if (m_entranceCounter.get() > 0) {
-        if (!m_entranceIR.get() && m_entranceLastVal) {
+        m_entranceVal = m_entranceDebounce.getNextValue(m_entranceIR.get());
+        m_transferVal = m_transferDebounce.getNextValue(m_transferIR.get());
+        m_exitVal = m_exitDebounce.getNextValue(m_exitIR.get());
+
+        if (!m_entranceVal && m_entranceLastVal) {
             if (m_lowEncoderVelocity.getAsDouble() < 0) {
-//                m_numBallsLow+= m_entranceCounter.get();
                 m_nBallsLow++;
-                System.out.println("ADDING LOW");
             } else if (m_lowEncoderVelocity.getAsDouble() > 0) {
-//                m_numBallsLow-= m_entranceCounter.get();
-//                m_nBallsLow--;
-//                System.out.println("REMOVING LOW");
+                m_nBallsLow--;
             }
-//            m_entranceCounter.reset();
+            m_entranceCounter.reset();
         }
 
-//        if (m_transferCounter.get() > 0) {
-        if (!m_transferIR.get() && m_transferLastVal) {
-            m_nBallsHigh++;
-            m_nBallsLow--;
+        if (!m_transferVal && m_transferLastVal) {
 
-//            if (m_highEncoderVelocity.getAsDouble() < 0) {
-////                m_numBallsHigh += m_transferCounter.get();
-//                m_nBallsHigh++;
-//                System.out.println("ADDING HIGH");
-//            } else if (m_highEncoderVelocity.getAsDouble() > 0) {
-////                m_numBallsHigh -= m_transferCounter.get();
-////                m_nBallsHigh--;
-////                System.out.println("REMOVING HIGH");
-//            }
-//
-//            if (m_lowEncoderVelocity.getAsDouble() < 0) {
-////                m_numBallsLow-= m_transferCounter.get();
-//                m_nBallsLow--;
-//                System.out.println("REMOVING LOW");
-//            } else if (m_lowEncoderVelocity.getAsDouble() > 0) {
-////                m_numBallsLow += m_transferCounter.get();
-////                m_nBallsLow++;
-////                System.out.println("ADDING LOW");
-//            }
+            if (m_highEncoderVelocity.getAsDouble() < 0) {
+                m_nBallsHigh++;
+            } else if (m_highEncoderVelocity.getAsDouble() > 0) {
+                m_nBallsHigh--;
+            }
 
-           // m_transferCounter.reset();
+            if (m_lowEncoderVelocity.getAsDouble() < 0) {
+                m_nBallsLow--;
+            } else if (m_lowEncoderVelocity.getAsDouble() > 0) {
+                m_nBallsLow++;
+            }
+
+            m_transferCounter.reset();
         }
 
+        if (!m_exitVal && m_exitLastVal) {
+            if (m_highEncoderVelocity.getAsDouble() < 0) {
+                m_nBallsHigh--;
+            } else if (m_highEncoderVelocity.getAsDouble() > 0) {
+                m_nBallsHigh++;
+            }
+            m_exitCounter.reset();
+        }
 
-////        if (m_exitCounter.get() > 0) {
-//        if (!m_exitIR.get() && m_exitLastVal) {
-//            if (m_highEncoderVelocity.getAsDouble() < 0) {
-////                m_numBallsHigh -= m_transferCounter.get();
-//                m_nBallsHigh--;
-//            } else if (m_highEncoderVelocity.getAsDouble() > 0) {
-////                m_numBallsHigh += m_transferCounter.get();
-//                m_nBallsHigh++;
-//            }
-//            m_exitCounter.reset();
-//        }
+        if (m_nBallsHigh < 0) {
+            m_nBallsHigh = 0;
+        }
 
-        m_entranceLastVal = m_entranceIR.get();
-        m_transferLastVal = m_transferIR.get();
-        m_exitLastVal = m_exitIR.get();
+        if (m_nBallsLow < 0) {
+            m_nBallsLow = 0;
+        }
 
-
-
-
-//        if (m_nBallsHigh < 0) {
-//            m_nBallsHigh = 0;
-//        }
-//
-//        if (m_nBallsLow < 0) {
-//            m_nBallsLow = 0;
-//        }
+        m_entranceLastVal = m_entranceVal;
+        m_transferLastVal = m_transferVal;
+        m_exitLastVal = m_exitVal;
     }
 }

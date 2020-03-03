@@ -89,7 +89,7 @@ public final class Constants {
         public static final double UP_RAMP_RATE = 0.4;
         public static final double DOWN_RAMP_RATE = 0.1; //pwm deltas
 
-        public static final double STEERING_SCALE = 0.8;
+        public static final double STEERING_SCALE = 0.6;
 
         public static final String RESET_GYRO_LABEL = "Zero Gyro";
     }
@@ -136,14 +136,14 @@ public final class Constants {
         public static final double HIGH_DISTANCE_PER_REVOLUTION = HIGH_GEAR_RATIO * 2 * Math.PI * ROLLER_RADIUS;
 
         public static final double LOW_INTAKE_BY_ONE_POS = -7;
-        public static final double HIGH_INDEX_BY_ONE_POS = -7;
+        public static final double HIGH_INDEX_BY_ONE_POS = -6.5;
 
         //replace below with actual number
         public static final double LOW_BELT_INTAKE_PWM = -0.6;
         public static final double OUTTAKE_PWM = 0.5;
         public static final double NORMAL_BALL_INCREMENT_TIMEOUT = 1; //seconds
 
-        public static final double HIGH_MAGAZINE_POSITION_CONTROLLER_THRESHOLD = 1;
+        public static final double HIGH_MAGAZINE_POSITION_CONTROLLER_THRESHOLD = 0.5;
 
         public static final double COUNTER_MAX_PERIOD = 0.01;
         public static final int SAMPLES_TO_AVERAGE = 40;
@@ -155,8 +155,8 @@ public final class Constants {
 
         public static final String LOW_MAGAZINE_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL = "lowMagazineVelocityController";
 
-        public static final double MAGAZINE_MAX_VELOCITY = 300;
-        public static final double MAGAZINE_MIN_VELOCITY = -300;
+        public static final double MAGAZINE_MAX_VELOCITY = 50;
+        public static final double MAGAZINE_MIN_VELOCITY = -50;
     }
 
     public static final class Feeder {
@@ -220,7 +220,7 @@ public final class Constants {
         public static final double RPM_CONVERSION_FACTOR = 0.10472;
         public static final double FLYWHEEL_ENERGY_LOSS_FACTOR = 0.9;
 
-        public static final double FYWHEEL_OUTTAKE_PWM = 0.3;
+        public static final double FYWHEEL_OUTTAKE_PWM = 0.1;
 
         public static final double RPM_ADJUST = 0;
 
