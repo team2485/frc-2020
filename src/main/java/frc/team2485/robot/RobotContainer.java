@@ -495,8 +495,8 @@ public class RobotContainer {
     //All the data the widgets need in networktables for them to work
     public void widget1NetworkTables() {
         //for the Heading Widget
-        SmartDashboard.putNumber("Heading/encoder",m_turret.getEncoderPosition()); //In Radians, add this to the Robot's Gyro position
-        SmartDashboard.putNumber("Heading/gyro",m_drivetrain.getHeading()); //In Degrees, make sure this is reset at the beginning
+        SmartDashboard.putNumber("Heading/encoder",m_turret.getEncoderPosition()); //In Radians, but the widget wants it in degrees
+        SmartDashboard.putNumber("Heading/gyro",m_drivetrain.getHeading()); //In Degrees(widgets want it in degrees), make sure this is reset at the beginning
 
         //Data for the shooter widget is in the Shoot command
     }
@@ -512,14 +512,18 @@ public class RobotContainer {
         double v0x = Shoot.getv0xFromVfx(timeOfTrajectory, vfx, Constants.PowerCell.POWER_CELL_DRAG_COEFF, Constants.PowerCell.POWER_CELL_MASS);
         //taken from Shoot.java
         double initialVelocity = Math.sqrt(v0x*v0x+v0y*v0y);
-        SmartDashboard.putNumber("Shooter/pitch",m_hood.getEncoderPosition()); // shouldn't we just get this from v0x & v0y?
-        SmartDashboard.putNumber("Shooter/iv",initialVelocity);
+        SmartDashboard.putNumber("Shooter/pitch",Math.atan2(v0y,v0x)); // pitch is in radians
+        SmartDashboard.putNumber("Shooter/iv",initialVelocity); //initial velocity is in meters per second
     }
-    public void sendWidget1data(double encoderVal, double gyroVal) { //for testing
+    public void sendWidget1data(double encoderVal, double gyroVal) { //just for testing
+        //encoderVal is in degrees
+        //gyroVal is in degrees
         SmartDashboard.putNumber("Heading/encoder",encoderVal); //In Radians, add this to the Robot's Gyro position
         SmartDashboard.putNumber("Heading/gyro",gyroVal); //In Degrees, make sure this is reset at the beginning
     }
-    public void sendWidget2data(double pitchVal, double ivVal) { //for testing
+    public void sendWidget2data(double pitchVal, double ivVal) { //just for testing
+        //pitch is in radians
+        //initial velocity is in meters per seconds
         SmartDashboard.putNumber("Shooter/pitch",pitchVal); // shouldn't we just get this from v0x & v0y?
         SmartDashboard.putNumber("Shooter/iv",ivVal);
     }
