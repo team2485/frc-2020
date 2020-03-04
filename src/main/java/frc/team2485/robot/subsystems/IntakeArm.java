@@ -23,18 +23,10 @@ import frc.team2485.robot.Constants;
 public class IntakeArm extends SubsystemBase implements PositionPIDSubsystem, VelocityPIDSubsystem {
 
     private WL_TalonSRX m_talon;
+
     private CANEncoder m_encoder;
 
-    /**
-     * FPGA-run counter to count encoder pulses.
-     */
-//    private Counter m_encoderCounter;
-
-//    private int m_encoderCounts;
-
     private double m_lastPWM;
-
-//    private final double ENCODER_COUNTS_PER_REV;
 
     private final double TOP_POSITION;
 
@@ -48,19 +40,15 @@ public class IntakeArm extends SubsystemBase implements PositionPIDSubsystem, Ve
 
         this.m_talon = new WL_TalonSRX(Constants.IntakeArm.TALON_PORT);
 
-        this.m_encoder = encoder;
-
-//        this.m_talon.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed);
-//        this.m_talon.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed);
+        this.m_talon.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed);
+        this.m_talon.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed);
 
         this.m_talon.configContinuousCurrentLimit(Constants.IntakeArm.MAX_CURRENT);
 
+        this.m_encoder = encoder;
+
         this.m_velocityController = new WL_PIDController();
         this.m_positionController = new WL_PIDController();
-
-//        this.m_encoderCounter = new Counter(new DigitalInput(Constants.IntakeArm.ENCODER_DIO_PORT));
-//
-//        this.ENCODER_COUNTS_PER_REV = Constants.IntakeArm.ENCODER_PULSES_PER_REVOLUTION * 2; // counter does 2x encoding.
 
         this.TOP_POSITION = Constants.IntakeArm.TOP_POSITION_DEGREES;
 

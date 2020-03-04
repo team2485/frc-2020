@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpiutil.math.MathUtil;
+import frc.team2485.WarlordsLib.BufferZone;
 import frc.team2485.WarlordsLib.Limelight;
 import frc.team2485.WarlordsLib.PositionPIDSubsystem;
 import frc.team2485.WarlordsLib.VelocityPIDSubsystem;
@@ -29,6 +30,8 @@ public class Turret extends SubsystemBase implements VelocityPIDSubsystem, Posit
 
     private Limelight m_limelight;
 
+    private BufferZone m_buffer;
+
     private final double MIN_ANGLE, MAX_ANGLE, BUFFER_ZONE_SIZE;
 
     private double m_absoluteEncoderOffset;
@@ -47,8 +50,6 @@ public class Turret extends SubsystemBase implements VelocityPIDSubsystem, Posit
         m_talon.setTolerance(Constants.Turret.TURRET_PID_TOLERANCE);
         m_talon.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed);
         m_talon.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed);
-        m_talon.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed);
-        m_talon.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed);
 
         m_positionController = new WL_PIDController();
 
@@ -59,8 +60,10 @@ public class Turret extends SubsystemBase implements VelocityPIDSubsystem, Posit
 
         BUFFER_ZONE_SIZE = Constants.Turret.BUFFER_ZONE_SIZE;
 
+        m_buffer = new BufferZone(Constants.Turret.MIN_VELOCITY, Constants.Turret.MAX_VELOCITY, Constants.Turret.MIN_POSITION, Constants.Turret.MAX_POSITION, Constants.Turret.BUFFER_ZONE_SIZE);
+
         RobotConfigs.getInstance().addConfigurable(Constants.Turret.VELOCITY_CONTROLLER_CONFIGURABLE_LABEL, m_talon);
-        RobotConfigs.getInstance().addConfigurable(Constants.Turret.POSITION_CONTROLLER_CONFIGURABLE_LABEL, m_talon);
+        RobotConfigs.getInstance().addConfigurable(Constants.Turret.POSITION_CONTROLLER_CONFIGURABLE_LABEL, m_positionController);
         RobotConfigs.getInstance().addConfigurable(Constants.Turret.ENCODER_OFFSET_CONFIGURABLE_LABEL, this);
 
         this.addToShuffleboard();
@@ -101,7 +104,6 @@ public class Turret extends SubsystemBase implements VelocityPIDSubsystem, Posit
 
     /**
      * Sets PWM of turret motor, without hard stop checks.
-     * DON'T USE THIS UNLESS YOU'RE ABSOLUTELY SURE WHAT YOU'RE DOING!
      * @param pwm pwm value to set
      */
     public void setPWM(double pwm) {
@@ -111,7 +113,7 @@ public class Turret extends SubsystemBase implements VelocityPIDSubsystem, Posit
     @Override
     public void runVelocityPID(double velocity) {
         // velocity / 10 to convert from per 100ms to 1 second
-        m_talon.runPID(MathUtil.clamp(velocity/10.0, Constants.Turret.TURRET_MIN_VELOCITY, Constants.Turret.TURRET_MAX_VELOCITY));
+        m_talon.runPID(m_buffer.get(velocity, this.getEncoderPosition())/10.0);
     }
 
     @Override
@@ -134,11 +136,10 @@ public class Turret extends SubsystemBase implements VelocityPIDSubsystem, Posit
 
     /**
      * Get turret encoder position
-     * @return encoder position in radians
      */
     @Override
     public double getEncoderPosition() {
-        return m_talon.getEncoderPosition();
+        return getAbsoluteEncoderPosition() + m_absoluteEncoderOffset;
     }
 
     @Override
@@ -158,11 +159,6 @@ public class Turret extends SubsystemBase implements VelocityPIDSubsystem, Posit
 
     public double getMaxAngle() {
         return this.MAX_ANGLE;
-    }
-
-    public void resetPID() {
-        this.m_talon.resetPID();
-        m_positionController.reset();
     }
 
     public void enableSoftLimits(boolean enable) {
@@ -196,11 +192,11 @@ public class Turret extends SubsystemBase implements VelocityPIDSubsystem, Posit
 
     @Override
     public void periodic() {
-//        if (getReverseLimitSwitch()) {
-//            resetEncoderPosition(MIN_ANGLE);
-//        } else if (getForwardLimitSwitch()) {
-//            resetEncoderPosition(MAX_ANGLE);
-//        }
+        if (getReverseLimitSwitch()) {
+            resetEncoderPosition(MIN_ANGLE);
+        } else if (getForwardLimitSwitch()) {
+            resetEncoderPosition(MAX_ANGLE);
+        }
     }
 
     private void setEncoderOffset(double offset) {

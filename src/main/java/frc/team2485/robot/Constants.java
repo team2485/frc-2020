@@ -65,8 +65,6 @@ public final class Constants {
 
     public static final class Drivetrain {
 
-        public static final boolean TUNING_MODE = false;
-
         public static final int SPARK_LEFT_PORT_MASTER = 10;
         public static final int SPARK_LEFT_PORT_SLAVE_2 = 11;
         public static final int SPARK_LEFT_PORT_SLAVE_3 = 12;
@@ -78,13 +76,15 @@ public final class Constants {
         public static final int LEFT_ENCODER_SPARK = 10;
         public static final int RIGHT_ENCODER_SPARK = 14;
 
-        public static final int MAX_CURRENT = 18;
-
         public static final int PIGEON_IMU_PORT = 1;
+
+        public static final int MAX_CURRENT = 18;
 
         public static final int ENCODER_CPR = 250 * 4; // 4x encoding
 
         public static final double WHEEL_RADIUS = 3; // inches
+
+        public static final double DISTANCE_PER_REVOLUTION = 2 * Math.PI * WHEEL_RADIUS;
 
         public static final double UP_RAMP_RATE = 0.4;
         public static final double DOWN_RAMP_RATE = 0.1; //pwm deltas
@@ -158,6 +158,8 @@ public final class Constants {
 
         public static final double MAGAZINE_MAX_VELOCITY = 50;
         public static final double MAGAZINE_MIN_VELOCITY = -50;
+
+        public static final int MAX_DEBOUNCE_TIME = 3;
     }
 
     public static final class Feeder {
@@ -190,8 +192,8 @@ public final class Constants {
         public static final double DISTANCE_PER_REVOLUTION = 360;
 
         // these are relative to the vertical axis
-        public static final double HOOD_BOTTOM_POSITION_DEG = 11;
-        public static final double HOOD_TOP_POSITION_DEG = 45;
+        public static final double HOOD_BOTTOM_POSITION_DEG = 12;
+        public static final double HOOD_TOP_POSITION_DEG = 41;
 
         public static final String TAB_NAME = "Shooter";
 
@@ -209,6 +211,8 @@ public final class Constants {
 
         public static final double HOOD_MAX_VELOCITY = 8000;
         public static final double HOOD_MIN_VELOCITY = -8000;
+
+        public static final double BUFFER_ZONE_SIZE = 5;
 
         public static final double HOOD_DEFAULT_INCREMENT = -10;
     }
@@ -229,6 +233,8 @@ public final class Constants {
         public static final double FYWHEEL_OUTTAKE_PWM = 0.1;
 
         public static final double RPM_ADJUST = 0;
+
+        public static final double GEAR_RATIO = 2/1;
 
         public static final String TAB_NAME = "Shooter";
 
@@ -255,15 +261,17 @@ public final class Constants {
 
         public static final double TURRET_SPEED = 360.0 * 0.02; // degrees per ~20 milliseconds
 
-        public static final double MIN_POSITION = -136; // degrees
-        public static final double MAX_POSITION = 160; // degrees
+        public static final double MIN_POSITION = -130; // degrees
+        public static final double MAX_POSITION = 168; // degrees
+
+        public static final double MAX_VELOCITY = 80; // degrees / second
+        public static final double MIN_VELOCITY = -80; // degrees / second
 
         /**
          * In manual mode the max pwm will linearly clamp starting at the buffer zone size before the min or max positions.
          */
-        public static final double BUFFER_ZONE_SIZE = 30; // degrees
+        public static final double BUFFER_ZONE_SIZE = 20; // degrees
 
-        public static final double MANUAL_ANGLE_SCALE = 100;
 
         public static final double TURRET_PID_TOLERANCE = 1; // degrees
 
@@ -273,8 +281,7 @@ public final class Constants {
         public static final String ENCODER_OFFSET_CONFIGURABLE_LABEL = "turretEncoderOffset";
         public static final String ZERO_TURRET_LABEL = "Zero Turret";
 
-        public static final double TURRET_MAX_VELOCITY = 40;
-        public static final double TURRET_MIN_VELOCITY = -40;
+        public static final double MANUAL_ANGLE_SCALE = 100;
     }
 
     public static final class Climber {

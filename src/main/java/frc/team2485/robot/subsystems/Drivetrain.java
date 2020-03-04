@@ -39,8 +39,6 @@ public class Drivetrain extends SubsystemBase  {
 
     private PigeonIMU m_pigeon;
 
-//    private RampRate steeringRamp;
-
     public Drivetrain() {
         this.m_sparkLeft1Master = new WL_SparkMax(Constants.Drivetrain.SPARK_LEFT_PORT_MASTER);
         this.m_sparkLeft2 = new WL_SparkMax(Constants.Drivetrain.SPARK_LEFT_PORT_SLAVE_2);
@@ -67,13 +65,10 @@ public class Drivetrain extends SubsystemBase  {
         this.m_encoderRight.setInverted(true);
 
 
-        this.m_encoderLeft.setDistancePerRevolution(2 * Math.PI * Constants.Drivetrain.WHEEL_RADIUS);
-        this.m_encoderRight.setDistancePerRevolution(2 * Math.PI * Constants.Drivetrain.WHEEL_RADIUS);
-
-
+        this.m_encoderLeft.setDistancePerRevolution(Constants.Drivetrain.DISTANCE_PER_REVOLUTION);
+        this.m_encoderRight.setDistancePerRevolution(Constants.Drivetrain.DISTANCE_PER_REVOLUTION);
 
         this.m_throttleRamp = new RampRate();
-//        this.steeringRamp = new RampRate();
 
         SendableRegistry.add(this.m_drive, "DifferentialDrive");
 
@@ -91,16 +86,13 @@ public class Drivetrain extends SubsystemBase  {
 
         tab.addNumber("Left PWM", m_sparkLeft1Master::getAppliedOutput);
         tab.addNumber("Right PWM", m_sparkRight1Master::getAppliedOutput);
+        tab.add("throttle ramp", this.m_throttleRamp);
         tab.addNumber("Left Encoder Position", this::getLeftEncoderPosition);
         tab.addNumber("Left Encoder Velocity", this::getLeftEncoderVelocity);
         tab.addNumber("Right Encoder Position", this::getRightEncoderPosition);
         tab.addNumber("Right Encoder Velocity", this::getRightEncoderVelocity);
         tab.addNumber("Left Spark Master Current", m_sparkLeft1Master::getOutputCurrent);
         tab.addNumber("Right Spark Master Current", m_sparkRight1Master::getOutputCurrent);
-        tab.addNumber("Left Spark 2 Current", m_sparkLeft2::getOutputCurrent);
-        tab.addNumber("Right Spark 2 Current", m_sparkRight2::getOutputCurrent);
-        tab.addNumber("Left Spark 3 Current", m_sparkLeft3::getOutputCurrent);
-        tab.addNumber("Right Spark 3 Current", m_sparkRight3::getOutputCurrent);
     }
 
     public void curvatureDrive(double throttle, double steering, boolean isQuickTurn) {
@@ -154,7 +146,7 @@ public class Drivetrain extends SubsystemBase  {
     }
 
     public CANEncoder getIntakeArmEncoder() {
-        return m_sparkLeft3.getEncoder();
+        return m_sparkLeft3.getAlternateEncoder();
     }
 
     public Pose2d getPose() {

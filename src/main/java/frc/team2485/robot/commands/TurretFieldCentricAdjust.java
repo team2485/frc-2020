@@ -31,7 +31,7 @@ public class TurretFieldCentricAdjust extends CommandBase {
 
     public void initialize() {
         resetSetpoint();
-        m_turret.resetPID();
+        m_turret.resetPIDs();
     }
 
     /**

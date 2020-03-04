@@ -7,6 +7,7 @@
 
 package frc.team2485.robot;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -22,6 +23,8 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     RobotConfigs.getInstance().loadConfigsFromFile(Constants.CONFIGS_FILE);
     m_robotContainer = new RobotContainer();
+
+    CameraServer.getInstance().startAutomaticCapture();
   }
 
   @Override
@@ -46,6 +49,8 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
     }
+
+    m_robotContainer.gameInit();
   }
 
   @Override

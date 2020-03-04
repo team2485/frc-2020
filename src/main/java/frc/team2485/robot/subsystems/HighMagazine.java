@@ -13,6 +13,7 @@ import frc.team2485.WarlordsLib.Tunable;
 import frc.team2485.WarlordsLib.VelocityPIDSubsystem;
 import frc.team2485.WarlordsLib.control.WL_PIDController;
 import frc.team2485.WarlordsLib.motorcontrol.PIDSparkMax;
+import frc.team2485.WarlordsLib.motorcontrol.WL_SparkMax;
 import frc.team2485.WarlordsLib.robotConfigs.RobotConfigs;
 import frc.team2485.robot.Constants;
 
@@ -21,42 +22,34 @@ import java.util.function.IntSupplier;
 
 public class HighMagazine extends SubsystemBase implements PositionPIDSubsystem, VelocityPIDSubsystem {
 
-    private PIDSparkMax m_spark;
+    private WL_SparkMax m_spark;
+
+    private WL_PIDController m_velocityController;
 
     private WL_PIDController m_positionController;
-
-    public enum MagazineState {
-        INTAKING, FEEDING
-    }
-
-    private MagazineState m_state;
-
-
 
     /**
      * High magazine subystem, controlling the top belt stage and outtake rollers.
      *
      */
     public HighMagazine() {
-        m_spark = new PIDSparkMax(Constants.Magazine.SPARK_HIGH_PORT, ControlType.kVelocity);
+        m_spark = new WL_SparkMax(Constants.Magazine.SPARK_HIGH_PORT);
 
         m_spark.getEncoder().setPositionConversionFactor(Constants.Magazine.HIGH_DISTANCE_PER_REVOLUTION);
         m_spark.getEncoder().setVelocityConversionFactor(Constants.Magazine.HIGH_DISTANCE_PER_REVOLUTION / 60);
         m_spark.getEncoder().setPosition(0);
-//                m_spark.setInverted(true);
         m_spark.enableVoltageCompensation(Constants.NOMINAL_VOLTAGE);
-        m_spark.setEncoderPosition(0);
-        m_spark.setTolerance(Constants.Magazine.HIGH_MAGAZINE_POSITION_CONTROLLER_THRESHOLD);
         m_spark.setSmartCurrentLimit(Constants.Magazine.SPARK_HIGH_MAX_CURRENT);
+        //m_spark.setIzone(0);
 
-        m_state = MagazineState.INTAKING;
+
+        m_velocityController = new WL_PIDController();
 
         m_positionController = new WL_PIDController();
-        m_positionController.setTolerance(0.5);
+        m_positionController.setTolerance(Constants.Magazine.HIGH_MAGAZINE_POSITION_CONTROLLER_THRESHOLD);
 
-        RobotConfigs.getInstance().addConfigurable(Constants.Magazine.HIGH_MAGAZINE_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL, m_spark);
+        RobotConfigs.getInstance().addConfigurable(Constants.Magazine.HIGH_MAGAZINE_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL, m_velocityController);
         RobotConfigs.getInstance().addConfigurable(Constants.Magazine.HIGH_MAGAZINE_POSITION_CONTROLLER_CONFIGURABLE_LABEL, m_positionController);
-
 
         this.addToShuffleboard();
     }
@@ -66,9 +59,8 @@ public class HighMagazine extends SubsystemBase implements PositionPIDSubsystem,
 
         ShuffleboardTab tab = Shuffleboard.getTab(Constants.Magazine.TAB_NAME);
         tab.add(this);
-        tab.add("High Spark Controller", m_spark);
+        tab.add("High Velocity Controller", m_velocityController);
         tab.add("High Position Controller", m_positionController);
-        tab.addString("Magazine State", m_state::toString);
         tab.addNumber("High Position", this::getEncoderPosition);
         tab.addNumber("High Velocity", this::getEncoderVelocity);
         tab.addNumber("High Current", m_spark::getOutputCurrent);
@@ -85,7 +77,7 @@ public class HighMagazine extends SubsystemBase implements PositionPIDSubsystem,
 
     @Override
     public void resetPIDs() {
-        m_spark.resetPID();
+        m_velocityController.reset();
         m_positionController.reset();
     }
 
@@ -115,12 +107,13 @@ public class HighMagazine extends SubsystemBase implements PositionPIDSubsystem,
 
     @Override
     public void runVelocityPID(double velocity) {
-        m_spark.runPID(MathUtil.clamp(velocity, Constants.Magazine.MAGAZINE_MIN_VELOCITY, Constants.Magazine.MAGAZINE_MAX_VELOCITY));
+//        m_spark.runPID(MathUtil.clamp(velocity, Constants.Magazine.MAGAZINE_MIN_VELOCITY, Constants.Magazine.MAGAZINE_MAX_VELOCITY));
+        m_spark.set(m_velocityController.calculate(getEncoderVelocity(), MathUtil.clamp(velocity, Constants.Magazine.MAGAZINE_MIN_VELOCITY, Constants.Magazine.MAGAZINE_MAX_VELOCITY)));
     }
 
     @Override
     public boolean atVelocitySetpoint() {
-        return m_spark.atTarget();
+        return m_velocityController.atSetpoint();
     }
 
     public void resetEncoder(double position) {
@@ -133,8 +126,10 @@ public class HighMagazine extends SubsystemBase implements PositionPIDSubsystem,
     @Override
     public void tunePeriodic(int layer) {
         if (layer == 0) {
-            m_spark.runPID();
+
+            m_spark.set(m_velocityController.calculate(getEncoderVelocity()));
         } else if (layer == 1) {
+
             runVelocityPID(m_positionController.calculate(getEncoderPosition()));
         }
     }

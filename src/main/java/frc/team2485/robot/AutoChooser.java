@@ -1,6 +1,5 @@
 package frc.team2485.robot;
 
-import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -54,12 +53,12 @@ public class AutoChooser  {
 
         //MAGAZINE INTAKE (HIGH)
         Command highMagazineIntake = new ConditionalCommand(
-                new IncrementHighMagazine(highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS).withInterrupt(() -> !(ballCounter.getTransferIR())),
+                new IncrementHighMagazine(highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS).withInterrupt(() -> !(ballCounter.transferIRHasBall())),
                 new InstantCommand(() -> {
                     highMagazine.setPWM(0);
                 }),
                 () -> {
-                    return ballCounter.getTransferIR()
+                    return ballCounter.transferIRHasBall()
                             && (ballCounter.getNumBallsHigh() <= Constants.Magazine.HIGH_MAGAZINE_BALL_CAPACITY);
                 });
 
@@ -74,8 +73,8 @@ public class AutoChooser  {
                 }),
                 () -> {
                     return !((ballCounter.getNumBallsHigh() >= Constants.Magazine.HIGH_MAGAZINE_BALL_CAPACITY
-                            || ballCounter.getNumBallsHigh() >= 3 && ballCounter.getExitIR())
-                            && ballCounter.getTransferIR());
+                            || ballCounter.getNumBallsHigh() >= 3 && ballCounter.exitIRHasBall())
+                            && ballCounter.transferIRHasBall());
 
                 }
         );

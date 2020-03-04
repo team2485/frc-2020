@@ -44,7 +44,7 @@ public class TurretSetAngle extends CommandBase {
 
     @Override
     public void initialize() {
-        m_turret.resetPID();
+        m_turret.resetPIDs();
     }
 
     @Override

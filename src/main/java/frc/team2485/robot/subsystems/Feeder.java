@@ -64,6 +64,10 @@ public class Feeder extends SubsystemBase implements VelocityPIDSubsystem {
         return m_spark.getEncoder().getVelocity();
     }
 
+    /**
+     * The hood encoder is wired to the feeder Spark Max
+     * @return CANEncoder hood encoder
+     */
     public CANEncoder getHoodEncoder() {
         return m_spark.getAlternateEncoder(Constants.Hood.ENCODER_CPR);
     }
