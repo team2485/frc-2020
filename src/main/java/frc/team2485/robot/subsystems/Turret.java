@@ -118,6 +118,10 @@ public class Turret extends SubsystemBase implements VelocityPIDSubsystem, Posit
         m_talon.runPID(m_buffer.get(velocity, this.getEncoderPosition())/10.0);
     }
 
+    public void runUnclampedVelocityPID(double velocity) {
+        m_talon.runPID(velocity/10.0);
+    }
+
     @Override
     public void runPositionPID(double position) {
         m_positionController.setSetpoint(MathUtil.clamp(position, MIN_ANGLE, MAX_ANGLE));

@@ -165,6 +165,8 @@ public final class Constants {
         public static final double MAGAZINE_MAX_VELOCITY = 50;
         public static final double MAGAZINE_MIN_VELOCITY = -50;
 
+        public static final double LOW_INTAKE_VELOCITY = -40;
+
         public static final int MAX_DEBOUNCE_TIME = 3;
     }
 
@@ -200,8 +202,8 @@ public final class Constants {
         public static final double HOOD_LEAD_SCREW_GEAR_RATIO = 1.0/5;
 
         // these are relative to the vertical axis
-        public static final double HOOD_BOTTOM_POSITION_DEG = 12;
-        public static final double HOOD_TOP_POSITION_DEG = 41;
+        public static final double HOOD_BOTTOM_POSITION_DEG = 10;
+        public static final double HOOD_TOP_POSITION_DEG = 42;
 
 
         public static final String TAB_NAME = "Shooter";
@@ -218,8 +220,8 @@ public final class Constants {
         public static final String HOOD_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL = "hoodVelocityController";
         public static final String HOOD_POSITION_CONTROLLER_CONFIGURABLE_LABEL = "hoodPositionController";
 
-        public static final double HOOD_MAX_VELOCITY = 8000;
-        public static final double HOOD_MIN_VELOCITY = -8000;
+        public static final double HOOD_MAX_VELOCITY = 1600;
+        public static final double HOOD_MIN_VELOCITY = -1600;
 
         public static final double BUFFER_ZONE_SIZE = 5;
 

@@ -91,6 +91,11 @@ public class Hood extends SubsystemBase implements PositionPIDSubsystem, Velocit
         this.setPWM(m_velocityController.calculate(this.getEncoderVelocity(), m_velocityBuffer.get(velocity, getEncoderPosition())));
     }
 
+    public void runUnclampedVelocityPID(double velocity) {
+//        this.setPWM(m_velocityController.calculate(this.getEncoderVelocity(), MathUtil.clamp(velocity, Constants.Hood.HOOD_MIN_VELOCITY, Constants.Hood.HOOD_MAX_VELOCITY)));
+        this.setPWM(m_velocityController.calculate(this.getEncoderVelocity(), velocity));
+    }
+
     @Override
     public boolean atVelocitySetpoint() {
         return m_velocityController.atSetpoint();

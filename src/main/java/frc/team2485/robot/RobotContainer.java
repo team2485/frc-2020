@@ -138,87 +138,78 @@ public class RobotContainer {
 
     public void configureIntakingCommands() {
 
-        m_jack.getJoystickButton(XboxController.Button.kBack).whenPressed(
+        m_jack.getJoystickButton(XboxController.Button.kStart).whenPressed(
                 new InstantCommand(() -> {
                     m_ballCounter.setNumBallsLow(0);
                     m_ballCounter.setNumBallsHigh(0);
                 })
         );
 
+        IntakeBalls intakeBalls = new IntakeBalls(m_lowMagazine, m_highMagazine, m_ballCounter);
+
+        m_jack.getJoystickButton(XboxController.Button.kA).toggleWhenPressed(intakeBalls);
+
         // Increment high magazine
-        m_jack.getJoystickButton(XboxController.Button.kA).whileHeld(
-                new ConditionalCommand(
-                        new IncrementHighMagazine(m_highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS),//.withInterrupt(() -> !m_ballCounter.transferIRHasBall()),
-                        new InstantCommand(() -> {
-                            m_highMagazine.setPWM(0);
-                        }),
-                        () -> {
-                            return
-                                    // !m_ballCounter.entranceIRHasBall() && m_ballCounter.getEntranceLastVal()
-                                    m_ballCounter.transferIRHasBall() &&
-                                            (m_ballCounter.getNumBallsHigh() <= Constants.Magazine.HIGH_MAGAZINE_BALL_CAPACITY);
-                        }
-                )
-        ).whenReleased(
-                new InstantCommand(() -> {
-                    m_highMagazine.setPWM(0);
-                })
-        );
-
-//        m_highMagazine.setDefaultCommand(
-//                new ScheduleCommand(
-//                        new ConditionalCommand(
-//                                new IncrementHighMagazine(m_highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS),//.withInterrupt(() -> !m_ballCounter.transferIRHasBall()),
-//                                new InstantCommand(() -> {
-//                                    m_highMagazine.setPWM(0);
-//                                }, m_highMagazine),
-//                                () -> {
-//                                    return
-//                                            // !m_ballCounter.entranceIRHasBall() && m_ballCounter.getEntranceLastVal()
-//                                            m_ballCounter.transferIRHasBall();
-////                                                    (m_ballCounter.getNumBallsHigh() <= Constants.Magazine.HIGH_MAGAZINE_BALL_CAPACITY);
-//                                }
-//                        )
-//                )
-//        );
-
-        SmartDashboard.putNumber("Intake Speed", -40);
-
-//        m_jack.getJoystickButton(XboxController.Button.kA).toggleWhenPressed(
-//                new FunctionalCommand(
+//        m_jack.getJoystickButton(XboxController.Button.kA).whileHeld(
+//                new ConditionalCommand(
+//                        new IncrementHighMagazine(m_highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS),//.withInterrupt(() -> !m_ballCounter.transferIRHasBall()),
+//                        new InstantCommand(() -> {
+//                            m_highMagazine.setPWM(0);
+//                        }),
 //                        () -> {
-//                        },
-//                        () -> m_lowMagazine.runVelocityPID(SmartDashboard.getNumber("Intake Speed", -50)),
-//                        (interrupted) -> m_lowMagazine.setPWM(0),
-//                        () -> false,
-//                        m_lowMagazine
+//                            return
+//                                    // !m_ballCounter.entranceIRHasBall() && m_ballCounter.getEntranceLastVal()
+//                                    m_ballCounter.transferIRHasBall() &&
+//                                            (m_ballCounter.getNumBallsHigh() <= Constants.Magazine.HIGH_MAGAZINE_BALL_CAPACITY);
+//                        }
 //                )
+//        ).whenReleased(
+//                new InstantCommand(() -> {
+//                    m_highMagazine.setPWM(0);
+//                })
 //        );
-
-        // Run low magazine
-        m_jack.getJoystickButton(XboxController.Button.kA).whileHeld(
-                new ConditionalCommand(
-                        new InstantCommand(() -> {
-//                            m_lowMagazine.setPWM(Constants.Magazine.LOW_BELT_INTAKE_PWM);
-                            m_lowMagazine.runVelocityPID(SmartDashboard.getNumber("Intake Speed", -40));
-
-                        }),
-                        new InstantCommand(() -> {
-                            m_lowMagazine.setPWM(0);
-                        }),
-                        () -> {
+//
+////        m_highMagazine.setDefaultCommand(
+////                new ScheduleCommand(
+////                        new ConditionalCommand(
+////                                new IncrementHighMagazine(m_highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS),//.withInterrupt(() -> !m_ballCounter.transferIRHasBall()),
+////                                new InstantCommand(() -> {
+////                                    m_highMagazine.setPWM(0);
+////                                }, m_highMagazine),
+////                                () -> {
+////                                    return
+////                                            // !m_ballCounter.entranceIRHasBall() && m_ballCounter.getEntranceLastVal()
+////                                            m_ballCounter.transferIRHasBall();
+//////                                                    (m_ballCounter.getNumBallsHigh() <= Constants.Magazine.HIGH_MAGAZINE_BALL_CAPACITY);
+////                                }
+////                        )
+////                )
+////        );
+//
+//        // Run low magazine
+//        m_jack.getJoystickButton(XboxController.Button.kA).whileHeld(
+//                new ConditionalCommand(
+//                        new InstantCommand(() -> {
+////                            m_lowMagazine.setPWM(Constants.Magazine.LOW_BELT_INTAKE_PWM);
+//                            m_lowMagazine.runVelocityPID(SmartDashboard.getNumber("Intake Speed", -40));
+//
+//                        }),
+//                        new InstantCommand(() -> {
+//                            m_lowMagazine.setPWM(0);
+//                        }),
+//                        () -> {
 //                            return !((m_ballCounter.getNumBallsHigh() >= Constants.Magazine.HIGH_MAGAZINE_BALL_CAPACITY
 //                                    || (m_ballCounter.getNumBallsHigh() >= 3 && m_ballCounter.exitIRHasBall()))
 //                                    && m_ballCounter.transferIRHasBall());
-                            return true;
-                        }
-                )
-        ).whenReleased(
-                new InstantCommand(
-                        () ->
-                                m_lowMagazine.setPWM(0)
-                )
-        );
+////                            return true;
+//                        }
+//                )
+//        ).whenReleased(
+//                new InstantCommand(
+//                        () ->
+//                                m_lowMagazine.setPWM(0)
+//                )
+//        );
 
 
         m_jack.getJoystickButton(XboxController.Button.kB).whileHeld(
@@ -227,6 +218,7 @@ public class RobotContainer {
                     m_highMagazine.setPWM(Constants.Magazine.OUTTAKE_PWM);
                     m_feeder.setPWM(Constants.Feeder.OUTTAKE_PWM);
                     m_flywheels.setPWM(Constants.Flywheels.FYWHEEL_OUTTAKE_PWM);
+                    intakeBalls.cancel();
                 })
         ).whenReleased(
                 new InstantCommand(() -> {
@@ -261,20 +253,38 @@ public class RobotContainer {
                 new InstantCommand(() -> m_turret.setPWM(0))
         );
 
-        // Increment ball into shooter
+        // Increment/feed ball into shooter
         m_suraj.getJoystickButton(XboxController.Button.kBumperRight).whileHeld(
-                new ConditionalCommand(
-                        new SequentialCommandGroup(
-                                new InstantCommand(() -> {
-                                    m_lowMagazine.setPWM(-0.5);
-                                    m_feeder.setPWM(-0.8);
-                                }).alongWith(
-                                        new IncrementHighMagazine(m_highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS),
-                                        new WaitCommand(Constants.Magazine.NORMAL_BALL_INCREMENT_TIMEOUT)
-                                )),
-                        new InstantCommand(),
-                        () -> m_flywheels.getLeftEncoderVelocity() < -1000 && m_flywheels.getRightEncoderVelocity() < -1000
-                )).whenReleased(
+
+                new SequentialCommandGroup(
+                        new RunCommand(
+                                () -> {
+                                    m_highMagazine.runVelocityPID(-40);
+                                }
+                        ).withInterrupt(
+                                () -> m_ballCounter.exitIRHasBall()
+                        ).andThen(
+                                new InstantCommand(
+                                        () -> {
+                                            m_highMagazine.setPWM(0);
+                                        }
+                                )
+                        ),
+                        new ConditionalCommand(
+                                new SequentialCommandGroup(
+                                        new InstantCommand(() -> {
+                                            m_lowMagazine.setPWM(-0.5);
+                                            m_feeder.setPWM(-0.8);
+                                        }).alongWith(
+                                                new IncrementHighMagazine(m_highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS),
+                                                new WaitCommand(Constants.Magazine.NORMAL_BALL_INCREMENT_TIMEOUT)
+                                        )),
+                                new InstantCommand(),
+                                () -> m_flywheels.getLeftEncoderVelocity() < -1000 && m_flywheels.getRightEncoderVelocity() < -1000
+                        )
+                )
+
+        ).whenReleased(
                 new InstantCommand(() -> {
                     m_lowMagazine.setPWM(0);
                     m_highMagazine.setPWM(0);
@@ -306,12 +316,12 @@ public class RobotContainer {
 //            m_hood.setPWM(0);
 //        }));
 
-        SmartDashboard.putNumber("Velocity RPM", 0);
+        SmartDashboard.putNumber("Velocity RPM", -6000);
 
         m_suraj.getJoystickButton(XboxController.Button.kBumperLeft).whileHeld(
                 new RunCommand(
                         () -> {
-                            m_flywheels.setVelocity(SmartDashboard.getNumber("Velocity RPM", 0));
+                            m_flywheels.setVelocity(SmartDashboard.getNumber("Velocity RPM", -6000));
                         }
                 )
         );
@@ -511,7 +521,7 @@ public class RobotContainer {
             if (SmartDashboard.getBoolean(Constants.PID_ENABLE_LABEL, false)) {
                 m_tuneChooser.getSelected().tunePeriodic((int) SmartDashboard.getNumber(Constants.TUNE_LAYER_LABEL, 0));
             } else {
-                m_tuneChooser.getSelected().setPWM(0);
+                m_tuneChooser.getSelected().setPWM(-getAxis(m_jack, Axis.kLeftY));
             }
         } else {
 
@@ -534,7 +544,7 @@ public class RobotContainer {
              */
             if (m_jack.getXButton()) {
                 if (!m_hood.getForwardLimitSwitch()) {
-                    m_hood.runVelocityPID(600);
+                    m_hood.runUnclampedVelocityPID(100);
                 } else {
                     m_hood.forceZero();
                 }
@@ -547,7 +557,7 @@ public class RobotContainer {
              */
             if (m_jack.getYButton()) {
                 if (!m_turret.getReverseLimitSwitch()) {
-                    m_turret.runVelocityPID(-10);
+                    m_turret.runUnclampedVelocityPID(-10);
                 } else {
                     m_turret.resetEncoderPosition(Constants.Turret.MIN_POSITION);
                 }
@@ -559,8 +569,9 @@ public class RobotContainer {
 
     /**
      * Convenience function for getting a deadbanded axis
+     *
      * @param controller which controller to poll from
-     * @param axis which axis to use
+     * @param axis       which axis to use
      * @return the value of the specified controller axis
      */
     private double getAxis(WL_XboxController controller, Axis axis) {
