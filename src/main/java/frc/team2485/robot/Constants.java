@@ -22,7 +22,13 @@ public final class Constants {
 
     public static final boolean TUNE_MODE = true;
 
+    public static final String PID_ENABLE_LABEL = "PID Enable";
+
     public static final String TUNE_ENABLE_LABEL = "Tune Enable";
+
+    public static final String TUNE_LAYER_LABEL = "Tune Layer";
+
+    public static final String RESET_PID_LABEL = "Reset PID";
 
     public static final double GRAVITY_ACCELERATION_CONSTANT = 9.8; //meters per second
 
@@ -191,9 +197,12 @@ public final class Constants {
         public static final int ENCODER_CPR = 1000 * 4; //4x encoding
         public static final double DISTANCE_PER_REVOLUTION = 360;
 
+        public static final double HOOD_LEAD_SCREW_GEAR_RATIO = 1.0/5;
+
         // these are relative to the vertical axis
         public static final double HOOD_BOTTOM_POSITION_DEG = 12;
         public static final double HOOD_TOP_POSITION_DEG = 41;
+
 
         public static final String TAB_NAME = "Shooter";
 
@@ -261,8 +270,8 @@ public final class Constants {
 
         public static final double TURRET_SPEED = 360.0 * 0.02; // degrees per ~20 milliseconds
 
-        public static final double MIN_POSITION = -130; // degrees
-        public static final double MAX_POSITION = 168; // degrees
+        public static final double MIN_POSITION = -135; // degrees
+        public static final double MAX_POSITION = 158; // degrees
 
         public static final double MAX_VELOCITY = 80; // degrees / second
         public static final double MIN_VELOCITY = -80; // degrees / second
@@ -270,7 +279,7 @@ public final class Constants {
         /**
          * In manual mode the max pwm will linearly clamp starting at the buffer zone size before the min or max positions.
          */
-        public static final double BUFFER_ZONE_SIZE = 20; // degrees
+        public static final double BUFFER_ZONE_SIZE = 50; // degrees
 
 
         public static final double TURRET_PID_TOLERANCE = 1; // degrees
@@ -281,7 +290,7 @@ public final class Constants {
         public static final String ENCODER_OFFSET_CONFIGURABLE_LABEL = "turretEncoderOffset";
         public static final String ZERO_TURRET_LABEL = "Zero Turret";
 
-        public static final double MANUAL_ANGLE_SCALE = 100;
+        public static final double MANUAL_ANGLE_SCALE = 150;
     }
 
     public static final class Climber {

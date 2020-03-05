@@ -7,27 +7,22 @@
 
 package frc.team2485.robot;
 
-import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Axis;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
 
+import frc.team2485.WarlordsLib.Tunable;
 import frc.team2485.WarlordsLib.oi.Deadband;
 import frc.team2485.WarlordsLib.oi.WL_XboxController;
-import frc.team2485.robot.commands.IncrementHighMagazine;
+import frc.team2485.robot.commands.*;
 import frc.team2485.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import frc.team2485.robot.commands.SetHood;
-import frc.team2485.robot.commands.Shoot;
 
-import frc.team2485.robot.commands.TurretSetAngle;
-import frc.team2485.robot.commands.IntakeArmMove;
 import frc.team2485.robot.subsystems.Drivetrain;
-
-import java.time.Instant;
 
 public class RobotContainer {
 
@@ -101,6 +96,8 @@ public class RobotContainer {
             m_ballCounter.setNumBallsHigh(0);
             m_ballCounter.setNumBallsLow(0);
         }));
+
+        this.configureTuning();
     }
 
     public void configureDrivetrainCommands() {
@@ -313,7 +310,7 @@ public class RobotContainer {
 
         m_suraj.getJoystickButton(XboxController.Button.kBumperLeft).whileHeld(
                 new RunCommand(
-                        ()-> {
+                        () -> {
                             m_flywheels.setVelocity(SmartDashboard.getNumber("Velocity RPM", 0));
                         }
                 )
@@ -351,6 +348,9 @@ public class RobotContainer {
 
         m_turret.setDefaultCommand(
                 new RunCommand(() -> {
+//                    m_turret.runPositionPID(
+//                            m_turret.getEncoderPosition() + getAxis(m_suraj, Axis.kLeftX) * Constants.Turret.MANUAL_ANGLE_SCALE
+//                    );
                     m_turret.runVelocityPID(
                             getAxis(m_suraj, Axis.kLeftX) * Constants.Turret.MAX_VELOCITY
                     );
@@ -366,10 +366,7 @@ public class RobotContainer {
 //                                    Constants.OI.XBOX_DEADBAND);
 //                        },
 //                        () -> {
-//
-//
-//                            SmartDashboard.putNumber("Pigeon Heading", -pigeon.getFusedHeading());
-//                            return -pigeon.getFusedHeading();
+//                            return m_drivetrain.getHeading();
 //                        }
 //                )
 //        );
@@ -405,21 +402,6 @@ public class RobotContainer {
 //                new SetHood(m_hood, () -> {
 //                    return m_hood.getEncoderPosition() - getAxis(m_suraj, Axis.kRightY) * Constants.Hood.MANUAL_ANGLE_SCALE;
 //                }, false)
-//        );
-
-//        m_suraj.getJoystickButton(XboxController.Button.kX).whileHeld(new ConditionalCommand(
-//                new SetHood(m_hood, () -> {
-//                    return 90 - (90 - m_hood.getEncoderPosition()
-//                            - Constants.Robot.LIMELIGHT_ANGLE_FROM_HORIZONTAL
-//                            + m_turret.getLimelight().getTargetVerticalOffset(0)
-//                            - Deadband.cubicScaledDeadband(
-//                            m_suraj.getY(GenericHID.Hand.kRight),
-//                            Constants.OI.XBOX_DEADBAND) * Constants.Hood.AUTO_HOOD_MANUAL_ADJUST);
-//                }),
-//                new InstantCommand(() -> m_hood.setPWM(0)),
-//                () -> m_turret.getLimelight().hasValidTarget())
-//        ).whenReleased(
-//                new InstantCommand(() -> m_hood.setPWM(0))
 //        );
 
 //        m_suraj.getJoystickButton(XboxController.Button.kX).whileHeld(new ConditionalCommand(
@@ -488,100 +470,99 @@ public class RobotContainer {
         return m_autoCommand;
     }
 
-    public void testInit() {
-        if (Constants.TUNE_MODE) {
-            SmartDashboard.putBoolean(Constants.TUNE_ENABLE_LABEL, false);
-        }
+    private SendableChooser<Tunable> m_tuneChooser;
 
+    public void configureTuning() {
         SmartDashboard.putBoolean(Constants.Turret.ZERO_TURRET_LABEL, false);
         SmartDashboard.putBoolean(Constants.Drivetrain.RESET_GYRO_LABEL, false);
+        SmartDashboard.putNumber(Constants.TUNE_LAYER_LABEL, 0);
+        SmartDashboard.putBoolean(Constants.PID_ENABLE_LABEL, false);
+        SmartDashboard.putBoolean(Constants.TUNE_ENABLE_LABEL, false);
+        SmartDashboard.putBoolean(Constants.RESET_PID_LABEL, false);
+        SmartDashboard.putBoolean("Reset PID", false);
 
-        m_turret.resetPIDs();
-        m_hood.resetPID();
-        m_highMagazine.resetPIDs();
-        m_lowMagazine.resetPIDs();
-        m_flywheels.resetPIDs();
-        m_feeder.resetPIDs();
+        m_tuneChooser = new SendableChooser<Tunable>();
+        m_tuneChooser.addOption("Low Magazine", m_lowMagazine);
+        m_tuneChooser.addOption("High Magazine", m_highMagazine);
+        m_tuneChooser.addOption("Turret", m_turret);
+        m_tuneChooser.addOption("Feeder", m_feeder);
+        m_tuneChooser.addOption("Hood", m_hood);
+        m_tuneChooser.addOption("Flywheels", m_flywheels);
+
+        SmartDashboard.putData("Tune Chooser", m_tuneChooser);
+    }
+
+    public void testInit() {
+        m_tuneChooser.getSelected().resetPIDs();
+        SmartDashboard.putNumber(Constants.TUNE_LAYER_LABEL, 0);
+        SmartDashboard.putBoolean(Constants.PID_ENABLE_LABEL, false);
+        SmartDashboard.putBoolean(Constants.TUNE_ENABLE_LABEL, false);
     }
 
     public void testPeriodic() {
-        if (SmartDashboard.getBoolean(Constants.Turret.ZERO_TURRET_LABEL, false)) {
-            m_turret.resetEncoderPosition(0);
-            SmartDashboard.putBoolean(Constants.Turret.ZERO_TURRET_LABEL, false);
+
+
+        if (SmartDashboard.getBoolean(Constants.RESET_PID_LABEL, false)) {
+            m_tuneChooser.getSelected().resetPIDs();
+            SmartDashboard.putBoolean(Constants.RESET_PID_LABEL, false);
         }
 
-        if (SmartDashboard.getBoolean(Constants.Drivetrain.RESET_GYRO_LABEL, false)) {
-            m_drivetrain.setHeading(0);
-            SmartDashboard.putBoolean(Constants.Drivetrain.RESET_GYRO_LABEL, false);
-        }
-
-//
-//        if (m_hood.getBottomLimitSwitch()) {
-//            m_hood.setEncoderPosition(Constants.Hood.HOOD_BOTTOM_POSITION_DEG);
-//        }
-//        else
-//        if (m_hood.getTopLimitSwitch()) {
-//            m_hood.setEncoderPosition(Constants.Hood.HOOD_TOP_POSITION_DEG);
-//        } else {
-//            m_hood.runVelocityPID(-1200);
-//        }
-
-
-        if (Constants.TUNE_MODE) {
-            boolean enable = SmartDashboard.getBoolean(Constants.TUNE_ENABLE_LABEL, false);
-            if (enable) {
-//                m_lowMagazine.tunePeriodic(0);
-//                m_highMagazine.tunePeriodic(1);
-//                m_turret.tunePeriodic(1);
-//                m_hood.tunePeriodic(1);
-//                m_flywheels.tunePeriodic(0);
-//                m_flywheels.tunePeriodic(0);
-//                m_feeder.tunePeriodic(0);
+        if (SmartDashboard.getBoolean(Constants.TUNE_ENABLE_LABEL, false)) {
+            if (SmartDashboard.getBoolean(Constants.PID_ENABLE_LABEL, false)) {
+                m_tuneChooser.getSelected().tunePeriodic((int) SmartDashboard.getNumber(Constants.TUNE_LAYER_LABEL, 0));
             } else {
-//                m_flywheels.setPWM(0);
-//                m_highMagazine.setPWM(0);
-//                m_lowMagazine.setPWM(-getAxis(m_jack, Axis.kLeftY));
-//                m_turret.setPWM(getAxis(m_suraj, Axis.kLeftX));
-//                m_turret.setPWM(getAxis(m_jack, Axis.kLeftX));
-//                m_feeder.setPWM(-getAxis(m_jack, Axis.kLeftY));
-//                m_intakeArm.setPWM(getAxis(m_jack, Axis.kRightY));
-//                m_hood.setPWM(-Deadband.linearScaledDeadband(m_jack.getY(GenericHID.Hand.kLeft), Constants.OI.XBOX_DEADBAND));
-//                m_feeder.setPWM(-getAxis(m_jack, Axis.kLeftY));
-//                m_flywheels.setPWM(-Deadband.linearScaledDeadband(m_suraj.getY(GenericHID.Hand.kRight), Constants.OI.XBOX_DEADBAND));
-//                m_hood.setPWM(-Deadband.linearScaledDeadband(m_suraj.getY(GenericHID.Hand.kLeft), Constants.OI.XBOX_DEADBAND));
+                m_tuneChooser.getSelected().setPWM(0);
+            }
+        } else {
 
+            /**
+             * Zeroing logic
+             */
+
+            if (SmartDashboard.getBoolean(Constants.Turret.ZERO_TURRET_LABEL, false)) {
+                m_turret.resetEncoderPosition(0);
+                SmartDashboard.putBoolean(Constants.Turret.ZERO_TURRET_LABEL, false);
             }
 
-            if (!enable || m_jack.getBumper(GenericHID.Hand.kRight) || m_suraj.getBumper(GenericHID.Hand.kRight)) {
-//                m_lowMagazine.setPWM(-getAxis(m_jack, Axis.kLeftY));
-//                m_highMagazine.setPWM(-getAxis(m_jack, Axis.kLeftY));
-//                m_turret.setPWM(getAxis(m_suraj, Axis.kLeftX));
-//                m_feeder.setPWM(-getAxis(m_jack, Axis.kLeftY));
-//                m_intakeArm.setPWM(getAxis(m_jack, Axis.kRightY));
-//                m_flywheels.setPWM(-Deadband.linearScaledDeadband(m_suraj.getY(GenericHID.Hand.kRight), Constants.OI.XBOX_DEADBAND));
-//                m_hood.setPWM(-Deadband.linearScaledDeadband(m_suraj.getY(GenericHID.Hand.kLeft), Constants.OI.XBOX_DEADBAND));
+            if (SmartDashboard.getBoolean(Constants.Drivetrain.RESET_GYRO_LABEL, false)) {
+                m_drivetrain.setHeading(0);
+                SmartDashboard.putBoolean(Constants.Drivetrain.RESET_GYRO_LABEL, false);
             }
 
-            // Simple zeroing
+            /**
+             * Hood zeroing
+             */
             if (m_jack.getXButton()) {
                 if (!m_hood.getForwardLimitSwitch()) {
                     m_hood.runVelocityPID(600);
                 } else {
                     m_hood.forceZero();
-                    m_hood.setPWM(0);
                 }
+            } else {
+                m_hood.setPWM(0);
             }
+
+            /**
+             * Turret zeroing
+             */
             if (m_jack.getYButton()) {
                 if (!m_turret.getReverseLimitSwitch()) {
                     m_turret.runVelocityPID(-10);
                 } else {
                     m_turret.resetEncoderPosition(Constants.Turret.MIN_POSITION);
-                    m_turret.setPWM(0);
                 }
+            } else {
+                m_turret.setPWM(0);
             }
         }
     }
 
+    /**
+     * Convenience function for getting a deadbanded axis
+     * @param controller which controller to poll from
+     * @param axis which axis to use
+     * @return the value of the specified controller axis
+     */
     private double getAxis(WL_XboxController controller, Axis axis) {
         return Deadband.linearScaledDeadband(controller.getRawAxis(axis.value), Constants.OI.XBOX_DEADBAND);
     }

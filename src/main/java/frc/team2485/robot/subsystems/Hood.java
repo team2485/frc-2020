@@ -40,6 +40,9 @@ public class Hood extends SubsystemBase implements PositionPIDSubsystem, Velocit
         this.m_spark.getForwardLimitSwitch(CANDigitalInput.LimitSwitchPolarity.kNormallyClosed).enableLimitSwitch(true);
         this.m_spark.getReverseLimitSwitch(CANDigitalInput.LimitSwitchPolarity.kNormallyClosed).enableLimitSwitch(true);
 
+        this.m_spark.getEncoder().setPositionConversionFactor(Constants.Hood.HOOD_LEAD_SCREW_GEAR_RATIO);
+        this.m_spark.getEncoder().setVelocityConversionFactor(Constants.Hood.HOOD_LEAD_SCREW_GEAR_RATIO);
+
         this.m_hoodEncoder = hoodEncoder;
         hoodEncoder.setInverted(true);
         this.m_hoodEncoder.setPositionConversionFactor(Constants.Hood.DISTANCE_PER_REVOLUTION);

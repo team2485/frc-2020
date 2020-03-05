@@ -51,6 +51,8 @@ public class Turret extends SubsystemBase implements VelocityPIDSubsystem, Posit
         m_talon.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed);
         m_talon.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed);
 
+        m_absoluteEncoderOffset = RobotConfigs.getInstance().getDouble(Constants.Turret.ENCODER_OFFSET_CONFIGURABLE_LABEL, "encoderOffset", 0);
+
         m_positionController = new WL_PIDController();
 
         m_limelight = new Limelight();
@@ -139,7 +141,7 @@ public class Turret extends SubsystemBase implements VelocityPIDSubsystem, Posit
      */
     @Override
     public double getEncoderPosition() {
-        return getAbsoluteEncoderPosition() + m_absoluteEncoderOffset;
+        return m_talon.getEncoderPosition();
     }
 
     @Override
@@ -210,6 +212,7 @@ public class Turret extends SubsystemBase implements VelocityPIDSubsystem, Posit
 
     @Override
     public void tunePeriodic(int layer) {
+        System.out.println(layer == 0);
         if (layer == 0) {
             m_talon.runPID();
         } else if (layer == 1) {
