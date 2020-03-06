@@ -91,16 +91,14 @@ public class RobotContainer {
 
         // intake arm
         m_intakeArm.setDefaultCommand(
-                new PerpetualCommand(
-                        new RunCommand(
-                                () -> {
-                                    if (!m_intakeArm.getTopLimitSwitch()) {
-                                        m_intakeArm.setPWM(Constants.IntakeArm.Setpoints.DEFAULT_PWM);
-                                    } else {
-                                        m_intakeArm.setPWM(0);
-                                    }
-                                }, m_intakeArm
-                        )
+                new RunCommand(
+                        () -> {
+                            if (!m_intakeArm.getTopLimitSwitch()) {
+                                m_intakeArm.setPWM(Constants.IntakeArm.Setpoints.DEFAULT_PWM);
+                            } else {
+                                m_intakeArm.setPWM(0);
+                            }
+                        }, m_intakeArm
                 )
         );
 
@@ -127,7 +125,19 @@ public class RobotContainer {
         );
 
         // intaking
-        m_jack.getJoystickButton(XboxController.Button.kA).toggleWhenPressed(new IntakeBalls(m_lowMagazine, m_highMagazine, m_ballCounter));
+        m_jack.getJoystickButton(XboxController.Button.kA)
+                .whileHeld(
+//                        new IntakeBalls(m_lowMagazine, m_highMagazine, m_ballCounter)
+                        new RunCommand(() -> {
+                            m_lowMagazine.setPWM(-0.4);
+                            m_highMagazine.runVelocityPID(-40);
+                        })
+                ).whenReleased(
+                        new InstantCommand(() -> {
+                            m_lowMagazine.setPWM(0);
+                            m_highMagazine.setPWM(0);
+                        })
+        );
 
         // Outtake
         m_jack.getJoystickButton(XboxController.Button.kB).whileHeld(
@@ -162,21 +172,26 @@ public class RobotContainer {
         // Increment/feed ball into shooter
         m_suraj.getJoystickButton(XboxController.Button.kBumperRight).whileHeld(
                 new SequentialCommandGroup(
-                        new RunCommand(
-                                () -> {
-                                    m_highMagazine.runVelocityPID(Constants.Magazine.Setpoints.HIGH_MAGAZINE_FEED_VELOCITY);
-                                }, m_highMagazine
-                        ).withInterrupt(
-                                () -> m_ballCounter.exitIRHasBall()
-                        ).andThen(
-                                new InstantCommand(
-                                        () -> {
-                                            m_highMagazine.setPWM(0);
-                                        }, m_highMagazine
-                                )
-                        ),
-                        new WaitUntilCommand(() -> m_flywheels.atVelocitySetpoint()),
-                        new Feed(m_feeder, m_highMagazine, m_lowMagazine, m_ballCounter, 8)
+//                        new RunCommand(
+//                                () -> {
+//                                    m_highMagazine.runVelocityPID(Constants.Magazine.Setpoints.HIGH_MAGAZINE_FEED_VELOCITY);
+//                                }, m_highMagazine
+//                        ).withInterrupt(
+//                                () -> m_ballCounter.exitIRHasBall()
+//                        ).andThen(
+//                                new InstantCommand(
+//                                        () -> {
+//                                            m_highMagazine.setPWM(0);
+//                                        }, m_highMagazine
+//                                )
+//                        ),
+//                        new WaitUntilCommand(() -> m_flywheels.atVelocitySetpoint()),
+//                        new Feed(m_feeder, m_highMagazine, m_lowMagazine, m_ballCounter, 8),
+                        new RunCommand(() -> {
+                            m_highMagazine.setPWM(-0.4);
+                            m_feeder.setPWM(-0.8);
+                            m_lowMagazine.setPWM(-0.5);
+                        })
                 )
         ).whenReleased(
                 new InstantCommand(
@@ -265,19 +280,19 @@ public class RobotContainer {
                 }, m_flywheels)
         );
 
-//        SmartDashboard.putNumber("Velocity RPM", -6000);
+        SmartDashboard.putNumber("Velocity RPM", -4850);
 
         // set rpm
         m_suraj.getJoystickButton(XboxController.Button.kBumperLeft).whileHeld(
-                new RunCommand(() -> {
-                    double pwm = getAxis(m_suraj, Axis.kRightTrigger) - getAxis(m_suraj, Axis.kLeftTrigger);
-
-                    double output = -4000 - pwm * 2000;
-
-                    m_flywheels.setVelocity(output);
-
-                }, m_flywheels)
-//                new FlywheelsSetRPM(m_flywheels, () -> SmartDashboard.getNumber("Velocity RPM", -6000))
+//                new RunCommand(() -> {
+//                    double pwm = getAxis(m_suraj, Axis.kRightTrigger) - getAxis(m_suraj, Axis.kLeftTrigger);
+//
+//                    double output = -4000 - pwm * 2000;
+//
+//                    m_flywheels.setVelocity(output);
+//
+//                }, m_flywheels)
+                new FlywheelsSetRPM(m_flywheels, () -> SmartDashboard.getNumber("Velocity RPM", -4850))
         ).whenReleased(
                 new InstantCommand(
                         () -> m_flywheels.setPWM(0)
@@ -305,7 +320,7 @@ public class RobotContainer {
 //                })
 //        );
 
-        // climbing
+        // climbing climber
         m_jack.getJoystickButton(XboxController.Button.kY).whileHeld(
                 new InstantCommand(() -> m_climber.setPWM(Constants.Climber.DEFAULT_PWM))).whenReleased(
                 new InstantCommand(() -> m_climber.setPWM(0))
@@ -346,24 +361,24 @@ public class RobotContainer {
     private void configureAutos() {
         m_autoChooser.addOption("Basic Auto",
                 new ParallelCommandGroup(
-                        new InstantCommand(
-                                () -> {
-                                    m_drivetrain.resetEncoders(0, 0);
-                                    m_drivetrain.setHeading(0);
-                                }
-                        ),
-                        // Always align turret
-                        new TurretLimelightAlign(m_turret),
-                        new SequentialCommandGroup(
-                                new ParallelDeadlineGroup(
-                                        // Deadline
-                                        new SequentialCommandGroup(
-                                                new WaitUntilCommand(() -> m_hood.atPositionSetpoint() && m_flywheels.atVelocitySetpoint() && m_turret.atPositionSetpoint()),
-                                                new Feed(m_feeder, m_highMagazine, m_lowMagazine, m_ballCounter, 4)
-                                        ),
-                                        new FlywheelsSetRPM(m_flywheels, Constants.ShootingSetpoints.INITIATION_LINE.RPM),
-                                        new HoodSetAngle(m_hood, Constants.ShootingSetpoints.INITIATION_LINE.HOOD_ANGLE)
-                                ),
+//                        new InstantCommand(
+//                                () -> {
+//                                    m_drivetrain.resetEncoders(0, 0);
+//                                    m_drivetrain.setHeading(0);
+//                                }
+//                        ),
+//                        // Always align turret
+//                        new TurretLimelightAlign(m_turret),
+//                        new SequentialCommandGroup(
+//                                new ParallelDeadlineGroup(
+//                                        // Deadline
+//                                        new SequentialCommandGroup(
+//                                                new WaitUntilCommand(() -> m_hood.atPositionSetpoint() && m_flywheels.atVelocitySetpoint() && m_turret.atPositionSetpoint()),
+//                                                new Feed(m_feeder, m_highMagazine, m_lowMagazine, m_ballCounter, 4)
+//                                        ),
+//                                        new FlywheelsSetRPM(m_flywheels, Constants.ShootingSetpoints.INITIATION_LINE.RPM),
+//                                        new HoodSetAngle(m_hood, Constants.ShootingSetpoints.INITIATION_LINE.HOOD_ANGLE)
+//                                ),
                                 new ParallelDeadlineGroup(
                                         new WaitCommand(2),
                                         new RunCommand(
@@ -373,7 +388,7 @@ public class RobotContainer {
                                         )
                                 )
                         )
-                )
+
         );
 
         SmartDashboard.putData("Auto Chooser", m_autoChooser);
@@ -397,7 +412,8 @@ public class RobotContainer {
     }
 
     public void testInit() {
-        m_tuneChooser.getSelected().resetPIDs();
+//        m_tuneChooser.getSelected().resetPIDs();
+        this.resetPIDs();
     }
 
     public void testPeriodic() {

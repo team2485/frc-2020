@@ -25,12 +25,14 @@ public class IntakeBalls extends ParallelCommandGroup {
         this.addCommands(
                 new RunCommand(
                         () -> {
+                            System.out.println("running");
                             if (!( // run until:
                                     (m_ballCounter.getNumBallsHigh() >= Constants.Magazine.HIGH_MAGAZINE_BALL_CAPACITY
                                             || (m_ballCounter.getNumBallsHigh() >= 3 && m_ballCounter.exitIRHasBall()))
-                                            && m_ballCounter.transferIRHasBall()
-                            )) {
-                                m_lowMagazine.runVelocityPID(Constants.Magazine.Setpoints.LOW_INTAKE_VELOCITY);
+                                            && m_ballCounter.transferIRHasBall()))
+                            {
+//                                m_lowMagazine.runVelocityPID(Constants.Magazine.Setpoints.LOW_INTAKE_VELOCITY);
+                                m_lowMagazine.setPWM(-0.4);
                             } else {
                                 m_lowMagazine.setPWM(0);
                             }

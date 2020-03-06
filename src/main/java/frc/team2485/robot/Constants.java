@@ -73,8 +73,8 @@ public final class Constants {
     }
 
     public static final class ShootingSetpoints {
-        public static final Setpoint INITIATION_LINE = new Setpoint(-4000, Constants.Hood.TOP_POSITION_DEG);
-        public static final Setpoint CONTROL_PANEL = new Setpoint(-6000, Hood.BOTTOM_POSITION_DEG);
+        public static final Setpoint INITIATION_LINE = new Setpoint(-3000, Constants.Hood.TOP_POSITION_DEG);
+        public static final Setpoint CONTROL_PANEL = new Setpoint(-4500, Hood.BOTTOM_POSITION_DEG);
     }
 
     public static final class Drivetrain {
@@ -301,7 +301,7 @@ public final class Constants {
     public static final class Climber {
         public static final int TALON_PORT = 18;
 
-        public static final double DEFAULT_PWM = -1.0;
+        public static final double DEFAULT_PWM = -0.7;
     }
 
     public static final class Autonomous {
