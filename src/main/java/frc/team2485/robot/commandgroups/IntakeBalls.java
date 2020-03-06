@@ -15,6 +15,8 @@ public class IntakeBalls extends ParallelCommandGroup {
 
     private boolean m_init = false;
 
+    private boolean m_incrementFinished;
+
     public IntakeBalls(LowMagazine lowMagazine, HighMagazine highMagazine, BallCounter ballCounter) {
         m_lowMagazine = lowMagazine;
         m_highMagazine = highMagazine;
@@ -38,8 +40,11 @@ public class IntakeBalls extends ParallelCommandGroup {
                         () -> {
                             if (m_ballCounter.transferIRHasBall()
                                     && (m_ballCounter.getNumBallsHigh() < Constants.Magazine.HIGH_MAGAZINE_BALL_CAPACITY)
-                                    && (m_highMagazine.atPositionSetpoint() || m_init)) {
-                                new HighMagazineIncrement(highMagazine, Constants.Magazine.Setpoints.HIGH_INDEX_BY_ONE_POS).schedule();
+                                    && (m_incrementFinished || m_init)) {
+                                m_incrementFinished = false;
+                                new HighMagazineIncrement(highMagazine, Constants.Magazine.Setpoints.HIGH_INDEX_BY_ONE_POS)
+                                        .andThen(new InstantCommand(() -> m_incrementFinished = true))
+                                        .schedule();
                                 m_init = false;
                             }
                         }, highMagazine
@@ -52,6 +57,7 @@ public class IntakeBalls extends ParallelCommandGroup {
         m_lowMagazine.resetPIDs();
         m_highMagazine.resetPIDs();
         m_init = true;
+        m_incrementFinished = true;
     }
 
     @Override

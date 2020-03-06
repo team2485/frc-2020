@@ -73,31 +73,8 @@ public class RobotContainer {
     }
 
     private void configureCommands() {
-        this.configureDrivetrainCommands();
-        this.configureIntakeArmCommands();
-        this.configureHoodCommands();
-        this.configureTurretCommands();
-        this.configureFlywheelsCommands();
-        this.configureShootingCommands();
-        this.configureIntakingCommands();
-        this.configureClimberCommands();
 
-        // Toggle Limelight LED
-        m_suraj.getJoystickButton(XboxController.Button.kBack).whenPressed(new InstantCommand(() -> {
-            m_turret.getLimelight().toggleLed();
-        }));
-
-        m_jack.getJoystickButton(XboxController.Button.kBack).whenPressed(new InstantCommand(() -> {
-            m_turret.getLimelight().toggleLed();
-        }));
-
-        m_jack.getJoystickButton(XboxController.Button.kStart).whenPressed(new InstantCommand(() -> {
-            m_ballCounter.setNumBallsHigh(0);
-            m_ballCounter.setNumBallsLow(0);
-        }));
-    }
-
-    public void configureDrivetrainCommands() {
+        // drivetrain
         m_drivetrain.setDefaultCommand(
                 new RunCommand(() -> {
                     m_drivetrain.curvatureDrive(
@@ -111,10 +88,8 @@ public class RobotContainer {
                             m_jack.getXButton());
                 }, m_drivetrain)
         );
-    }
 
-    public void configureIntakeArmCommands() {
-
+        // intake arm
         m_intakeArm.setDefaultCommand(
                 new PerpetualCommand(
                         new RunCommand(
@@ -135,9 +110,14 @@ public class RobotContainer {
 
         m_jack.getJoystickButton(XboxController.Button.kBumperLeft)
                 .whileHeld(new IntakeArmMove(m_intakeArm, IntakeArmMove.IntakeArmPosition.BOTTOM, Constants.IntakeArm.Setpoints.DEFAULT_PWM));
-    }
 
-    public void configureIntakingCommands() {
+        // hood manual
+        m_hood.setDefaultCommand(new RunCommand(
+                () -> {
+                    m_hood.runVelocityPID(Constants.Hood.HOOD_MAX_VELOCITY
+                            * -Deadband.linearScaledDeadband(m_suraj.getY(GenericHID.Hand.kRight), Constants.OI.XBOX_DEADBAND));
+                }, m_hood
+        ));
 
         m_jack.getJoystickButton(XboxController.Button.kStart).whenPressed(
                 new InstantCommand(() -> {
@@ -146,6 +126,7 @@ public class RobotContainer {
                 })
         );
 
+        // intaking
         m_jack.getJoystickButton(XboxController.Button.kA).toggleWhenPressed(new IntakeBalls(m_lowMagazine, m_highMagazine, m_ballCounter));
 
         // Outtake
@@ -164,18 +145,8 @@ public class RobotContainer {
                     m_flywheels.setPWM(0);
                 }, m_lowMagazine, m_highMagazine, m_feeder, m_flywheels)
         );
-    }
 
-    public void configureShootingCommands() {
-
-//        m_suraj.getJoystickButton(XboxController.Button.kBumperRight).whenPressed(
-//                new ConditionalCommand(
-//                        new RunCommand(()->m_highMagazine.runVelocityPID(-10)),
-//                        null,
-//                        ()->!m_ballCounter.exitIRHasBall()
-//                )
-//        );
-
+        // seek and align
         m_suraj.getJoystickButton(XboxController.Button.kX).whileHeld(
 //                new TurretLimelightAlign(m_turret, () -> Constants.Turret.AUTO_TURRET_MANUAL_ADJUST * getAxis(m_suraj, Axis.kLeftX))
                 new ConditionalCommand(
@@ -219,29 +190,28 @@ public class RobotContainer {
                 )
         );
 
-        SmartDashboard.putNumber("Velocity RPM", -6000);
-
-        m_suraj.getJoystickButton(XboxController.Button.kBumperLeft).whileHeld(
-                new FlywheelsSetRPM(m_flywheels, () -> SmartDashboard.getNumber("Velocity RPM", -6000))
-        );
-
+        // control panel setpoint
         m_suraj.getJoystickButton(XboxController.Button.kA).whileHeld(
                 new ParallelCommandGroup(
                         new FlywheelsSetRPM(m_flywheels,
                                 () -> Constants.ShootingSetpoints.CONTROL_PANEL.RPM + (getAxis(m_suraj, Axis.kRightTrigger) - getAxis(m_suraj, Axis.kLeftTrigger)) * Constants.Flywheels.RPM_ADJUST
                         ),
                         new HoodSetAngle(m_hood,
-                                () -> Constants.ShootingSetpoints.CONTROL_PANEL.HOOD_ANGLE + getAxis(m_suraj, Axis.kRightY) * Constants.Hood.Setpoints.HOOD_ADJUST)
+                                () -> Constants.ShootingSetpoints.CONTROL_PANEL.HOOD_ANGLE + getAxis(m_suraj, Axis.kRightY) * Constants.Hood.Setpoints.HOOD_ADJUST),
+                        new TurretLimelightAlign(m_turret,
+                                () -> Constants.Turret.AUTO_TURRET_MANUAL_ADJUST * getAxis(m_suraj, Axis.kLeftX))
                 )
         );
 
+        // initiation line setpoint
         m_suraj.getJoystickButton(XboxController.Button.kY).whileHeld(
                 new ParallelCommandGroup(
                         new FlywheelsSetRPM(m_flywheels,
                                 () -> Constants.ShootingSetpoints.INITIATION_LINE.RPM + (getAxis(m_suraj, Axis.kRightTrigger) - getAxis(m_suraj, Axis.kLeftTrigger)) * Constants.Flywheels.RPM_ADJUST
                         ),
                         new HoodSetAngle(m_hood,
-                                () -> Constants.ShootingSetpoints.INITIATION_LINE.HOOD_ANGLE + getAxis(m_suraj, Axis.kRightY) * Constants.Hood.Setpoints.HOOD_ADJUST)
+                                () -> Constants.ShootingSetpoints.INITIATION_LINE.HOOD_ANGLE + getAxis(m_suraj, Axis.kRightY) * Constants.Hood.Setpoints.HOOD_ADJUST),
+                        new TurretLimelightAlign(m_turret, () -> Constants.Turret.AUTO_TURRET_MANUAL_ADJUST * getAxis(m_suraj, Axis.kLeftX))
                 )
         );
 
@@ -265,9 +235,8 @@ public class RobotContainer {
 //            m_flywheels.setPWM(0);
 //            m_hood.setPWM(0);
 //        }));
-    }
 
-    public void configureTurretCommands() {
+        // turret
         m_turret.setDefaultCommand(
                 new RunCommand(() -> {
 //                    m_turret.runPositionPID(
@@ -279,31 +248,7 @@ public class RobotContainer {
                 }, m_turret)
         );
 
-        // Field Centric Control
-//        m_suraj.getJoystickButton(XboxController.Button.kX).whenHeld(
-//                new TurretFieldCentricAdjust(m_turret,
-//                        () -> {
-//                            return Constants.Turret.TURRET_SPEED * Deadband.cubicScaledDeadband(
-//                                    m_suraj.getX(GenericHID.Hand.kLeft),
-//                                    Constants.OI.XBOX_DEADBAND);
-//                        },
-//                        () -> {
-//                            return m_drivetrain.getHeading();
-//                        }
-//                )
-//        );
-    }
-
-    public void configureHoodCommands() {
-        m_hood.setDefaultCommand(new RunCommand(
-                () -> {
-                    m_hood.runVelocityPID(Constants.Hood.HOOD_MAX_VELOCITY
-                            * -Deadband.linearScaledDeadband(m_suraj.getY(GenericHID.Hand.kRight), Constants.OI.XBOX_DEADBAND));
-                }, m_hood
-        ));
-    }
-
-    public void configureFlywheelsCommands() {
+        // flywheels manual
         m_flywheels.setDefaultCommand(
                 new RunCommand(() -> {
                     double output = 0;
@@ -319,19 +264,66 @@ public class RobotContainer {
 
                 }, m_flywheels)
         );
-    }
 
-    public void configureClimberCommands() {
+//        SmartDashboard.putNumber("Velocity RPM", -6000);
+
+        // set rpm
+        m_suraj.getJoystickButton(XboxController.Button.kBumperLeft).whileHeld(
+                new RunCommand(() -> {
+                    double pwm = getAxis(m_suraj, Axis.kRightTrigger) - getAxis(m_suraj, Axis.kLeftTrigger);
+
+                    double output = -4000 - pwm * 2000;
+
+                    m_flywheels.setVelocity(output);
+
+                }, m_flywheels)
+//                new FlywheelsSetRPM(m_flywheels, () -> SmartDashboard.getNumber("Velocity RPM", -6000))
+        ).whenReleased(
+                new InstantCommand(
+                        () -> m_flywheels.setPWM(0)
+                )
+        );
+
+        // turret field centric control
+//        m_suraj.getJoystickButton(XboxController.Button.kX).whenHeld(
+//                new TurretFieldCentricAdjust(m_turret,
+//                        () -> {
+//                            return Constants.Turret.TURRET_SPEED * Deadband.cubicScaledDeadband(
+//                                    m_suraj.getX(GenericHID.Hand.kLeft),
+//                                    Constants.OI.XBOX_DEADBAND);
+//                        },
+//                        () -> {
+//                            return m_drivetrain.getHeading();
+//                        }
+//                )
+//        );
+
+
 //        m_jack.getJoystickButton(XboxController.Button.kY).whileHeld(
 //                new RunCommand(() -> {
 //                    m_climber.setPWM(Deadband.linearScaledDeadband(m_jack.getY(GenericHID.Hand.kRight), Constants.OI.XBOX_DEADBAND));
 //                })
 //        );
 
+        // climbing
         m_jack.getJoystickButton(XboxController.Button.kY).whileHeld(
                 new InstantCommand(() -> m_climber.setPWM(Constants.Climber.DEFAULT_PWM))).whenReleased(
                 new InstantCommand(() -> m_climber.setPWM(0))
         );
+
+        // Toggle Limelight LED
+        m_suraj.getJoystickButton(XboxController.Button.kBack).whenPressed(new InstantCommand(() -> {
+            m_turret.getLimelight().toggleLed();
+        }));
+
+        m_jack.getJoystickButton(XboxController.Button.kBack).whenPressed(new InstantCommand(() -> {
+            m_turret.getLimelight().toggleLed();
+        }));
+
+        m_jack.getJoystickButton(XboxController.Button.kStart).whenPressed(new InstantCommand(() -> {
+            m_ballCounter.setNumBallsHigh(0);
+            m_ballCounter.setNumBallsLow(0);
+        }));
     }
 
     public void resetPIDs() {
@@ -354,6 +346,12 @@ public class RobotContainer {
     private void configureAutos() {
         m_autoChooser.addOption("Basic Auto",
                 new ParallelCommandGroup(
+                        new InstantCommand(
+                                () -> {
+                                    m_drivetrain.resetEncoders(0, 0);
+                                    m_drivetrain.setHeading(0);
+                                }
+                        ),
                         // Always align turret
                         new TurretLimelightAlign(m_turret),
                         new SequentialCommandGroup(
