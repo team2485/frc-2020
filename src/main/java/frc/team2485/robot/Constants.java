@@ -12,22 +12,19 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 
+import java.util.Set;
+
 public final class Constants {
 
     public static final String CONFIGS_FILE = "/home/lvuser/constants.csv";
-
-    public static final boolean DEBUG_MODE = true;
 
     public static final double NOMINAL_VOLTAGE = 12;
 
     public static final boolean TUNE_MODE = true;
 
     public static final String PID_ENABLE_LABEL = "PID Enable";
-
     public static final String TUNE_ENABLE_LABEL = "Tune Enable";
-
     public static final String TUNE_LAYER_LABEL = "Tune Layer";
-
     public static final String RESET_PID_LABEL = "Reset PID";
 
     public static final double GRAVITY_ACCELERATION_CONSTANT = 9.8; //meters per second
@@ -67,6 +64,22 @@ public final class Constants {
         public static final double POWER_CELL_MASS = 0.141748; //kg
         public static final double POWER_CELL_DRAG_COEFF = 0.116;
         public static final double POWER_CELL_RADIUS = 0.0508; //meters
+    }
+
+    public static final class Setpoint {
+
+        public final double RPM;
+        public final double HOOD_ANGLE;
+
+        public Setpoint(double rpm, double hoodAngle) {
+            RPM = rpm;
+            HOOD_ANGLE = hoodAngle;
+        }
+    }
+
+    public static final class ShootingSetpoints {
+        public static final Setpoint INITIATION_LINE = new Setpoint(-4000, Constants.Hood.HOOD_TOP_POSITION_DEG);
+        public static final Setpoint CONTROL_PANEL = new Setpoint(-6000, Hood.HOOD_BOTTOM_POSITION_DEG);
     }
 
     public static final class Drivetrain {
@@ -136,9 +149,10 @@ public final class Constants {
 
         public static final double ROLLER_RADIUS = 1.3 / 2;
 
-//        public static final double HIGH_GEAR_RATIO = 1;
         public static final double HIGH_GEAR_RATIO = 18.0/24;
         public static final double LOW_GEAR_RATIO = 12.0/30;
+
+        public static final double HIGH_MAGAZINE_POSITION_THRESHOLD = 0.5;
 
         public static final double HIGH_DISTANCE_PER_REVOLUTION = HIGH_GEAR_RATIO * 2 * Math.PI * ROLLER_RADIUS;
 
@@ -148,26 +162,22 @@ public final class Constants {
         //replace below with actual number
         public static final double LOW_MAGAZINE_INTAKE_PWM = -0.4;
         public static final double OUTTAKE_PWM = 0.5;
-        public static final double NORMAL_BALL_INCREMENT_TIMEOUT = 1; //seconds
+        public static final double NORMAL_BALL_INCREMENT_WAIT = 0.5; //seconds
 
         public static final double LOW_MAGAZINE_FEED_PWM = -0.5;
-
-        public static final double HIGH_MAGAZINE_POSITION_CONTROLLER_THRESHOLD = 0.5;
-
-        public static final double COUNTER_MAX_PERIOD = 0.01;
-        public static final int SAMPLES_TO_AVERAGE = 40;
-
-        public static final String TAB_NAME = "Magazine";
-
-        public static final String HIGH_MAGAZINE_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL = "highMagazineVelocityController";
-        public static final String HIGH_MAGAZINE_POSITION_CONTROLLER_CONFIGURABLE_LABEL = "highMagazinePositionController";
-
-        public static final String LOW_MAGAZINE_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL = "lowMagazineVelocityController";
 
         public static final double MAGAZINE_MAX_VELOCITY = 50;
         public static final double MAGAZINE_MIN_VELOCITY = -50;
 
+        public static final double LOW_INTAKE_VELOCITY = -40;
+
         public static final int MAX_DEBOUNCE_TIME = 3;
+
+        public static final String TAB_NAME = "Magazine";
+        public static final String HIGH_MAGAZINE_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL = "highMagazineVelocityController";
+        public static final String HIGH_MAGAZINE_POSITION_CONTROLLER_CONFIGURABLE_LABEL = "highMagazinePositionController";
+        public static final String LOW_MAGAZINE_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL = "lowMagazineVelocityController";
+
     }
 
     public static final class Feeder {
@@ -203,8 +213,8 @@ public final class Constants {
         public static final double HOOD_LEAD_SCREW_GEAR_RATIO = 1.0/5;
 
         // these are relative to the vertical axis
-        public static final double HOOD_BOTTOM_POSITION_DEG = 12;
-        public static final double HOOD_TOP_POSITION_DEG = 41;
+        public static final double HOOD_BOTTOM_POSITION_DEG = 10;
+        public static final double HOOD_TOP_POSITION_DEG = 42;
 
 
         public static final String TAB_NAME = "Shooter";
@@ -221,12 +231,14 @@ public final class Constants {
         public static final String HOOD_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL = "hoodVelocityController";
         public static final String HOOD_POSITION_CONTROLLER_CONFIGURABLE_LABEL = "hoodPositionController";
 
-        public static final double HOOD_MAX_VELOCITY = 8000;
-        public static final double HOOD_MIN_VELOCITY = -8000;
+        public static final double HOOD_MAX_VELOCITY = 1600;
+        public static final double HOOD_MIN_VELOCITY = -1600;
 
         public static final double BUFFER_ZONE_SIZE = 5;
 
         public static final double HOOD_DEFAULT_INCREMENT = -10;
+
+        public static final double POSITION_THRESHOLD = 1; //degrees
     }
 
     public static final class Flywheels {
@@ -246,7 +258,9 @@ public final class Constants {
 
         public static final double RPM_ADJUST = 0;
 
-        public static final double GEAR_RATIO = 2/1;
+        public static final double GEAR_RATIO = 2.0/1;
+
+        public static final double VELOCITY_THRESHOLD = 100; //rpm
 
         public static final String TAB_NAME = "Shooter";
 
@@ -255,7 +269,6 @@ public final class Constants {
 
         public static final double FLYWHEELS_MAX_VELOCITY = 6000;
         public static final double FLYWHEELS_MIN_VELOCITY = -6000;
-
     }
 
     public static final class Turret {
@@ -285,7 +298,7 @@ public final class Constants {
         public static final double BUFFER_ZONE_SIZE = 50; // degrees
 
 
-        public static final double TURRET_PID_TOLERANCE = 1; // degrees
+        public static final double TURRET_POSITION_TOLERANCE = 1; // degrees
 
         public static final String TAB_NAME = "Turret";
         public static final String POSITION_CONTROLLER_CONFIGURABLE_LABEL = "turretPositionController";
@@ -299,7 +312,7 @@ public final class Constants {
     public static final class Climber {
         public static final int TALON_PORT = 18;
 
-        public static final double DEFAULT_PWM = -0.6;
+        public static final double DEFAULT_PWM = -1.0;
     }
 
     public static final class Autonomous {

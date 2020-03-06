@@ -22,7 +22,7 @@ public class LowMagazine extends SubsystemBase implements VelocityPIDSubsystem {
      * Low magazine subystem, controlling the intake rollers and low belt.
      */
     public LowMagazine() {
-        m_spark = new PIDSparkMax(Constants.Magazine.SPARK_LOW_PORT, ControlType.kCurrent);
+        m_spark = new PIDSparkMax(Constants.Magazine.SPARK_LOW_PORT, ControlType.kVelocity);
         m_spark.getEncoder().setPositionConversionFactor(Constants.Magazine.LOW_GEAR_RATIO * Constants.Magazine.ROLLER_RADIUS * 2 * Math.PI);
         m_spark.getEncoder().setVelocityConversionFactor(Constants.Magazine.LOW_GEAR_RATIO * Constants.Magazine.ROLLER_RADIUS * 2 * Math.PI / 60);
         m_spark.getEncoder().setPosition(0);
@@ -38,7 +38,7 @@ public class LowMagazine extends SubsystemBase implements VelocityPIDSubsystem {
 
     public void addToShuffleboard() {
         ShuffleboardTab tab = Shuffleboard.getTab(Constants.Magazine.TAB_NAME);
-        tab.add(m_spark);
+        tab.add("Low Spark", m_spark);
         tab.addNumber("Low Position", this::getEncoderPosition);
         tab.addNumber("Low Velocity", this::getEncoderVelocity);
         tab.addNumber("Low Current", m_spark::getOutputCurrent);

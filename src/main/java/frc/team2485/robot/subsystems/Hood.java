@@ -51,6 +51,8 @@ public class Hood extends SubsystemBase implements PositionPIDSubsystem, Velocit
         this.m_velocityController = new WL_PIDController();
         this.m_positionController = new WL_PIDController();
 
+        this.m_positionController.setTolerance(Constants.Hood.POSITION_THRESHOLD);
+
         m_velocityBuffer = new BufferZone(Constants.Hood.HOOD_MIN_VELOCITY, Constants.Hood.HOOD_MAX_VELOCITY,
                 Constants.Hood.HOOD_BOTTOM_POSITION_DEG, Constants.Hood.HOOD_TOP_POSITION_DEG, Constants.Hood.BUFFER_ZONE_SIZE);
 
@@ -89,6 +91,11 @@ public class Hood extends SubsystemBase implements PositionPIDSubsystem, Velocit
     public void runVelocityPID(double velocity) {
 //        this.setPWM(m_velocityController.calculate(this.getEncoderVelocity(), MathUtil.clamp(velocity, Constants.Hood.HOOD_MIN_VELOCITY, Constants.Hood.HOOD_MAX_VELOCITY)));
         this.setPWM(m_velocityController.calculate(this.getEncoderVelocity(), m_velocityBuffer.get(velocity, getEncoderPosition())));
+    }
+
+    public void runUnclampedVelocityPID(double velocity) {
+//        this.setPWM(m_velocityController.calculate(this.getEncoderVelocity(), MathUtil.clamp(velocity, Constants.Hood.HOOD_MIN_VELOCITY, Constants.Hood.HOOD_MAX_VELOCITY)));
+        this.setPWM(m_velocityController.calculate(this.getEncoderVelocity(), velocity));
     }
 
     @Override

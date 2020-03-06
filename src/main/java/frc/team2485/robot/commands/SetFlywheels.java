@@ -11,6 +11,10 @@ public class SetFlywheels extends CommandBase {
     private DoubleSupplier m_leftVelocity;
     private DoubleSupplier m_rightVelocity;
 
+    public SetFlywheels(Flywheels flywheels, double velocity) {
+        this(flywheels, () -> velocity);
+    }
+
     public SetFlywheels(Flywheels flywheels, DoubleSupplier leftVelocity, DoubleSupplier rightVelocity) {
         addRequirements(flywheels);
         this.m_flywheels = flywheels;
@@ -28,11 +32,11 @@ public class SetFlywheels extends CommandBase {
     }
 
     public void execute() {
-        System.out.println("left vel: " + m_leftVelocity.getAsDouble());
-        System.out.println("right vel: " + m_rightVelocity.getAsDouble());
         m_flywheels.setVelocity(m_leftVelocity.getAsDouble(), m_rightVelocity.getAsDouble());
     }
 
-
-
+    @Override
+    public void end(boolean interrupted) {
+        m_flywheels.setPWM(0);
+    }
 }

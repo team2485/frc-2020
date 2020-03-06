@@ -47,7 +47,7 @@ public class Turret extends SubsystemBase implements VelocityPIDSubsystem, Posit
         m_talon.setFeedbackDeviceType(FeedbackDevice.CTRE_MagEncoder_Relative);
         m_talon.setDistancePerPulse(360.0 / Constants.Turret.ENCODER_CPR); // convert to degrees
         m_talon.enableVoltageCompensation(Constants.NOMINAL_VOLTAGE);
-        m_talon.setTolerance(Constants.Turret.TURRET_PID_TOLERANCE);
+        m_talon.setTolerance(Constants.Turret.TURRET_POSITION_TOLERANCE);
         m_talon.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed);
         m_talon.configReverseLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyClosed);
 
@@ -116,6 +116,10 @@ public class Turret extends SubsystemBase implements VelocityPIDSubsystem, Posit
     public void runVelocityPID(double velocity) {
         // velocity / 10 to convert from per 100ms to 1 second
         m_talon.runPID(m_buffer.get(velocity, this.getEncoderPosition())/10.0);
+    }
+
+    public void runUnclampedVelocityPID(double velocity) {
+        m_talon.runPID(velocity/10.0);
     }
 
     @Override

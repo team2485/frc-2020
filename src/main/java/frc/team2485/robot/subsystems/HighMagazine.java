@@ -1,24 +1,16 @@
 package frc.team2485.robot.subsystems;
 
-import com.revrobotics.ControlType;
-import edu.wpi.first.wpilibj.Counter;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.team2485.WarlordsLib.PositionPIDSubsystem;
-import frc.team2485.WarlordsLib.Tunable;
 import frc.team2485.WarlordsLib.VelocityPIDSubsystem;
 import frc.team2485.WarlordsLib.control.WL_PIDController;
-import frc.team2485.WarlordsLib.motorcontrol.PIDSparkMax;
 import frc.team2485.WarlordsLib.motorcontrol.WL_SparkMax;
 import frc.team2485.WarlordsLib.robotConfigs.RobotConfigs;
 import frc.team2485.robot.Constants;
-
-import java.util.function.BooleanSupplier;
-import java.util.function.IntSupplier;
 
 public class HighMagazine extends SubsystemBase implements PositionPIDSubsystem, VelocityPIDSubsystem {
 
@@ -46,7 +38,7 @@ public class HighMagazine extends SubsystemBase implements PositionPIDSubsystem,
         m_velocityController = new WL_PIDController();
 
         m_positionController = new WL_PIDController();
-        m_positionController.setTolerance(Constants.Magazine.HIGH_MAGAZINE_POSITION_CONTROLLER_THRESHOLD);
+        m_positionController.setTolerance(Constants.Magazine.HIGH_MAGAZINE_POSITION_THRESHOLD);
 
         RobotConfigs.getInstance().addConfigurable(Constants.Magazine.HIGH_MAGAZINE_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL, m_velocityController);
         RobotConfigs.getInstance().addConfigurable(Constants.Magazine.HIGH_MAGAZINE_POSITION_CONTROLLER_CONFIGURABLE_LABEL, m_positionController);
