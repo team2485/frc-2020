@@ -14,4 +14,8 @@ public class TurretLimelightAlign extends TurretSetAngle {
     public TurretLimelightAlign(Turret turret) {
         super(turret, () -> turret.getEncoderPosition() + turret.getLimelight().getTargetHorizontalOffset(0));
     }
+
+    public TurretLimelightAlign(Turret turret, DoubleSupplier adjust) {
+        super(turret, () -> turret.getEncoderPosition() + turret.getLimelight().getTargetHorizontalOffset(0) + adjust.getAsDouble());
+    }
 }

@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.team2485.robot.subsystems.BallCounter;
 import frc.team2485.robot.subsystems.HighMagazine;
 
-public class IncrementHighMagazine extends CommandBase {
+public class HighMagazineIncrement extends CommandBase {
 
     private HighMagazine m_highMagazine;
 
@@ -12,9 +12,11 @@ public class IncrementHighMagazine extends CommandBase {
 
     private double m_distance;
 
-    public IncrementHighMagazine(HighMagazine magazine, double distance) {
-        m_highMagazine = magazine;
+    public HighMagazineIncrement(HighMagazine highMagazine, double distance) {
+        m_highMagazine = highMagazine;
         m_distance = distance;
+
+        this.addRequirements(m_highMagazine);
     }
 
     @Override

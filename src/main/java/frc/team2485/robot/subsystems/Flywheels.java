@@ -37,12 +37,15 @@ public class Flywheels extends SubsystemBase implements Tunable {
 
     private void addToShuffleboard() {
         ShuffleboardTab tab = Shuffleboard.getTab(Constants.Flywheels.TAB_NAME);
-        tab.add("Left Flywheel Vel Ctrl", m_sparkLeft);
-        tab.add("Right Flywheel Vel Ctrl", m_sparkRight);
+        if (Constants.TUNE_MODE) {
+            tab.add("Left Flywheel Vel Ctrl", m_sparkLeft);
+            tab.add("Right Flywheel Vel Ctrl", m_sparkRight);
+            tab.addNumber("Left Flywheel Current", m_sparkLeft::getOutputCurrent);
+            tab.addNumber("Right Flywheel Current", m_sparkRight::getOutputCurrent);
+
+        }
         tab.addNumber("Left Flywheel Velocity", this::getLeftEncoderVelocity);
         tab.addNumber("Right Flywheel Velocity", this::getRightEncoderVelocity);
-        tab.addNumber("Left Flywheel Current", m_sparkLeft::getOutputCurrent);
-        tab.addNumber("Right Flywheel Current", m_sparkRight::getOutputCurrent);
     }
 
     private void setLeftPWM(double pwm) {
@@ -69,11 +72,11 @@ public class Flywheels extends SubsystemBase implements Tunable {
     }
 
     private void setLeftVelocity(double velocity) {
-        m_sparkLeft.runPID(MathUtil.clamp(velocity, Constants.Flywheels.FLYWHEELS_MIN_VELOCITY, Constants.Flywheels.FLYWHEELS_MAX_VELOCITY));
+        m_sparkLeft.runPID(MathUtil.clamp(velocity, -Constants.Flywheels.FLYWHEELS_MAX_VELOCITY, Constants.Flywheels.FLYWHEELS_MAX_VELOCITY));
     }
 
     private void setRightVelocity(double velocity) {
-        m_sparkRight.runPID(MathUtil.clamp(velocity, Constants.Flywheels.FLYWHEELS_MIN_VELOCITY, Constants.Flywheels.FLYWHEELS_MAX_VELOCITY));
+        m_sparkRight.runPID(MathUtil.clamp(velocity, -Constants.Flywheels.FLYWHEELS_MAX_VELOCITY, Constants.Flywheels.FLYWHEELS_MAX_VELOCITY));
     }
 
     public boolean atVelocitySetpoint() {

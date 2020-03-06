@@ -1,8 +1,8 @@
-package frc.team2485.robot.commands;
+package frc.team2485.robot.commandgroups;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.team2485.robot.Constants;
+import frc.team2485.robot.commands.HighMagazineIncrement;
 import frc.team2485.robot.subsystems.BallCounter;
 import frc.team2485.robot.subsystems.HighMagazine;
 import frc.team2485.robot.subsystems.LowMagazine;
@@ -13,47 +13,45 @@ public class IntakeBalls extends ParallelCommandGroup {
     private HighMagazine m_highMagazine;
     private BallCounter m_ballCounter;
 
-    private IncrementHighMagazine m_incrementHighMagazine;
+    private boolean m_init = false;
 
     public IntakeBalls(LowMagazine lowMagazine, HighMagazine highMagazine, BallCounter ballCounter) {
         m_lowMagazine = lowMagazine;
         m_highMagazine = highMagazine;
         m_ballCounter = ballCounter;
 
-        addRequirements(lowMagazine, highMagazine);
-
-        m_incrementHighMagazine = new IncrementHighMagazine(highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS);
-
         this.addCommands(
                 new RunCommand(
                         () -> {
-                            if (!((m_ballCounter.getNumBallsHigh() >= Constants.Magazine.HIGH_MAGAZINE_BALL_CAPACITY
-                                    || (m_ballCounter.getNumBallsHigh() >= 3 && m_ballCounter.exitIRHasBall()))
-                                    && m_ballCounter.transferIRHasBall())) {
-                                m_lowMagazine.runVelocityPID(SmartDashboard.getNumber("Intake Speed", -40));
+                            if (!( // run until:
+                                    (m_ballCounter.getNumBallsHigh() >= Constants.Magazine.HIGH_MAGAZINE_BALL_CAPACITY
+                                            || (m_ballCounter.getNumBallsHigh() >= 3 && m_ballCounter.exitIRHasBall()))
+                                            && m_ballCounter.transferIRHasBall()
+                            )) {
+                                m_lowMagazine.runVelocityPID(Constants.Magazine.Setpoints.LOW_INTAKE_VELOCITY);
                             } else {
                                 m_lowMagazine.setPWM(0);
                             }
-                        }
+                        }, lowMagazine
                 ),
                 new RunCommand(
                         () -> {
-                            if (m_ballCounter.transferIRHasBall() &&
-                                    (m_ballCounter.getNumBallsHigh() < Constants.Magazine.HIGH_MAGAZINE_BALL_CAPACITY)
-                                    && m_incrementHighMagazine.isFinished()) {
-                                System.out.println("Scheduled");
-                                m_incrementHighMagazine.schedule();
+                            if (m_ballCounter.transferIRHasBall()
+                                    && (m_ballCounter.getNumBallsHigh() < Constants.Magazine.HIGH_MAGAZINE_BALL_CAPACITY)
+                                    && (m_highMagazine.atPositionSetpoint() || m_init)) {
+                                new HighMagazineIncrement(highMagazine, Constants.Magazine.Setpoints.HIGH_INDEX_BY_ONE_POS).schedule();
+                                m_init = false;
                             }
-                        }
+                        }, highMagazine
                 )
         );
     }
 
     @Override
     public void initialize() {
-
         m_lowMagazine.resetPIDs();
         m_highMagazine.resetPIDs();
+        m_init = true;
     }
 
     @Override

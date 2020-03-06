@@ -59,11 +59,11 @@ public class IntakeArm extends SubsystemBase implements PositionPIDSubsystem, Ve
 
     public void addToShuffleboard() {
         ShuffleboardTab tab = Shuffleboard.getTab("Intake Arm");
-        tab.add(this);
-        tab.add(m_talon);
-//        tab.add(m_encoderCounter);
-//        tab.addNumber("Encoder Position", this::getEncoderDegrees);
-        tab.addNumber("Output Current", m_talon::getStatorCurrent);
+        if (Constants.TUNE_MODE) {
+            tab.add(this);
+            tab.add(m_talon);
+            tab.addNumber("Output Current", m_talon::getStatorCurrent);
+        }
     }
 
     public void setPWM(double pwm) {
@@ -105,12 +105,12 @@ public class IntakeArm extends SubsystemBase implements PositionPIDSubsystem, Ve
 
     @Override
     public void runVelocityPID(double velocity) {
-        this.setPWM(m_velocityController.calculate(this.getEncoderVelocity(), MathUtil.clamp(velocity, Constants.Hood.HOOD_MIN_VELOCITY, Constants.Hood.HOOD_MAX_VELOCITY)));
+        this.setPWM(m_velocityController.calculate(this.getEncoderVelocity(), MathUtil.clamp(velocity, -Constants.IntakeArm.MAX_VELOCITY, Constants.IntakeArm.MAX_VELOCITY)));
     }
 
     @Override
     public void runPositionPID(double position) {
-        runVelocityPID(m_positionController.calculate(this.getEncoderPosition(), MathUtil.clamp(position, Constants.Hood.HOOD_TOP_POSITION_DEG, Constants.Hood.HOOD_BOTTOM_POSITION_DEG)));
+        runVelocityPID(m_positionController.calculate(this.getEncoderPosition(), MathUtil.clamp(position, Constants.IntakeArm.BOTTOM_POSITION_DEGREES, Constants.IntakeArm.TOP_POSITION_DEGREES)));
     }
 
     @Override

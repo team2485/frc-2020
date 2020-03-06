@@ -1,10 +1,11 @@
-package frc.team2485.robot.commands;
+package frc.team2485.robot.commandgroups;
 
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.team2485.robot.Constants;
+import frc.team2485.robot.commands.HighMagazineIncrement;
 import frc.team2485.robot.subsystems.BallCounter;
 import frc.team2485.robot.subsystems.Feeder;
 import frc.team2485.robot.subsystems.HighMagazine;
@@ -23,29 +24,27 @@ public class Feed extends ParallelCommandGroup {
         this.m_lowMagazine = lowMagazine;
         this.m_ballCounter = ballCounter;
 
-        this.addRequirements(feeder, lowMagazine, highMagazine);
-
         SequentialCommandGroup increment = new SequentialCommandGroup();
 
         for (int i = 0; i < numFeeds; i++) {
             increment.addCommands(
-                    new IncrementHighMagazine(m_highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS),
-                    new WaitCommand(Constants.Magazine.NORMAL_BALL_INCREMENT_WAIT)
+                    new HighMagazineIncrement(m_highMagazine, Constants.Magazine.Setpoints.HIGH_INDEX_BY_ONE_POS),
+                    new WaitCommand(Constants.Magazine.Setpoints.NORMAL_BALL_INCREMENT_WAIT)
             );
         }
 
         this.addCommands(
                 new RunCommand(
                         () -> {
-                            m_lowMagazine.setPWM(Constants.Magazine.LOW_MAGAZINE_FEED_PWM);
-                        }
+                            m_lowMagazine.setPWM(Constants.Magazine.Setpoints.LOW_MAGAZINE_FEED_PWM);
+                        }, m_lowMagazine
                 ).withInterrupt(
                         () -> m_ballCounter.transferIRHasBall()
                 ),
                 new RunCommand(
                         () -> {
-                            m_feeder.setPWM(Constants.Feeder.FEED_PWM);
-                        }
+                            m_feeder.setPWM(Constants.Feeder.Setpoints.FEED_PWM);
+                        }, m_feeder
                 ),
                 increment
         );

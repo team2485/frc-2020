@@ -3,10 +3,8 @@ package frc.team2485.robot.subsystems;
 import com.revrobotics.CANDigitalInput;
 import com.revrobotics.CANEncoder;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.team2485.WarlordsLib.BufferZone;
@@ -40,8 +38,8 @@ public class Hood extends SubsystemBase implements PositionPIDSubsystem, Velocit
         this.m_spark.getForwardLimitSwitch(CANDigitalInput.LimitSwitchPolarity.kNormallyClosed).enableLimitSwitch(true);
         this.m_spark.getReverseLimitSwitch(CANDigitalInput.LimitSwitchPolarity.kNormallyClosed).enableLimitSwitch(true);
 
-        this.m_spark.getEncoder().setPositionConversionFactor(Constants.Hood.HOOD_LEAD_SCREW_GEAR_RATIO);
-        this.m_spark.getEncoder().setVelocityConversionFactor(Constants.Hood.HOOD_LEAD_SCREW_GEAR_RATIO);
+        this.m_spark.getEncoder().setPositionConversionFactor(Constants.Hood.LEAD_SCREW_GEAR_RATIO);
+        this.m_spark.getEncoder().setVelocityConversionFactor(Constants.Hood.LEAD_SCREW_GEAR_RATIO);
 
         this.m_hoodEncoder = hoodEncoder;
         hoodEncoder.setInverted(true);
@@ -53,8 +51,8 @@ public class Hood extends SubsystemBase implements PositionPIDSubsystem, Velocit
 
         this.m_positionController.setTolerance(Constants.Hood.POSITION_THRESHOLD);
 
-        m_velocityBuffer = new BufferZone(Constants.Hood.HOOD_MIN_VELOCITY, Constants.Hood.HOOD_MAX_VELOCITY,
-                Constants.Hood.HOOD_BOTTOM_POSITION_DEG, Constants.Hood.HOOD_TOP_POSITION_DEG, Constants.Hood.BUFFER_ZONE_SIZE);
+        m_velocityBuffer = new BufferZone(-Constants.Hood.HOOD_MAX_VELOCITY, Constants.Hood.HOOD_MAX_VELOCITY,
+                Constants.Hood.BOTTOM_POSITION_DEG, Constants.Hood.TOP_POSITION_DEG, Constants.Hood.BUFFER_ZONE_SIZE);
 
         RobotConfigs.getInstance().addConfigurable(Constants.Hood.HOOD_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL, m_velocityController);
         RobotConfigs.getInstance().addConfigurable(Constants.Hood.HOOD_POSITION_CONTROLLER_CONFIGURABLE_LABEL, m_positionController);
@@ -64,13 +62,16 @@ public class Hood extends SubsystemBase implements PositionPIDSubsystem, Velocit
 
     public void addToShuffleboard() {
         ShuffleboardTab tab = Shuffleboard.getTab(Constants.Hood.TAB_NAME);
-        tab.add(m_spark);
-        tab.add("Hood Velocity Ctrl", m_velocityController);
-        tab.add("Hood Position Ctrl", m_positionController);
-        tab.addNumber("Hood Encoder Velocity", this::getEncoderVelocity);
+        if (Constants.TUNE_MODE) {
+            tab.add(m_spark);
+            tab.add("Hood Velocity Ctrl", m_velocityController);
+            tab.add("Hood Position Ctrl", m_positionController);
+            tab.addNumber("Hood Encoder Velocity", this::getEncoderVelocity);
+            tab.addNumber("Hood Neo Encoder Velocity", this::getNeoEncoderVelocity);
+            tab.addNumber("Hood Current", m_spark::getOutputCurrent);
+        }
         tab.addNumber("Hood Encoder Position", this::getEncoderPosition);
-        tab.addNumber("Hood Neo Encoder Velocity", this::getNeoEncoderVelocity);
-        tab.addNumber("Hood Current", m_spark::getOutputCurrent);
+        tab.addBoolean("Hood at Target", this::atPositionSetpoint);
     }
 
     public void setPWM(double pwm) {
@@ -122,7 +123,7 @@ public class Hood extends SubsystemBase implements PositionPIDSubsystem, Velocit
      */
     @Override
     public void runPositionPID(double position) {
-        runVelocityPID(m_positionController.calculate(this.getEncoderPosition(), MathUtil.clamp(position, Constants.Hood.HOOD_TOP_POSITION_DEG, Constants.Hood.HOOD_BOTTOM_POSITION_DEG)));
+        runVelocityPID(m_positionController.calculate(this.getEncoderPosition(), MathUtil.clamp(position, Constants.Hood.TOP_POSITION_DEG, Constants.Hood.BOTTOM_POSITION_DEG)));
     }
 
     @Override
@@ -154,10 +155,10 @@ public class Hood extends SubsystemBase implements PositionPIDSubsystem, Velocit
 
     public void forceZero() {
         if (getForwardLimitSwitch()) {
-            this.m_hoodEncoder.setPosition(Constants.Hood.HOOD_TOP_POSITION_DEG);
+            this.m_hoodEncoder.setPosition(Constants.Hood.TOP_POSITION_DEG);
             m_isZeroed = true;
         } else if (getReverseLimitSwitch()) {
-            this.m_hoodEncoder.setPosition(Constants.Hood.HOOD_BOTTOM_POSITION_DEG);
+            this.m_hoodEncoder.setPosition(Constants.Hood.BOTTOM_POSITION_DEG);
             m_isZeroed = true;
         }
     }
@@ -165,10 +166,10 @@ public class Hood extends SubsystemBase implements PositionPIDSubsystem, Velocit
     @Override
     public void periodic() {
         if (getForwardLimitSwitch()) {
-            this.m_hoodEncoder.setPosition(Constants.Hood.HOOD_TOP_POSITION_DEG);
+            this.m_hoodEncoder.setPosition(Constants.Hood.TOP_POSITION_DEG);
             m_isZeroed = true;
         } else if (getReverseLimitSwitch()) {
-            this.m_hoodEncoder.setPosition(Constants.Hood.HOOD_BOTTOM_POSITION_DEG);
+            this.m_hoodEncoder.setPosition(Constants.Hood.BOTTOM_POSITION_DEG);
             m_isZeroed = true;
         }
 

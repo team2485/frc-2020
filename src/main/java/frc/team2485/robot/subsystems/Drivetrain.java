@@ -70,8 +70,6 @@ public class Drivetrain extends SubsystemBase  {
 
         this.m_throttleRamp = new RampRate();
 
-        SendableRegistry.add(this.m_drive, "DifferentialDrive");
-
         RobotConfigs.getInstance().addConfigurable("drivetrainThrottleRamp", m_throttleRamp);
 
         this.addToShuffleboard();
@@ -79,20 +77,20 @@ public class Drivetrain extends SubsystemBase  {
 
     public void addToShuffleboard() {
         ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
-        tab.add(this);
-        tab.add(this.m_drive);
 
-//        tab.add("throttle ramp", this.m_throttleRamp);
-
-        tab.addNumber("Left PWM", m_sparkLeft1Master::getAppliedOutput);
-        tab.addNumber("Right PWM", m_sparkRight1Master::getAppliedOutput);
-        tab.add("throttle ramp", this.m_throttleRamp);
+        if (Constants.TUNE_MODE) {
+            tab.add(this);
+            tab.add(this.m_drive);
+            tab.addNumber("Left PWM", m_sparkLeft1Master::getAppliedOutput);
+            tab.addNumber("Right PWM", m_sparkRight1Master::getAppliedOutput);
+            tab.add("throttle ramp", this.m_throttleRamp);
+            tab.addNumber("Left Encoder Velocity", this::getLeftEncoderVelocity);
+            tab.addNumber("Right Encoder Velocity", this::getRightEncoderVelocity);
+            tab.addNumber("Left Spark Master Current", m_sparkLeft1Master::getOutputCurrent);
+            tab.addNumber("Right Spark Master Current", m_sparkRight1Master::getOutputCurrent);
+        }
         tab.addNumber("Left Encoder Position", this::getLeftEncoderPosition);
-        tab.addNumber("Left Encoder Velocity", this::getLeftEncoderVelocity);
         tab.addNumber("Right Encoder Position", this::getRightEncoderPosition);
-        tab.addNumber("Right Encoder Velocity", this::getRightEncoderVelocity);
-        tab.addNumber("Left Spark Master Current", m_sparkLeft1Master::getOutputCurrent);
-        tab.addNumber("Right Spark Master Current", m_sparkRight1Master::getOutputCurrent);
     }
 
     public void curvatureDrive(double throttle, double steering, boolean isQuickTurn) {

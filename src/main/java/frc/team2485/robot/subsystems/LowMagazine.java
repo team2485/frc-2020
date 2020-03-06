@@ -1,14 +1,10 @@
 package frc.team2485.robot.subsystems;
 
 import com.revrobotics.ControlType;
-import edu.wpi.first.wpilibj.Counter;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpiutil.math.MathUtil;
-import frc.team2485.WarlordsLib.Tunable;
 import frc.team2485.WarlordsLib.VelocityPIDSubsystem;
 import frc.team2485.WarlordsLib.motorcontrol.PIDSparkMax;
 import frc.team2485.WarlordsLib.robotConfigs.RobotConfigs;
@@ -38,10 +34,12 @@ public class LowMagazine extends SubsystemBase implements VelocityPIDSubsystem {
 
     public void addToShuffleboard() {
         ShuffleboardTab tab = Shuffleboard.getTab(Constants.Magazine.TAB_NAME);
-        tab.add("Low Spark", m_spark);
-        tab.addNumber("Low Position", this::getEncoderPosition);
-        tab.addNumber("Low Velocity", this::getEncoderVelocity);
-        tab.addNumber("Low Current", m_spark::getOutputCurrent);
+        if (Constants.TUNE_MODE) {
+            tab.add("Low Spark", m_spark);
+            tab.addNumber("Low Position", this::getEncoderPosition);
+            tab.addNumber("Low Velocity", this::getEncoderVelocity);
+            tab.addNumber("Low Current", m_spark::getOutputCurrent);
+        }
     }
 
     /**
@@ -79,7 +77,7 @@ public class LowMagazine extends SubsystemBase implements VelocityPIDSubsystem {
 
     @Override
     public void runVelocityPID(double velocity) {
-        m_spark.runPID(MathUtil.clamp(velocity, Constants.Magazine.MAGAZINE_MIN_VELOCITY, Constants.Magazine.MAGAZINE_MAX_VELOCITY));
+        m_spark.runPID(MathUtil.clamp(velocity, -Constants.Magazine.MAGAZINE_MAX_VELOCITY, Constants.Magazine.MAGAZINE_MAX_VELOCITY));
     }
 
 

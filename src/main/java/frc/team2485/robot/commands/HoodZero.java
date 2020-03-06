@@ -4,13 +4,13 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.team2485.robot.Constants;
 import frc.team2485.robot.subsystems.Hood;
 
-public class ZeroHood extends CommandBase {
+public class HoodZero extends CommandBase {
 
     private Hood m_hood;
 
     private double m_velocity;
 
-    public ZeroHood(Hood hood, double velocity) {
+    public HoodZero(Hood hood, double velocity) {
         this.m_hood = hood;
         this.m_velocity = velocity;
     }
@@ -28,6 +28,6 @@ public class ZeroHood extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         m_hood.setPWM(0);
-        m_hood.setEncoderPosition(Constants.Hood.HOOD_TOP_POSITION_DEG);
+        m_hood.setEncoderPosition(Constants.Hood.TOP_POSITION_DEG);
     }
 }

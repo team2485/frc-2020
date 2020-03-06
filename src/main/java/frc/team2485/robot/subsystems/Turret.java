@@ -62,7 +62,7 @@ public class Turret extends SubsystemBase implements VelocityPIDSubsystem, Posit
 
         BUFFER_ZONE_SIZE = Constants.Turret.BUFFER_ZONE_SIZE;
 
-        m_buffer = new BufferZone(Constants.Turret.MIN_VELOCITY, Constants.Turret.MAX_VELOCITY, Constants.Turret.MIN_POSITION, Constants.Turret.MAX_POSITION, Constants.Turret.BUFFER_ZONE_SIZE);
+        m_buffer = new BufferZone(-Constants.Turret.MAX_VELOCITY, Constants.Turret.MAX_VELOCITY, Constants.Turret.MIN_POSITION, Constants.Turret.MAX_POSITION, Constants.Turret.BUFFER_ZONE_SIZE);
 
         RobotConfigs.getInstance().addConfigurable(Constants.Turret.VELOCITY_CONTROLLER_CONFIGURABLE_LABEL, m_talon);
         RobotConfigs.getInstance().addConfigurable(Constants.Turret.POSITION_CONTROLLER_CONFIGURABLE_LABEL, m_positionController);
@@ -74,14 +74,17 @@ public class Turret extends SubsystemBase implements VelocityPIDSubsystem, Posit
     public void addToShuffleboard() {
         SendableRegistry.add(m_talon, "Turret Talon");
         ShuffleboardTab tab = Shuffleboard.getTab(Constants.Turret.TAB_NAME);
-        tab.add(this);
-        tab.add("Velocity Controller", m_talon);
-        tab.add("Position Controller", m_positionController);
+        if (Constants.TUNE_MODE) {
+            tab.add(this);
+            tab.add("Velocity Controller", m_talon);
+            tab.add("Position Controller", m_positionController);
+            tab.addNumber("Encoder Velocity", this::getEncoderVelocity);
+            tab.addNumber("Encoder Abs Position", this::getAbsoluteEncoderPosition);
+            tab.addNumber("Encoder Offset", this::getEncoderOffset);
+            tab.addNumber("Current", m_talon::getStatorCurrent);
+        }
         tab.addNumber("Encoder Position", this::getEncoderPosition);
-        tab.addNumber("Encoder Velocity", this::getEncoderVelocity);
-        tab.addNumber("Encoder Abs Position", this::getAbsoluteEncoderPosition);
-        tab.addNumber("Encoder Offset", this::getEncoderOffset);
-        tab.addNumber("Current", m_talon::getStatorCurrent);
+        tab.addBoolean("Turret at Target", this::atPositionSetpoint);
     }
 
     /**

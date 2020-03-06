@@ -12,8 +12,6 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
 
-import java.util.Set;
-
 public final class Constants {
 
     public static final String CONFIGS_FILE = "/home/lvuser/constants.csv";
@@ -43,9 +41,6 @@ public final class Constants {
          * Suraj's XBOX port
          */
         public static final int SURAJ_PORT = 1;
-
-        public static final double SURAJ_LTRIGGER_THRESHOLD = 0.3;
-        public static final double SURAJ_RTRIGGER_THRESHOLD = 0.3;
 
         /**
          * Deadband threshold for all Xbox controllers.
@@ -78,8 +73,8 @@ public final class Constants {
     }
 
     public static final class ShootingSetpoints {
-        public static final Setpoint INITIATION_LINE = new Setpoint(-4000, Constants.Hood.HOOD_TOP_POSITION_DEG);
-        public static final Setpoint CONTROL_PANEL = new Setpoint(-6000, Hood.HOOD_BOTTOM_POSITION_DEG);
+        public static final Setpoint INITIATION_LINE = new Setpoint(-4000, Constants.Hood.TOP_POSITION_DEG);
+        public static final Setpoint CONTROL_PANEL = new Setpoint(-6000, Hood.BOTTOM_POSITION_DEG);
     }
 
     public static final class Drivetrain {
@@ -105,9 +100,9 @@ public final class Constants {
 
         public static final double DISTANCE_PER_REVOLUTION = 2 * Math.PI * WHEEL_RADIUS;
 
-        public static final double UP_RAMP_RATE = 0.4;
-        public static final double DOWN_RAMP_RATE = 0.1; //pwm deltas
-
+        /**
+         * Slow down steering/throttle by this much
+         */
         public static final double STEERING_SCALE = 0.8;
         public static final double THROTTLE_SCALE = 0.8;
 
@@ -116,21 +111,18 @@ public final class Constants {
 
     public static final class IntakeArm {
 
-        public static final int MAX_CURRENT = 2; //amps
-
         public static final int TALON_PORT = 20;
 
-        public static final int ENCODER_DIO_PORT = 0;
-
-        public static final double ENCODER_PULSES_PER_REVOLUTION = 174.9;
+        public static final int MAX_CURRENT = 2; //amps
 
         public static final double TOP_POSITION_DEGREES = 0;
-
         public static final double BOTTOM_POSITION_DEGREES = 90; //temp
 
-        public static final double SPEED = 0.7;
+        public static final double MAX_VELOCITY = 100; //temp
 
-
+        public static final class Setpoints {
+            public static final double DEFAULT_PWM = 0.7;
+        }
     }
 
     public static final class Magazine {
@@ -154,24 +146,25 @@ public final class Constants {
 
         public static final double HIGH_MAGAZINE_POSITION_THRESHOLD = 0.5;
 
+        public static final int MAX_DEBOUNCE_TIME = 3;
+
         public static final double HIGH_DISTANCE_PER_REVOLUTION = HIGH_GEAR_RATIO * 2 * Math.PI * ROLLER_RADIUS;
 
-        public static final double LOW_INTAKE_BY_ONE_POS = -7;
-        public static final double HIGH_INDEX_BY_ONE_POS = -6.5;
-
-        //replace below with actual number
-        public static final double LOW_MAGAZINE_INTAKE_PWM = -0.4;
-        public static final double OUTTAKE_PWM = 0.5;
-        public static final double NORMAL_BALL_INCREMENT_WAIT = 0.5; //seconds
-
-        public static final double LOW_MAGAZINE_FEED_PWM = -0.5;
-
         public static final double MAGAZINE_MAX_VELOCITY = 50;
-        public static final double MAGAZINE_MIN_VELOCITY = -50;
 
-        public static final double LOW_INTAKE_VELOCITY = -40;
+        public static final class Setpoints {
+            public static final double LOW_INTAKE_BY_ONE_POS = -7;
+            public static final double HIGH_INDEX_BY_ONE_POS = -6.5;
 
-        public static final int MAX_DEBOUNCE_TIME = 3;
+            public static final double LOW_MAGAZINE_INTAKE_PWM = -0.4;
+            public static final double OUTTAKE_PWM = 0.5;
+            public static final double NORMAL_BALL_INCREMENT_WAIT = 0.5; //seconds
+            public static final double LOW_MAGAZINE_FEED_PWM = -0.5;
+            public static final double LOW_INTAKE_VELOCITY = -40;
+
+            public static final double HIGH_MAGAZINE_FEED_VELOCITY = -40;
+        }
+
 
         public static final String TAB_NAME = "Magazine";
         public static final String HIGH_MAGAZINE_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL = "highMagazineVelocityController";
@@ -193,12 +186,12 @@ public final class Constants {
 
         public static final String VELOCITY_CONTROLLER_CONFIGURABLE_LABEL = "feederSpark";
 
-        public static final double OUTTAKE_PWM = 0.5;
-
-        public static final double FEED_PWM = -0.8;
-
         public static final double FEEDER_MAX_VELOCITY = 1000;
-        public static final double FEEDER_MIN_VELOCITY = -1000;
+
+        public static final class Setpoints {
+            public static final double OUTTAKE_PWM = 0.5;
+            public static final double FEED_PWM = -0.8;
+        }
 
         public static final String TAB_NAME = "Shooter";
     }
@@ -210,35 +203,32 @@ public final class Constants {
         public static final int ENCODER_CPR = 1000 * 4; //4x encoding
         public static final double DISTANCE_PER_REVOLUTION = 360;
 
-        public static final double HOOD_LEAD_SCREW_GEAR_RATIO = 1.0/5;
+        public static final double LEAD_SCREW_GEAR_RATIO = 1.0/5;
 
         // these are relative to the vertical axis
-        public static final double HOOD_BOTTOM_POSITION_DEG = 10;
-        public static final double HOOD_TOP_POSITION_DEG = 42;
-
-
-        public static final String TAB_NAME = "Shooter";
+        public static final double BOTTOM_POSITION_DEG = 10;
+        public static final double TOP_POSITION_DEG = 42;
 
         //both in radians relative to horizontal
         //check if these should be in degrees or radians
-        public static final double MAX_THETA = Math.toRadians(HOOD_TOP_POSITION_DEG);
-        public static final double MIN_THETA = Math.toRadians(HOOD_BOTTOM_POSITION_DEG);
+        public static final double MAX_THETA = Math.toRadians(TOP_POSITION_DEG);
+        public static final double MIN_THETA = Math.toRadians(BOTTOM_POSITION_DEG);
 
-        public static final double AUTO_HOOD_MANUAL_ADJUST = 0;
-
-        public static final double MANUAL_ANGLE_SCALE = 20;
-
+        public static final String TAB_NAME = "Shooter";
         public static final String HOOD_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL = "hoodVelocityController";
         public static final String HOOD_POSITION_CONTROLLER_CONFIGURABLE_LABEL = "hoodPositionController";
 
         public static final double HOOD_MAX_VELOCITY = 1600;
-        public static final double HOOD_MIN_VELOCITY = -1600;
 
         public static final double BUFFER_ZONE_SIZE = 5;
 
-        public static final double HOOD_DEFAULT_INCREMENT = -10;
-
         public static final double POSITION_THRESHOLD = 1; //degrees
+
+        public static final class Setpoints {
+            public static final double AUTO_HOOD_MANUAL_ADJUST = 0;
+            public static final double MANUAL_ANGLE_SCALE = 20;
+            public static final double HOOD_ADJUST = 5; // degrees
+        }
     }
 
     public static final class Flywheels {
@@ -256,7 +246,7 @@ public final class Constants {
 
         public static final double FYWHEEL_OUTTAKE_PWM = 0.1;
 
-        public static final double RPM_ADJUST = 0;
+        public static final double RPM_ADJUST = 200;
 
         public static final double GEAR_RATIO = 2.0/1;
 
@@ -290,7 +280,6 @@ public final class Constants {
         public static final double MAX_POSITION = 158; // degrees
 
         public static final double MAX_VELOCITY = 80; // degrees / second
-        public static final double MIN_VELOCITY = -80; // degrees / second
 
         /**
          * In manual mode the max pwm will linearly clamp starting at the buffer zone size before the min or max positions.

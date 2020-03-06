@@ -50,12 +50,14 @@ public class HighMagazine extends SubsystemBase implements PositionPIDSubsystem,
         SendableRegistry.add(m_spark, "High Magazine Spark");
 
         ShuffleboardTab tab = Shuffleboard.getTab(Constants.Magazine.TAB_NAME);
-        tab.add(this);
-        tab.add("High Velocity Controller", m_velocityController);
-        tab.add("High Position Controller", m_positionController);
-        tab.addNumber("High Position", this::getEncoderPosition);
-        tab.addNumber("High Velocity", this::getEncoderVelocity);
-        tab.addNumber("High Current", m_spark::getOutputCurrent);
+        if (Constants.TUNE_MODE) {
+            tab.add(this);
+            tab.add("High Velocity Controller", m_velocityController);
+            tab.add("High Position Controller", m_positionController);
+            tab.addNumber("High Position", this::getEncoderPosition);
+            tab.addNumber("High Velocity", this::getEncoderVelocity);
+            tab.addNumber("High Current", m_spark::getOutputCurrent);
+        }
     }
 
     /**
@@ -100,7 +102,7 @@ public class HighMagazine extends SubsystemBase implements PositionPIDSubsystem,
     @Override
     public void runVelocityPID(double velocity) {
 //        m_spark.runPID(MathUtil.clamp(velocity, Constants.Magazine.MAGAZINE_MIN_VELOCITY, Constants.Magazine.MAGAZINE_MAX_VELOCITY));
-        m_spark.set(m_velocityController.calculate(getEncoderVelocity(), MathUtil.clamp(velocity, Constants.Magazine.MAGAZINE_MIN_VELOCITY, Constants.Magazine.MAGAZINE_MAX_VELOCITY)));
+        m_spark.set(m_velocityController.calculate(getEncoderVelocity(), MathUtil.clamp(velocity, -Constants.Magazine.MAGAZINE_MAX_VELOCITY, Constants.Magazine.MAGAZINE_MAX_VELOCITY)));
     }
 
     @Override

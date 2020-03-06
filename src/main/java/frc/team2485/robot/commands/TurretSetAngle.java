@@ -11,8 +11,6 @@ public class TurretSetAngle extends CommandBase {
 
     private DoubleSupplier m_angleSetpoint;
 
-    private boolean m_isAtTarget;
-
     private boolean m_finishWhenAligned;
 
     /**
@@ -50,22 +48,18 @@ public class TurretSetAngle extends CommandBase {
     @Override
     public void execute() {
         m_turret.runPositionPID(m_angleSetpoint.getAsDouble());
-        this.m_isAtTarget = m_turret.atPositionSetpoint();
-//        if (m_isAtTarget) {
-//            m_turret.setPWM(0);
-//            m_turret.resetPID();
-//        }
-    }
-
-    public boolean isAtTarget() {
-        return this.m_isAtTarget;
     }
 
     @Override
     public boolean isFinished() {
         if (m_finishWhenAligned) {
-            return this.isAtTarget();
+            return m_turret.atPositionSetpoint();
         }
         return false;
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        m_turret.setPWM(0);
     }
 }

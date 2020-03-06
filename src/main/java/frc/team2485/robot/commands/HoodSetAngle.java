@@ -5,27 +5,26 @@ import frc.team2485.robot.subsystems.Hood;
 
 import java.util.function.DoubleSupplier;
 
-public class SetHood extends CommandBase {
+public class HoodSetAngle extends CommandBase {
 
     private Hood m_hood;
     private DoubleSupplier m_angle;
     private boolean m_finishWhenAtTarget;
 
-    public SetHood(Hood hood, double angle) {
+    public HoodSetAngle(Hood hood, double angle) {
         this(hood, () -> angle, true);
     }
 
-    public SetHood(Hood hood, DoubleSupplier angle) {
+    public HoodSetAngle(Hood hood, DoubleSupplier angle) {
         this(hood, angle, true);
     }
 
-    public SetHood(Hood hood, DoubleSupplier angle, boolean finishWhenAtTarget) {
+    public HoodSetAngle(Hood hood, DoubleSupplier angle, boolean finishWhenAtTarget) {
         addRequirements(hood);
 
         this.m_hood = hood;
         this.m_angle = angle;
         this.m_finishWhenAtTarget = finishWhenAtTarget;
-
     }
 
     @Override

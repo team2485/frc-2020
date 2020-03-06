@@ -29,9 +29,11 @@ public class Feeder extends SubsystemBase implements VelocityPIDSubsystem {
 
     public void addToShuffleboard() {
         ShuffleboardTab tab = Shuffleboard.getTab(Constants.Feeder.TAB_NAME);
-        tab.add("Feeder Vel Ctrl", m_spark);
-        tab.addNumber("Feeder Current", m_spark::getOutputCurrent);
-        tab.addNumber("Feeder Velocity", this::getEncoderVelocity);
+        if (Constants.TUNE_MODE) {
+            tab.addNumber("Feeder Velocity", this::getEncoderVelocity);
+            tab.add("Feeder Vel Ctrl", m_spark);
+            tab.addNumber("Feeder Current", m_spark::getOutputCurrent);
+        }
     }
 
 
@@ -46,7 +48,7 @@ public class Feeder extends SubsystemBase implements VelocityPIDSubsystem {
 
     @Override
     public void runVelocityPID(double velocity) {
-        m_spark.runPID(MathUtil.clamp(velocity, Constants.Feeder.FEEDER_MIN_VELOCITY, Constants.Feeder.FEEDER_MAX_VELOCITY));
+        m_spark.runPID(MathUtil.clamp(velocity, -Constants.Feeder.FEEDER_MAX_VELOCITY, Constants.Feeder.FEEDER_MAX_VELOCITY));
     }
 
     @Override
