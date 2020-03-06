@@ -12,37 +12,34 @@ import frc.team2485.robot.commands.paths.LineToRightTrenchPath;
 import frc.team2485.robot.commands.paths.RightTrenchToLinePath;
 import frc.team2485.robot.subsystems.*;
 
-public class AutoChooser  {
+public class AutoChooser {
 
-  private Command m_leftTrenchAuto;
-  private SendableChooser<Command> m_dashboardChooser = new SendableChooser<>();
+    private Command m_leftTrenchAuto;
+    private SendableChooser<Command> m_dashboardChooser = new SendableChooser<>();
 
 
     public AutoChooser(Drivetrain drivetrain, Feeder feeder, Flywheels flywheels, Hood hood, Turret turret, LowMagazine lowMagazine, HighMagazine highMagazine, IntakeArm intakeArm, BallCounter ballCounter) {
         //GENERAL AUTONOMOUS COMMANDS
 
-        //SHOOT WITH FLYWHEELS AND HOOD
-        Command shoot = new Shoot(flywheels,
-                hood,
-                turret.getLimelight(),
-                ()->Constants.Autonomous.PORT_ENTRANCE_Y_VELOCITY,
-                ()->Constants.Autonomous.RPM_ADJUST,
-                ()->Constants.Autonomous.HOOD_ADJUST);
 
         //FEED TO SHOOTER WITH MAGAZINE AND FEEDER WHEELS
-        Command indexToShooter = new SequentialCommandGroup(
+        Command indexToShooter = new ParallelCommandGroup(
                 new InstantCommand(() -> {
-                    lowMagazine.setPWM(-0.5);
-                    feeder.setPWM(-0.8);
-                }).alongWith(
-                        new IncrementHighMagazine(highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS)),
-                new WaitCommand(Constants.Magazine.NORMAL_BALL_INCREMENT_TIMEOUT)
+                    lowMagazine.setPWM(Constants.Magazine.LOW_MAGAZINE_FEED_PWM);
+                    feeder.setPWM(Constants.Feeder.FEED_PWM);
+                }),
+                new SequentialCommandGroup(
+
+                )
+
+        ).andThen(
+
         );
 
         //ALIGN TURRET TO GOAL USING LIMELIGHT
         Command alignTurret = new TurretSetAngle(turret, () -> {
-                    return turret.getEncoderPosition() + turret.getLimelight().getTargetHorizontalOffset(0);
-                });
+            return turret.getEncoderPosition() + turret.getLimelight().getTargetHorizontalOffset(0);
+        });
 
         //SHOOT WITH WHEELS, FEEDER, HOOD, TURRET, AND MAGAZINE
         Command shootWithTurretAndMagazine = new ParallelCommandGroup(
@@ -65,7 +62,7 @@ public class AutoChooser  {
         //MAGAZINE INTAKE(LOW)
         Command lowMagazineIntake = new ConditionalCommand(
                 new InstantCommand(() -> {
-                    lowMagazine.setPWM(Constants.Magazine.LOW_BELT_INTAKE_PWM);
+                    lowMagazine.setPWM(Constants.Magazine.LOW_MAGAZINE_INTAKE_PWM);
 //                            m_lowMagazine.setVelocity(-30);
                 }),
                 new InstantCommand(() -> {
@@ -88,18 +85,30 @@ public class AutoChooser  {
         m_leftTrenchAuto = new ParallelCommandGroup(
                 ballIntake,
                 new SequentialCommandGroup(
-                       shootWithTurretAndMagazine,
+                        shootWithTurretAndMagazine,
                         new LineToRightTrenchPath(drivetrain, turret.getLimelight()),
                         new RightTrenchToLinePath(drivetrain, turret.getLimelight()),
                         shootWithTurretAndMagazine
                 )
         );
+
         m_dashboardChooser.addOption("Left Trench", m_leftTrenchAuto);
 
 
         this.addToShuffleboard();
     }
 
+    /**
+     * SHOOT WITH FLYWHEELS AND HOOD
+     */
+    private Command shoot(Flywheels flywheels, Hood hood, Turret turret) {
+        return new Shoot(flywheels,
+                hood,
+                turret.getLimelight(),
+                () -> Constants.Autonomous.PORT_ENTRANCE_Y_VELOCITY,
+                () -> Constants.Autonomous.RPM_ADJUST,
+                () -> Constants.Autonomous.HOOD_ADJUST);
+    }
 
 
     private void addToShuffleboard() {

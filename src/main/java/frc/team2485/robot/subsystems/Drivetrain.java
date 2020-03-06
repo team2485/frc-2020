@@ -135,6 +135,11 @@ public class Drivetrain extends SubsystemBase  {
         m_pigeon.setFusedHeading(heading);
     }
 
+    public void setPWM(double pwm) {
+        m_sparkLeft1Master.set(pwm);
+        m_sparkRight1Master.set(pwm);
+    }
+
     public double getHeading() {
         return -m_pigeon.getFusedHeading();
     }

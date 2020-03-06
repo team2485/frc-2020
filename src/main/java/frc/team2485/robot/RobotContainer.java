@@ -24,6 +24,8 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 
 import frc.team2485.robot.subsystems.Drivetrain;
 
+import java.util.function.DoubleSupplier;
+
 public class RobotContainer {
 
     private WL_XboxController m_jack;
@@ -146,7 +148,7 @@ public class RobotContainer {
         );
 
         // Increment high magazine
-        m_jack.getJoystickButton(XboxController.Button.kA).whileHeld(
+        m_suraj.getJoystickButton(XboxController.Button.kA).whileHeld(
                 new ConditionalCommand(
                         new IncrementHighMagazine(m_highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS),//.withInterrupt(() -> !m_ballCounter.transferIRHasBall()),
                         new InstantCommand(() -> {
@@ -196,10 +198,10 @@ public class RobotContainer {
 //        );
 
         // Run low magazine
-        m_jack.getJoystickButton(XboxController.Button.kA).whileHeld(
+        m_suraj.getJoystickButton(XboxController.Button.kA).whileHeld(
                 new ConditionalCommand(
                         new InstantCommand(() -> {
-//                            m_lowMagazine.setPWM(Constants.Magazine.LOW_BELT_INTAKE_PWM);
+//                            m_lowMagazine.setPWM(Constants.Magazine.LOW_MAGAZINE_INTAKE_PWM);
                             m_lowMagazine.runVelocityPID(SmartDashboard.getNumber("Intake Speed", -40));
 
                         }),
@@ -423,6 +425,7 @@ public class RobotContainer {
 
     public void configureFlywheelsCommands() {
         SmartDashboard.putNumber("RPM Setpoint", 0);
+        SmartDashboard.putNumber("hood setpoint", 0);
 
         m_flywheels.setDefaultCommand(
                 new RunCommand(() -> {
@@ -443,8 +446,15 @@ public class RobotContainer {
         m_suraj.getJoystickButton(XboxController.Button.kB).whileHeld(
                 new RunCommand(() -> {
                     m_flywheels.setVelocity(SmartDashboard.getNumber("RPM Setpoint", 0));
+                    m_hood.setEncoderPosition(SmartDashboard.getNumber("hood setpoint", 0));
+                    m_highMagazine.setPWM(-0.3);
+                    m_feeder.setPWM(-0.4);
                 })
-        ).whenReleased(new InstantCommand(() -> m_flywheels.setPWM(0)));
+        ).whenReleased(new InstantCommand(() -> {
+            m_flywheels.setPWM(0);
+            m_highMagazine.setPWM(0);
+            m_feeder.setPWM(0);
+        }));
     }
 
     public void configureClimberCommands() {
@@ -463,9 +473,28 @@ public class RobotContainer {
     public Command getAutonomousCommand() {
         // temporary!
 
-        m_autoCommand = new RunCommand(() -> {
-
-        });
+//        m_autoCommand = new RunCommand(() -> {
+//        new SequentialCommandGroup(
+//                new ParallelCommandGroup(
+//                        new InstantCommand( () -> {
+//                                new SetHood(m_hood, 38.0),
+//                        new SetFlywheels(m_flywheels,  -3400.0),
+//                            m_feeder.setPWM(-0.5),
+//                            m_highMagazine.setPWM(-0.4);
+//
+//                        }
+//                ).withTimeout(4)),
+//
+//            new WaitCommand(Constants.Magazine.NORMAL_BALL_INCREMENT_TIMEOUT),
+//                new SetDrivePWM(m_drivetrain, 0.3, 100)
+//
+//
+//
+//
+//
+//
+//        );
+     //   });
 
         return m_autoCommand;
     }
@@ -493,13 +522,20 @@ public class RobotContainer {
     }
 
     public void testInit() {
-        m_tuneChooser.getSelected().resetPIDs();
-        SmartDashboard.putNumber(Constants.TUNE_LAYER_LABEL, 0);
-        SmartDashboard.putBoolean(Constants.PID_ENABLE_LABEL, false);
-        SmartDashboard.putBoolean(Constants.TUNE_ENABLE_LABEL, false);
+        //m_tuneChooser.getSelected().resetPIDs();
+        //SmartDashboard.putNumber(Constants.TUNE_LAYER_LABEL, 0);
+        //SmartDashboard.putBoolean(Constants.PID_ENABLE_LABEL, false);
+        //SmartDashboard.putBoolean(Constants.TUNE_ENABLE_LABEL, false);
+        m_flywheels.tunePeriodic(1);
+        m_hood.tunePeriodic(1);
+
+
+
     }
 
     public void testPeriodic() {
+
+
 
 
         if (SmartDashboard.getBoolean(Constants.RESET_PID_LABEL, false)) {

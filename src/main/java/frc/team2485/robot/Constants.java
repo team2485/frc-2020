@@ -146,9 +146,11 @@ public final class Constants {
         public static final double HIGH_INDEX_BY_ONE_POS = -6.5;
 
         //replace below with actual number
-        public static final double LOW_BELT_INTAKE_PWM = -0.4;
+        public static final double LOW_MAGAZINE_INTAKE_PWM = -0.4;
         public static final double OUTTAKE_PWM = 0.5;
         public static final double NORMAL_BALL_INCREMENT_TIMEOUT = 1; //seconds
+
+        public static final double LOW_MAGAZINE_FEED_PWM = -0.5;
 
         public static final double HIGH_MAGAZINE_POSITION_CONTROLLER_THRESHOLD = 0.5;
 
@@ -182,7 +184,8 @@ public final class Constants {
         public static final String VELOCITY_CONTROLLER_CONFIGURABLE_LABEL = "feederSpark";
 
         public static final double OUTTAKE_PWM = 0.5;
-        public static final double INTAKE_PWM = -0.8;
+
+        public static final double FEED_PWM = -0.8;
 
         public static final double FEEDER_MAX_VELOCITY = 1000;
         public static final double FEEDER_MIN_VELOCITY = -1000;
@@ -296,7 +299,7 @@ public final class Constants {
     public static final class Climber {
         public static final int TALON_PORT = 18;
 
-        public static final double DEFAULT_PWM = -0.5;
+        public static final double DEFAULT_PWM = -0.6;
     }
 
     public static final class Autonomous {
