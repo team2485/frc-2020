@@ -26,6 +26,9 @@ public class Flywheels extends SubsystemBase implements Tunable {
         m_sparkLeft.enableVoltageCompensation(Constants.NOMINAL_VOLTAGE);
         m_sparkRight.enableVoltageCompensation(Constants.NOMINAL_VOLTAGE);
 
+        m_sparkRight.setTolerance(200);
+        m_sparkLeft.setTolerance(200);
+
         RobotConfigs.getInstance().addConfigurable(Constants.Flywheels.LEFT_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL, m_sparkLeft);
         RobotConfigs.getInstance().addConfigurable(Constants.Flywheels.RIGHT_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL, m_sparkRight);
 
@@ -81,6 +84,10 @@ public class Flywheels extends SubsystemBase implements Tunable {
     public void setVelocity(double leftVelocity, double rightVelocity) {
         setLeftVelocity(leftVelocity);
         setRightVelocity(rightVelocity);
+    }
+
+    public boolean atVelocitySetpoint() {
+        return m_sparkLeft.atTarget() && m_sparkRight.atTarget();
     }
 
     public double getLeftEncoderVelocity() {

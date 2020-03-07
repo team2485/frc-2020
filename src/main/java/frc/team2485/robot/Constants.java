@@ -148,7 +148,7 @@ public final class Constants {
         //replace below with actual number
         public static final double LOW_BELT_INTAKE_PWM = -0.4;
         public static final double OUTTAKE_PWM = 0.5;
-        public static final double NORMAL_BALL_INCREMENT_TIMEOUT = 1; //seconds
+        public static final double NORMAL_BALL_INCREMENT_TIMEOUT = 1.5; //seconds
 
         public static final double HIGH_MAGAZINE_POSITION_CONTROLLER_THRESHOLD = 0.5;
 
@@ -220,10 +220,10 @@ public final class Constants {
         public static final String HOOD_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL = "hoodVelocityController";
         public static final String HOOD_POSITION_CONTROLLER_CONFIGURABLE_LABEL = "hoodPositionController";
 
-        public static final double HOOD_MAX_VELOCITY = 1600;
-        public static final double HOOD_MIN_VELOCITY = -1600;
+        public static final double HOOD_MAX_VELOCITY = 2500;
+        public static final double HOOD_MIN_VELOCITY = -2500;
 
-        public static final double BUFFER_ZONE_SIZE = 5;
+        public static final double BUFFER_ZONE_SIZE = 6;
 
         public static final double HOOD_DEFAULT_INCREMENT = -10;
     }
@@ -298,7 +298,7 @@ public final class Constants {
     public static final class Climber {
         public static final int TALON_PORT = 18;
 
-        public static final double DEFAULT_PWM = -0.5;
+        public static final double DEFAULT_PWM = -0.7;
     }
 
     public static final class Autonomous {
