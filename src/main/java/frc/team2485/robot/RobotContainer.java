@@ -150,17 +150,6 @@ public class RobotContainer {
 
     public void configureIntakingCommands() {
 
-        m_jack.getJoystickButton(XboxController.Button.kStart).whenPressed(
-                new InstantCommand(() -> {
-                    m_ballCounter.setNumBallsLow(0);
-                    m_ballCounter.setNumBallsHigh(0);
-                })
-        );
-
-//        IntakeBalls intakeBalls = new IntakeBalls(m_lowMagazine, m_highMagazine, m_ballCounter);
-
-//        m_jack.getJoystickButton(XboxController.Button.kA).whileHeld(new IntakeBalls(m_lowMagazine, m_highMagazine, m_ballCounter));
-
         // Increment high magazine
         m_jack.getJoystickButton(XboxController.Button.kA).whileHeld(
                 new ConditionalCommand(
@@ -180,25 +169,8 @@ public class RobotContainer {
                     m_highMagazine.setPWM(0);
                 }, m_highMagazine)
         );
-//
-//        m_highMagazine.setDefaultCommand(
-//                new ScheduleCommand(
-//                        new ConditionalCommand(
-//                                new IncrementHighMagazine(m_highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS),//.withInterrupt(() -> !m_ballCounter.transferIRHasBall()),
-//                                new InstantCommand(() -> {
-//                                    m_highMagazine.setPWM(0);
-//                                }, m_highMagazine),
-//                                () -> {
-//                                    return
-//                                            // !m_ballCounter.entranceIRHasBall() && m_ballCounter.getEntranceLastVal()
-//                                            m_ballCounter.transferIRHasBall();
-////                                                    (m_ballCounter.getNumBallsHigh() <= Constants.Magazine.HIGH_MAGAZINE_BALL_CAPACITY);
-//                                }
-//                        )
-//                )
-//        );
-//
-//        // Run low magazine
+
+        // Run low magazine
         m_jack.getJoystickButton(XboxController.Button.kA).whileHeld(
 //                new ConditionalCommand(
 //                        new InstantCommand(() -> {
@@ -360,18 +332,20 @@ public class RobotContainer {
         SmartDashboard.putNumber("Velocity RPM", -6000);
 
         DoubleSupplier flywheelsSetpoint = () -> {
-            // close
             if (m_suraj.getYButton()) {
-                return -3150;
-                // far
+                return Constants.Setpoints.INITIATION_LINE.RPM; // close
+            } else if (m_suraj.getBButton()) {
+                return Constants.Setpoints.CLOSE_TRENCH.RPM;
             } else if (m_suraj.getAButton()) {
-                return -5000;
+                return Constants.Setpoints.FAR.RPM; // far
+
             } else {
                 return Math.copySign(SmartDashboard.getNumber("Velocity RPM", -6000), -1);
             }
 
         };
 
+        // shoot left trigger
         m_suraj.getJoystickAxisButton(Axis.kLeftTrigger, 0.2).whileHeld(
                 new SetFlywheels(m_flywheels, flywheelsSetpoint)
         ).whenReleased(
@@ -385,24 +359,23 @@ public class RobotContainer {
         // far
         m_suraj.getJoystickButton(XboxController.Button.kA).whileHeld(
                 new ParallelCommandGroup(
-                        new SetHood(m_hood, () -> 10, false)
+                        new SetHood(m_hood, () -> Constants.Setpoints.FAR.ANGLE, false)
+                )
+        );
+
+        // close trench
+        m_suraj.getJoystickButton(XboxController.Button.kB).whileHeld(
+                new ParallelCommandGroup(
+                        new SetHood(m_hood, () -> Constants.Setpoints.CLOSE_TRENCH.ANGLE, false)
                 )
         );
 
         // initiation line
         m_suraj.getJoystickButton(XboxController.Button.kY).whileHeld(
                 new ParallelCommandGroup(
-                        new SetHood(m_hood, () -> 38.5, false)
+                        new SetHood(m_hood, () -> Constants.Setpoints.INITIATION_LINE.ANGLE, false)
                 )
         );
-
-        // ???
-        m_suraj.getJoystickButton(XboxController.Button.kB).whileHeld(
-                new ParallelCommandGroup(
-                        new SetHood(m_hood, () -> 27.5, false)
-                )
-        );
-
 
         // Turret Seek
 //        new ConditionalCommand(
@@ -486,7 +459,6 @@ public class RobotContainer {
                 }, m_hood
         ));
 
-
 //        m_hood.setDefaultCommand(
 //                new SetHood(m_hood, () -> {
 //                    return m_hood.getEncoderPosition() - getAxis(m_suraj, Axis.kRightY) * Constants.Hood.MANUAL_ANGLE_SCALE;
@@ -511,7 +483,6 @@ public class RobotContainer {
     }
 
     public void configureFlywheelsCommands() {
-        SmartDashboard.putNumber("RPM Setpoint", 0);
 
         m_flywheels.setDefaultCommand(
                 new RunCommand(() -> {
@@ -519,7 +490,7 @@ public class RobotContainer {
                     double pwm = Deadband.linearScaledDeadband(m_suraj.getTriggerAxis(GenericHID.Hand.kRight), Constants.OI.XBOX_DEADBAND);
 
                     if (pwm != 0) {
-                        output = -1000 - pwm * 5000;
+                        output = -4000 - pwm * 1000;
 
                         m_flywheels.setVelocity(output);
                     } else {
@@ -573,31 +544,25 @@ public class RobotContainer {
 
         m_autoCommand = new SequentialCommandGroup(
 //                                new WaitUntilCommand(() -> m_flywheels.getLeftEncoderVelocity() < -2000),
-                new ParallelDeadlineGroup(
-                        new WaitCommand(2),
-                        new SetFlywheels(m_flywheels, () -> -3150) //edit
-//                        new SetHood(m_hood, () -> 38.5, true)
-//                        new TurretSetAngle(m_turret, () -> {
-//                            return m_turret.getEncoderPosition()
-//                                    + m_turret.getLimelight().getTargetHorizontalOffset(0);
-//                        })
-                ),
+//                new ParallelDeadlineGroup(
+//                        new WaitCommand(2),
+//                        new SetFlywheels(m_flywheels, () -> Constants.Setpoints.INITIATION_LINE.RPM) //edit
+////                        new TurretSetAngle(m_turret, () -> {
+////                            return m_turret.getEncoderPosition()
+////                                    + m_turret.getLimelight().getTargetHorizontalOffset(0);
+////                        })
+//                ),
+                new WaitCommand(2),
                 new InstantCommand(() -> {
 //                    m_lowMagazine.setPWM(-0.5);
-                    m_feeder.setPWM(-0.8);
+                    m_feeder.setPWM(-0.9);
                 }),
                 //new WaitCommand(Constants.Magazine.NORMAL_BALL_INCREMENT_TIMEOUT),
                 new IncrementHighMagazine(m_highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS),
-                new ScheduleCommand(
-                        new SetFlywheels(m_flywheels, () -> -3150)),
                 new WaitCommand(Constants.Magazine.NORMAL_BALL_INCREMENT_TIMEOUT),
                 new IncrementHighMagazine(m_highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS),
-                new ScheduleCommand(
-                        new SetFlywheels(m_flywheels, () -> -3150)),
                 new WaitCommand(Constants.Magazine.NORMAL_BALL_INCREMENT_TIMEOUT),
                 new IncrementHighMagazine(m_highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS),
-                new ScheduleCommand(
-                        new SetFlywheels(m_flywheels, () -> -3150)),
                 new WaitCommand(Constants.Magazine.NORMAL_BALL_INCREMENT_TIMEOUT),
                 new IncrementHighMagazine(m_highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS),
                 new InstantCommand(() -> {
@@ -606,17 +571,23 @@ public class RobotContainer {
                     m_feeder.setPWM(0);
                     m_flywheels.setPWM(0);
                 }),
-                new RunCommand(() -> {
-                    m_drivetrain.curvatureDrive(-0.3, 0, false);
-                })
+                new RunCommand(
+                        () -> {
+                            m_drivetrain.curvatureDrive(-0.3, 0, false);
+                        }
+                )
                         .withTimeout(2)
                         .andThen(
                                 new InstantCommand(() -> {
                                     m_drivetrain.curvatureDrive(0, 0, false);
                                 })
-                        )
-        ).alongWith(new SetHood(m_hood, () -> 38.5, true))
-        .alongWith(new SetFlywheels(m_flywheels, () -> -3150)); //edit
+                        ))
+                .alongWith(
+                        new SetHood(m_hood, () -> Constants.Setpoints.INITIATION_LINE.ANGLE, true)
+                )
+                .alongWith(
+                        new SetFlywheels(m_flywheels, () -> Constants.Setpoints.INITIATION_LINE.RPM)
+                ); //edit
 
         return m_autoCommand;
     }

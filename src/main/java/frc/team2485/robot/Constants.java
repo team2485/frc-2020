@@ -69,6 +69,22 @@ public final class Constants {
         public static final double POWER_CELL_RADIUS = 0.0508; //meters
     }
 
+    protected static final class Setpoint {
+        public final double RPM;
+        public final double ANGLE;
+
+        public Setpoint(double rpm, double angle) {
+            RPM = rpm;
+            ANGLE = angle;
+        }
+    }
+
+    public static final class Setpoints {
+        public static final Setpoint INITIATION_LINE = new Setpoint(-4750, 30.5);
+        public static final Setpoint CLOSE_TRENCH = new Setpoint(-5000, 22);
+        public static final Setpoint FAR = new Setpoint(-6000, 10);
+    }
+
     public static final class Drivetrain {
 
         public static final int SPARK_LEFT_PORT_MASTER = 10;
