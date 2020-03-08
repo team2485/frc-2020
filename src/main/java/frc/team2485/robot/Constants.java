@@ -293,13 +293,13 @@ public final class Constants {
         public static final double MIN_POSITION = -135; // degrees
         public static final double MAX_POSITION = 158; // degrees
 
-        public static final double MAX_VELOCITY = 150; // degrees / second
-        public static final double MIN_VELOCITY = -150; // degrees / second
+        public static final double MAX_VELOCITY = 120; // degrees / second
+        public static final double MIN_VELOCITY = -120; // degrees / second
 
         /**
          * In manual mode the max pwm will linearly clamp starting at the buffer zone size before the min or max positions.
          */
-        public static final double BUFFER_ZONE_SIZE = 60; // degrees
+        public static final double BUFFER_ZONE_SIZE = 90; // degrees
 
 
         public static final double TURRET_PID_TOLERANCE = 1; // degrees

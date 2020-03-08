@@ -201,6 +201,7 @@ public class Turret extends SubsystemBase implements VelocityPIDSubsystem, Posit
     public void resetEncoderPosition(double position) {
         m_talon.setEncoderPosition(position);
         this.m_absoluteEncoderOffset = position - this.getAbsoluteEncoderPosition();
+        RobotConfigs.getInstance().put(Constants.Turret.ENCODER_OFFSET_CONFIGURABLE_LABEL, "encoderOffset", m_absoluteEncoderOffset);
     }
 
     @Override

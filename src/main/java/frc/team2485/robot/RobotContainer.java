@@ -600,7 +600,13 @@ public class RobotContainer {
                 )
                 .alongWith(
                         new SetFlywheels(m_flywheels, () -> Constants.Setpoints.INITIATION_LINE.RPM)
-                ); //edit
+                )
+                .alongWith(
+                        new RunCommand(() -> {
+                            m_turret.setPWM(0);
+                        }, m_turret)
+                )
+        ; //edit
 
         return m_autoCommand;
     }
