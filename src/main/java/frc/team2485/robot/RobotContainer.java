@@ -552,7 +552,7 @@ public class RobotContainer {
 ////                                    + m_turret.getLimelight().getTargetHorizontalOffset(0);
 ////                        })
 //                ),
-                new WaitCommand(2),
+                new WaitCommand(3),
                 new InstantCommand(() -> {
 //                    m_lowMagazine.setPWM(-0.5);
                     m_feeder.setPWM(-0.9);
@@ -665,7 +665,7 @@ public class RobotContainer {
             /**
              * Turret zeroing
              */
-            if (m_jack.getYButton()) {
+            if (m_jack.getAButton()) {
                 if (!m_turret.getReverseLimitSwitch()) {
                     m_turret.runUnclampedVelocityPID(-10);
                 } else {
