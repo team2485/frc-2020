@@ -81,7 +81,7 @@ public final class Constants {
 
     public static final class Setpoints {
         public static final Setpoint INITIATION_LINE = new Setpoint(-4750, 23.5);
-        public static final Setpoint CLOSE_TRENCH = new Setpoint(-5000, 20);
+        public static final Setpoint CLOSE_TRENCH = new Setpoint(-4750, 10);
         public static final Setpoint FAR = new Setpoint(-5500, 10);
     }
 
