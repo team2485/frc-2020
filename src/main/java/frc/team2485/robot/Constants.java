@@ -57,7 +57,7 @@ public final class Constants {
     }
 
     public static final class Robot {
-        public static final double HEIGHT_FROM_LL_TO_PORT = 1.58114915; //meters
+        public static final double HEIGHT_FROM_LL_TO_PORT = 1.58114915 * 3.28084; //meters... well now it's feet
         public static final double HEIGHT_FROM_SHOOTER_TO_PORT = 1.46685; //meters
         public static final double LIMELIGHT_TY_DEFAULT_VALUE = 15; //angle...change?
         public static final double LIMELIGHT_ANGLE_FROM_HORIZONTAL = 14.34; //degrees
@@ -148,7 +148,7 @@ public final class Constants {
         //replace below with actual number
         public static final double LOW_BELT_INTAKE_PWM = -0.4;
         public static final double OUTTAKE_PWM = 0.5;
-        public static final double NORMAL_BALL_INCREMENT_TIMEOUT = 1.5; //seconds
+        public static final double NORMAL_BALL_INCREMENT_TIMEOUT = 2; //seconds
 
         public static final double HIGH_MAGAZINE_POSITION_CONTROLLER_THRESHOLD = 0.5;
 
@@ -162,10 +162,10 @@ public final class Constants {
 
         public static final String LOW_MAGAZINE_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL = "lowMagazineVelocityController";
 
-        public static final double MAGAZINE_MAX_VELOCITY = 50;
-        public static final double MAGAZINE_MIN_VELOCITY = -50;
+        public static final double MAGAZINE_MAX_VELOCITY = 120;
+        public static final double MAGAZINE_MIN_VELOCITY = -120;
 
-        public static final double LOW_INTAKE_VELOCITY = -40;
+        public static final double LOW_INTAKE_VELOCITY = -70;
 
         public static final int MAX_DEBOUNCE_TIME = 3;
     }
@@ -230,10 +230,10 @@ public final class Constants {
 
     public static final class Flywheels {
         public static final int SPARK_FLYWHEEL_LEFT_PORT = 30;
-        public static final double SPARK_FLYWHEEL_LEFT_MAX_CURRENT = 0;
+        public static final int SPARK_FLYWHEEL_LEFT_MAX_CURRENT = 80;
 
         public static final int SPARK_FLYWHEEL_RIGHT_PORT = 31;
-        public static final double SPARK_FLYWHEEL_RIGHT_MAX_CURRENT = 0;
+        public static final int SPARK_FLYWHEEL_RIGHT_MAX_CURRENT = 80;
 
         public static final double ARC_ADJUST = 5;
 
@@ -246,6 +246,8 @@ public final class Constants {
         public static final double RPM_ADJUST = 0;
 
         public static final double GEAR_RATIO = 2/1;
+
+        public static final double RPM_THRESHOLD = 100;
 
         public static final String TAB_NAME = "Shooter";
 
@@ -275,8 +277,8 @@ public final class Constants {
         public static final double MIN_POSITION = -135; // degrees
         public static final double MAX_POSITION = 158; // degrees
 
-        public static final double MAX_VELOCITY = 80; // degrees / second
-        public static final double MIN_VELOCITY = -80; // degrees / second
+        public static final double MAX_VELOCITY = 150; // degrees / second
+        public static final double MIN_VELOCITY = -150; // degrees / second
 
         /**
          * In manual mode the max pwm will linearly clamp starting at the buffer zone size before the min or max positions.

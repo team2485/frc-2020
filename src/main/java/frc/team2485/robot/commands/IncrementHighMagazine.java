@@ -13,6 +13,8 @@ public class IncrementHighMagazine extends CommandBase {
     private double m_distance;
 
     public IncrementHighMagazine(HighMagazine magazine, double distance) {
+        addRequirements(magazine);
+
         m_highMagazine = magazine;
         m_distance = distance;
     }

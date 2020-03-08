@@ -82,6 +82,7 @@ public class Turret extends SubsystemBase implements VelocityPIDSubsystem, Posit
         tab.addNumber("Encoder Abs Position", this::getAbsoluteEncoderPosition);
         tab.addNumber("Encoder Offset", this::getEncoderOffset);
         tab.addNumber("Current", m_talon::getStatorCurrent);
+        tab.addNumber("Distance to Power Port", this::distToPort);
     }
 
     /**
@@ -146,6 +147,10 @@ public class Turret extends SubsystemBase implements VelocityPIDSubsystem, Posit
     @Override
     public double getEncoderPosition() {
         return m_talon.getEncoderPosition();
+    }
+
+    public double distToPort(){
+        return Constants.Robot.HEIGHT_FROM_LL_TO_PORT / Math.tan(Math.toRadians( m_limelight.getTargetVerticalOffset(Constants.Robot.LIMELIGHT_TY_DEFAULT_VALUE) + Constants.Robot.LIMELIGHT_ANGLE_FROM_HORIZONTAL));
     }
 
     @Override

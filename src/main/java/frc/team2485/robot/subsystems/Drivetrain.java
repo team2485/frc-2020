@@ -82,8 +82,6 @@ public class Drivetrain extends SubsystemBase  {
         tab.add(this);
         tab.add(this.m_drive);
 
-//        tab.add("throttle ramp", this.m_throttleRamp);
-
         tab.addNumber("Left PWM", m_sparkLeft1Master::getAppliedOutput);
         tab.addNumber("Right PWM", m_sparkRight1Master::getAppliedOutput);
         tab.add("throttle ramp", this.m_throttleRamp);

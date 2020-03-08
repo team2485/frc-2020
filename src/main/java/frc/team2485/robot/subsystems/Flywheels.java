@@ -1,5 +1,6 @@
 package frc.team2485.robot.subsystems;
 
+import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -23,11 +24,17 @@ public class Flywheels extends SubsystemBase implements Tunable {
         m_sparkRight.getEncoder().setVelocityConversionFactor(Constants.Flywheels.GEAR_RATIO);
         m_sparkLeft.getEncoder().setVelocityConversionFactor(Constants.Flywheels.GEAR_RATIO);
 
+        m_sparkLeft.setIdleMode(CANSparkMax.IdleMode.kCoast);
+        m_sparkRight.setIdleMode(CANSparkMax.IdleMode.kCoast);
+
+        m_sparkRight.setSmartCurrentLimit(Constants.Flywheels.SPARK_FLYWHEEL_LEFT_MAX_CURRENT);
+        m_sparkLeft.setSmartCurrentLimit(Constants.Flywheels.SPARK_FLYWHEEL_RIGHT_MAX_CURRENT);
+
         m_sparkLeft.enableVoltageCompensation(Constants.NOMINAL_VOLTAGE);
         m_sparkRight.enableVoltageCompensation(Constants.NOMINAL_VOLTAGE);
 
-        m_sparkRight.setTolerance(200);
-        m_sparkLeft.setTolerance(200);
+        m_sparkRight.setTolerance(Constants.Flywheels.RPM_THRESHOLD);
+        m_sparkLeft.setTolerance(Constants.Flywheels.RPM_THRESHOLD);
 
         RobotConfigs.getInstance().addConfigurable(Constants.Flywheels.LEFT_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL, m_sparkLeft);
         RobotConfigs.getInstance().addConfigurable(Constants.Flywheels.RIGHT_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL, m_sparkRight);

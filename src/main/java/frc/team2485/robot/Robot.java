@@ -34,6 +34,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledInit() {
+    // COMMENT OUT TO FREEZE!
     RobotConfigs.getInstance().saveConfigsToFile(Constants.CONFIGS_FILE);
   }
 

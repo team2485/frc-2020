@@ -45,4 +45,9 @@ public class SetHood extends CommandBase {
         }
         return false;
     }
+
+    @Override
+    public void end(boolean interrupted) {
+        m_hood.setPWM(0);
+    }
 }
