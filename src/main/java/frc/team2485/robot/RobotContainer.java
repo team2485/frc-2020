@@ -251,6 +251,16 @@ public class RobotContainer {
                 new InstantCommand(() -> m_turret.setPWM(0))
         );
 
+        m_suraj.getJoystickButton(XboxController.Button.kStart).whileHeld(
+                new RunCommand(() -> {
+                    m_feeder.setPWM(-0.9);
+                }, m_feeder)
+        ).whenReleased(
+                new InstantCommand(() -> {
+                    m_feeder.setPWM(0);
+                }, m_feeder)
+        );
+
         // Increment/feed ball into shooter
         m_suraj.getJoystickButton(XboxController.Button.kBumperRight).whileHeld(
 
@@ -426,6 +436,9 @@ public class RobotContainer {
 //                                    m_suraj.getX(GenericHID.Hand.kLeft),
 //                                    Constants.OI.XBOX_DEADBAND);
 //                        },
+
+
+
 //                        () -> {
 //                            return m_drivetrain.getHeading();
 //                        }

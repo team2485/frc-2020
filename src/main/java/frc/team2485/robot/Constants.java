@@ -299,7 +299,7 @@ public final class Constants {
         /**
          * In manual mode the max pwm will linearly clamp starting at the buffer zone size before the min or max positions.
          */
-        public static final double BUFFER_ZONE_SIZE = 50; // degrees
+        public static final double BUFFER_ZONE_SIZE = 60; // degrees
 
 
         public static final double TURRET_PID_TOLERANCE = 1; // degrees

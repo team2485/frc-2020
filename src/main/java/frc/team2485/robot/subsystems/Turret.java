@@ -83,6 +83,8 @@ public class Turret extends SubsystemBase implements VelocityPIDSubsystem, Posit
         tab.addNumber("Encoder Offset", this::getEncoderOffset);
         tab.addNumber("Current", m_talon::getStatorCurrent);
         tab.addNumber("Distance to Power Port", this::distToPort);
+        tab.addBoolean("Forward Limit Switch", this::getForwardLimitSwitch);
+        tab.addBoolean("Reverse Limit Switch", this::getReverseLimitSwitch);
     }
 
     /**
