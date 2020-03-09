@@ -69,11 +69,11 @@ public final class Constants {
         public static final double POWER_CELL_RADIUS = 0.0508; //meters
     }
 
-    protected static final class Setpoint {
+    static final class Setpoint {
         public final double RPM;
         public final double ANGLE;
 
-        public Setpoint(double rpm, double angle) {
+        private Setpoint(double rpm, double angle) {
             RPM = rpm;
             ANGLE = angle;
         }
