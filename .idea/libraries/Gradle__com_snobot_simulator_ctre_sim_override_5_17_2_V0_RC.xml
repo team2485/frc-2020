@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: com.snobot.simulator:ctre_sim_override:5.17.2_V0_RC">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.snobot.simulator/ctre_sim_override/5.17.2_V0_RC/4bb43c5f9f0bafbf987cbc1eddf15a89b2da4459/ctre_sim_override-5.17.2_V0_RC.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.snobot.simulator/ctre_sim_override/5.17.2_V0_RC/bdf7cccd5e17ee112533654268deaa5c2c052b47/ctre_sim_override-5.17.2_V0_RC-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

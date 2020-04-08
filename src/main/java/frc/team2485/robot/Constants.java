@@ -22,6 +22,8 @@ public final class Constants {
 
     public static final boolean TUNE_MODE = true;
 
+    public static final boolean IS_SIM = true;
+
     public static final String PID_ENABLE_LABEL = "PID Enable";
 
     public static final String TUNE_ENABLE_LABEL = "Tune Enable";

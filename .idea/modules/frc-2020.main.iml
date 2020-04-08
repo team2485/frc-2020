@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module external.linked.project.id="frc-2020:main" external.linked.project.path="$MODULE_DIR$/../.." external.root.project.path="$MODULE_DIR$/../.." external.system.id="GRADLE" external.system.module.group="" external.system.module.type="sourceSet" external.system.module.version="unspecified" type="JAVA_MODULE" version="4">
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_11">
-    <output url="file://$MODULE_DIR$/../../build/classes/java/main" />
+    <output url="file://$MODULE_DIR$/../../out/production/classes" />
     <exclude-output />
     <content url="file://$MODULE_DIR$/../../src/main">
       <sourceFolder url="file://$MODULE_DIR$/../../src/main/java" isTestSource="false" />
@@ -16,130 +16,20 @@
     <orderEntry type="library" name="Gradle: edu.wpi.first.cscore:cscore-java:2020.3.2" level="project" />
     <orderEntry type="library" name="Gradle: edu.wpi.first.cameraserver:cameraserver-java:2020.3.2" level="project" />
     <orderEntry type="library" name="Gradle: edu.wpi.first.hal:hal-java:2020.3.2" level="project" />
-    <orderEntry type="module-library">
-      <library name="Gradle: org.ejml:ejml-simple:0.38">
-        <CLASSES>
-          <root url="jar://C:/Users/Public/wpilib/2020/maven/org/ejml/ejml-simple/0.38/ejml-simple-0.38.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES>
-          <root url="jar://C:/Users/Public/wpilib/2020/maven/org/ejml/ejml-simple/0.38/ejml-simple-0.38-sources.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="Gradle: com.fasterxml.jackson.core:jackson-databind:2.10.0">
-        <CLASSES>
-          <root url="jar://C:/Users/Public/wpilib/2020/maven/com/fasterxml/jackson/core/jackson-databind/2.10.0/jackson-databind-2.10.0.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES>
-          <root url="jar://C:/Users/Public/wpilib/2020/maven/com/fasterxml/jackson/core/jackson-databind/2.10.0/jackson-databind-2.10.0-sources.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="Gradle: com.fasterxml.jackson.core:jackson-annotations:2.10.0">
-        <CLASSES>
-          <root url="jar://C:/Users/Public/wpilib/2020/maven/com/fasterxml/jackson/core/jackson-annotations/2.10.0/jackson-annotations-2.10.0.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES>
-          <root url="jar://C:/Users/Public/wpilib/2020/maven/com/fasterxml/jackson/core/jackson-annotations/2.10.0/jackson-annotations-2.10.0-sources.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="Gradle: com.fasterxml.jackson.core:jackson-core:2.10.0">
-        <CLASSES>
-          <root url="jar://C:/Users/Public/wpilib/2020/maven/com/fasterxml/jackson/core/jackson-core/2.10.0/jackson-core-2.10.0.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES>
-          <root url="jar://C:/Users/Public/wpilib/2020/maven/com/fasterxml/jackson/core/jackson-core/2.10.0/jackson-core-2.10.0-sources.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
+    <orderEntry type="library" name="Gradle: org.ejml:ejml-simple:0.38" level="project" />
+    <orderEntry type="library" name="Gradle: com.fasterxml.jackson.core:jackson-databind:2.10.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.fasterxml.jackson.core:jackson-annotations:2.10.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.fasterxml.jackson.core:jackson-core:2.10.0" level="project" />
     <orderEntry type="library" name="Gradle: com.ctre.phoenix:api-java:5.18.2" level="project" />
     <orderEntry type="library" name="Gradle: com.ctre.phoenix:wpiapi-java:5.18.2" level="project" />
     <orderEntry type="library" name="Gradle: com.revrobotics.frc:SparkMax-java:1.5.1" level="project" />
     <orderEntry type="library" name="Gradle: edu.wpi.first.wpilibNewCommands:wpilibNewCommands-java:2020.3.2" level="project" />
-    <orderEntry type="module-library">
-      <library name="Gradle: org.ejml:ejml-fdense:0.38">
-        <CLASSES>
-          <root url="jar://C:/Users/Public/wpilib/2020/maven/org/ejml/ejml-fdense/0.38/ejml-fdense-0.38.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES>
-          <root url="jar://C:/Users/Public/wpilib/2020/maven/org/ejml/ejml-fdense/0.38/ejml-fdense-0.38-sources.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="Gradle: org.ejml:ejml-dsparse:0.38">
-        <CLASSES>
-          <root url="jar://C:/Users/Public/wpilib/2020/maven/org/ejml/ejml-dsparse/0.38/ejml-dsparse-0.38.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES>
-          <root url="jar://C:/Users/Public/wpilib/2020/maven/org/ejml/ejml-dsparse/0.38/ejml-dsparse-0.38-sources.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="Gradle: org.ejml:ejml-ddense:0.38">
-        <CLASSES>
-          <root url="jar://C:/Users/Public/wpilib/2020/maven/org/ejml/ejml-ddense/0.38/ejml-ddense-0.38.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES>
-          <root url="jar://C:/Users/Public/wpilib/2020/maven/org/ejml/ejml-ddense/0.38/ejml-ddense-0.38-sources.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="Gradle: org.ejml:ejml-cdense:0.38">
-        <CLASSES>
-          <root url="jar://C:/Users/Public/wpilib/2020/maven/org/ejml/ejml-cdense/0.38/ejml-cdense-0.38.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES>
-          <root url="jar://C:/Users/Public/wpilib/2020/maven/org/ejml/ejml-cdense/0.38/ejml-cdense-0.38-sources.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="Gradle: org.ejml:ejml-zdense:0.38">
-        <CLASSES>
-          <root url="jar://C:/Users/Public/wpilib/2020/maven/org/ejml/ejml-zdense/0.38/ejml-zdense-0.38.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES>
-          <root url="jar://C:/Users/Public/wpilib/2020/maven/org/ejml/ejml-zdense/0.38/ejml-zdense-0.38-sources.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="Gradle: org.ejml:ejml-core:0.38">
-        <CLASSES>
-          <root url="jar://C:/Users/Public/wpilib/2020/maven/org/ejml/ejml-core/0.38/ejml-core-0.38.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES>
-          <root url="jar://C:/Users/Public/wpilib/2020/maven/org/ejml/ejml-core/0.38/ejml-core-0.38-sources.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="Gradle: com.google.code.findbugs:jsr305:3.0.2">
-        <CLASSES>
-          <root url="jar://C:/Users/Public/wpilib/2020/maven/com/google/code/findbugs/jsr305/3.0.2/jsr305-3.0.2.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES>
-          <root url="jar://C:/Users/Public/wpilib/2020/maven/com/google/code/findbugs/jsr305/3.0.2/jsr305-3.0.2-sources.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
+    <orderEntry type="library" name="Gradle: org.ejml:ejml-fdense:0.38" level="project" />
+    <orderEntry type="library" name="Gradle: org.ejml:ejml-dsparse:0.38" level="project" />
+    <orderEntry type="library" name="Gradle: org.ejml:ejml-ddense:0.38" level="project" />
+    <orderEntry type="library" name="Gradle: org.ejml:ejml-cdense:0.38" level="project" />
+    <orderEntry type="library" name="Gradle: org.ejml:ejml-zdense:0.38" level="project" />
+    <orderEntry type="library" name="Gradle: org.ejml:ejml-core:0.38" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.code.findbugs:jsr305:3.0.2" level="project" />
   </component>
 </module>

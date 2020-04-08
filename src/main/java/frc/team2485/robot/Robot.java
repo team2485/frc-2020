@@ -24,7 +24,9 @@ public class Robot extends TimedRobot {
     RobotConfigs.getInstance().loadConfigsFromFile(Constants.CONFIGS_FILE);
     m_robotContainer = new RobotContainer();
 
-    CameraServer.getInstance().startAutomaticCapture();
+    if (!Constants.IS_SIM) {
+      CameraServer.getInstance().startAutomaticCapture();
+    }
   }
 
   @Override

@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: net.java.jinput:jinput:2.0.7">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/net.java.jinput/jinput/2.0.7/7795d3dbbcfecd03e3d2bf964b04c0cd042415f7/jinput-2.0.7.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/net.java.jinput/jinput/2.0.7/7c2d3234e992788eebf6c230f6abc5683c5cd420/jinput-2.0.7-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
