@@ -11,5 +11,11 @@
     "**/.project": true,
     "**/.settings": true,
     "**/.factorypath": true
-  }
+  },
+  "extensions.ignoreRecommendations": true,
+  "files.autoSave": "off"
+  "extensions.ignoreRecommendations": true,
+  "files.autoSave": "off"
+  "extensions.ignoreRecommendations": true,
+  "files.autoSave": "off"
 }

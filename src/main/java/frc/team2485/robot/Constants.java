@@ -25,7 +25,7 @@ public final class Constants {
     public static final String TUNE_LAYER_LABEL = "Tune Layer";
     public static final String RESET_PID_LABEL = "Reset PID";
 
-    public static final double GRAVITY_ACCELERATION_CONSTANT = 9.8; //meters per second
+    public static final double GRAVITY_ACCELERATION_CONSTANT = 9.8; // meters per second
 
     /**
      * Constants specific to operator interface
@@ -49,16 +49,16 @@ public final class Constants {
     }
 
     public static final class Robot {
-        public static final double HEIGHT_FROM_LL_TO_PORT = 1.58114915; //meters
-        public static final double HEIGHT_FROM_SHOOTER_TO_PORT = 1.46685; //meters
-        public static final double LIMELIGHT_TY_DEFAULT_VALUE = 15; //angle...change?
-        public static final double LIMELIGHT_ANGLE_FROM_HORIZONTAL = 14.34; //degrees
+        public static final double HEIGHT_FROM_LL_TO_PORT = 1.58114915; // meters
+        public static final double HEIGHT_FROM_SHOOTER_TO_PORT = 1.46685; // meters
+        public static final double LIMELIGHT_TY_DEFAULT_VALUE = 15; // angle...change?
+        public static final double LIMELIGHT_ANGLE_FROM_HORIZONTAL = 14.34; // degrees
     }
 
     public static final class PowerCell {
-        public static final double POWER_CELL_MASS = 0.141748; //kg
+        public static final double POWER_CELL_MASS = 0.141748; // kg
         public static final double POWER_CELL_DRAG_COEFF = 0.116;
-        public static final double POWER_CELL_RADIUS = 0.0508; //meters
+        public static final double POWER_CELL_RADIUS = 0.0508; // meters
     }
 
     public static final class Setpoint {
@@ -113,12 +113,12 @@ public final class Constants {
 
         public static final int TALON_PORT = 20;
 
-        public static final int MAX_CURRENT = 2; //amps
+        public static final int MAX_CURRENT = 2; // amps
 
         public static final double TOP_POSITION_DEGREES = 0;
-        public static final double BOTTOM_POSITION_DEGREES = 90; //temp
+        public static final double BOTTOM_POSITION_DEGREES = 90; // temp
 
-        public static final double MAX_VELOCITY = 100; //temp
+        public static final double MAX_VELOCITY = 100; // temp
 
         public static final class Setpoints {
             public static final double DEFAULT_PWM = 0.7;
@@ -129,7 +129,7 @@ public final class Constants {
 
         public static final int SPARK_LOW_MAX_CURRENT = 80;
         public static final int SPARK_HIGH_MAX_CURRENT = 80;
-        //replace ports with real values
+        // replace ports with real values
         public static final int SPARK_LOW_PORT = 22;
         public static final int SPARK_HIGH_PORT = 23;
 
@@ -141,8 +141,8 @@ public final class Constants {
 
         public static final double ROLLER_RADIUS = 1.3 / 2;
 
-        public static final double HIGH_GEAR_RATIO = 18.0/24;
-        public static final double LOW_GEAR_RATIO = 12.0/30;
+        public static final double HIGH_GEAR_RATIO = 18.0 / 24;
+        public static final double LOW_GEAR_RATIO = 12.0 / 30;
 
         public static final double HIGH_MAGAZINE_POSITION_THRESHOLD = 0.5;
 
@@ -158,13 +158,12 @@ public final class Constants {
 
             public static final double LOW_MAGAZINE_INTAKE_PWM = -0.4;
             public static final double OUTTAKE_PWM = 0.5;
-            public static final double NORMAL_BALL_INCREMENT_WAIT = 0.5; //seconds
+            public static final double NORMAL_BALL_INCREMENT_WAIT = 0.5; // seconds
             public static final double LOW_MAGAZINE_FEED_PWM = -0.5;
             public static final double LOW_INTAKE_VELOCITY = -40;
 
             public static final double HIGH_MAGAZINE_FEED_VELOCITY = -40;
         }
-
 
         public static final String TAB_NAME = "Magazine";
         public static final String HIGH_MAGAZINE_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL = "highMagazineVelocityController";
@@ -175,8 +174,8 @@ public final class Constants {
 
     public static final class Feeder {
         public static final int SPARK_PORT = 33;
-        public static final int MAX_CURRENT = 80; //keep this
-        public static final int SPARK_FEEDER_MAX_STALL_CURRENT = 60; //keep this
+        public static final int MAX_CURRENT = 80; // keep this
+        public static final int SPARK_FEEDER_MAX_STALL_CURRENT = 60; // keep this
 
         public static final double GEAR_RATIO = 1.0 / 3;
 
@@ -200,17 +199,17 @@ public final class Constants {
         public static final int SPARK_PORT = 32;
         public static final double SPARK_HOOD_MAX_CURRENT = 0;
 
-        public static final int ENCODER_CPR = 1000 * 4; //4x encoding
+        public static final int ENCODER_CPR = 1000 * 4; // 4x encoding
         public static final double DISTANCE_PER_REVOLUTION = 360;
 
-        public static final double LEAD_SCREW_GEAR_RATIO = 1.0/5;
+        public static final double LEAD_SCREW_GEAR_RATIO = 1.0 / 5;
 
         // these are relative to the vertical axis
         public static final double BOTTOM_POSITION_DEG = 10;
         public static final double TOP_POSITION_DEG = 42;
 
-        //both in radians relative to horizontal
-        //check if these should be in degrees or radians
+        // both in radians relative to horizontal
+        // check if these should be in degrees or radians
         public static final double MAX_THETA = Math.toRadians(TOP_POSITION_DEG);
         public static final double MIN_THETA = Math.toRadians(BOTTOM_POSITION_DEG);
 
@@ -222,7 +221,7 @@ public final class Constants {
 
         public static final double BUFFER_ZONE_SIZE = 5;
 
-        public static final double POSITION_THRESHOLD = 1; //degrees
+        public static final double POSITION_THRESHOLD = 1; // degrees
 
         public static final class Setpoints {
             public static final double AUTO_HOOD_MANUAL_ADJUST = 0;
@@ -248,9 +247,9 @@ public final class Constants {
 
         public static final double RPM_ADJUST = 200;
 
-        public static final double GEAR_RATIO = 2.0/1;
+        public static final double GEAR_RATIO = 2.0 / 1;
 
-        public static final double VELOCITY_THRESHOLD = 100; //rpm
+        public static final double VELOCITY_THRESHOLD = 100; // rpm
 
         public static final String TAB_NAME = "Shooter";
 
@@ -282,10 +281,10 @@ public final class Constants {
         public static final double MAX_VELOCITY = 80; // degrees / second
 
         /**
-         * In manual mode the max pwm will linearly clamp starting at the buffer zone size before the min or max positions.
+         * In manual mode the max pwm will linearly clamp starting at the buffer zone
+         * size before the min or max positions.
          */
         public static final double BUFFER_ZONE_SIZE = 50; // degrees
-
 
         public static final double TURRET_POSITION_TOLERANCE = 1; // degrees
 
@@ -306,7 +305,7 @@ public final class Constants {
 
     public static final class Autonomous {
         public static final double INITIATION_LINE_X = 3.048;
-        public static final double POWER_PORT_X_POS = 0.0254*94.66;
+        public static final double POWER_PORT_X_POS = 0.0254 * 94.66;
         public static final double RIGHT_TRENCH_END_Y = -0.71;
 
         public static final double PORT_ENTRANCE_Y_VELOCITY = 0;
@@ -315,23 +314,21 @@ public final class Constants {
 
         public static final double SHOOTING_WARMUP_DELAY = 1;
 
-
         public static final DifferentialDriveVoltageConstraint AUTO_VOLTAGE_CONSTRAINT = new DifferentialDriveVoltageConstraint(
-                new SimpleMotorFeedforward(ApolloTerms.KS_VOLTS,
-                        ApolloTerms.KV_VOLT_SECONDS_PER_METER,
-                        ApolloTerms.KA_VOLT_SECONDS_SQUARED_PER_METER), ApolloTerms.K_DRIVE_KINEMATICS, 10);
+                new SimpleMotorFeedforward(ApolloTerms.KS_VOLTS, ApolloTerms.KV_VOLT_SECONDS_PER_METER,
+                        ApolloTerms.KA_VOLT_SECONDS_SQUARED_PER_METER),
+                ApolloTerms.K_DRIVE_KINEMATICS, 10);
 
-
-        //create config for trajectory
+        // create config for trajectory
 
         public static final TrajectoryConfig TRAJECTORY_CONFIG = new TrajectoryConfig(4, 2)
-                //kinematics to ensure max speed is obeyed + applying voltage constraint
+                // kinematics to ensure max speed is obeyed + applying voltage constraint
                 .setKinematics(ApolloTerms.K_DRIVE_KINEMATICS).addConstraint(AUTO_VOLTAGE_CONSTRAINT);
 
         public static final TrajectoryConfig COMPLEX_TRAJECTORY_CONFIG = new TrajectoryConfig(1, 2)
-                //kinematics to ensure max speed is obeyed + applying voltage constraint
-                .setKinematics(ApolloTerms.K_DRIVE_KINEMATICS).addConstraint(AUTO_VOLTAGE_CONSTRAINT); //change the fucking names
-
+                // kinematics to ensure max speed is obeyed + applying voltage constraint
+                .setKinematics(ApolloTerms.K_DRIVE_KINEMATICS).addConstraint(AUTO_VOLTAGE_CONSTRAINT); // change the
+                                                                                                       // fucking names
 
     }
 
@@ -342,11 +339,13 @@ public final class Constants {
         public static final double KP_DRIVE_VEL = 0.001;
         public static final double K_TRACK_WIDTH_METERS = 0.62;
 
-        public static final DifferentialDriveKinematics K_DRIVE_KINEMATICS = new DifferentialDriveKinematics(K_TRACK_WIDTH_METERS);
+        public static final DifferentialDriveKinematics K_DRIVE_KINEMATICS = new DifferentialDriveKinematics(
+                K_TRACK_WIDTH_METERS);
         public static final double K_MAX_SPEED_METERS_PER_SECOND = 3;
         public static final double K_MAX_ACCELERATION_METERS_PER_SECOND_SQUARED = 3;
 
-        //public static final double K_ENCODER_DISTANCE_PER_PULSE= (3 * 2 * Math.PI/250);
+        // public static final double K_ENCODER_DISTANCE_PER_PULSE= (3 * 2 *
+        // Math.PI/250);
 
         public static final double K_ENCODER_DISTANCE_PER_ROTATION = 2 * Math.PI * 0.0762;
 
@@ -355,6 +354,10 @@ public final class Constants {
 
         public static final double K_PATH_Y = 0.9;
 
+    }
+
+    public static final class ColorWheel {
+        public static final int MOTOR_PORT = 0;
     }
 
 }
