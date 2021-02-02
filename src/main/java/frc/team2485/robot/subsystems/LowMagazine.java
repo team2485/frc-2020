@@ -19,7 +19,7 @@ public class LowMagazine extends SubsystemBase implements VelocityPIDSubsystem {
     private PIDSparkMax m_spark;
 
     /**
-     * Low magazine subystem, controlling the intake rollers and low belt.
+     * Low magazine subystem, controlling the low belt.
      */
     public LowMagazine() {
         m_spark = new PIDSparkMax(Constants.Magazine.SPARK_LOW_PORT, ControlType.kVelocity);

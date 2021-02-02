@@ -136,6 +136,11 @@ public final class Constants {
 
     }
 
+    public static final class Intake {
+        public static final int SPARK_LEFT_PORT = 0;
+        public static final int SPARK_RIGHT_PORT = 0;
+    }
+
     public static final class Magazine {
 
         public static final int SPARK_LOW_MAX_CURRENT = 80;
