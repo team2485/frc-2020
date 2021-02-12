@@ -379,4 +379,15 @@ public final class Constants {
 
     }
 
+    public static final class Intake {
+        
+        public static final int TALONX_PORT = 20;
+        public static final int TALONZ_PORT = 21;
+    
+        public static final double MAX_VELOCITY = 6000;
+        public static final double MIN_VELOCITY = -6000;
+    
+        public static final String TAB_NAME = "Intake Rollers";
+      }
+
 }
