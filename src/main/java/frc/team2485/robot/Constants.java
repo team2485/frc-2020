@@ -82,7 +82,14 @@ public final class Constants {
     public static final class Setpoints {
         public static final Setpoint INITIATION_LINE = new Setpoint(-4750, 23.5);
         public static final Setpoint CLOSE_TRENCH = new Setpoint(-4750, 10);
-        public static final Setpoint FAR = new Setpoint(-5500, 10);
+        public static final Setpoint FAR = new Setpoint(-5000, 8);
+
+        public static final Setpoint GREEN_ZONE = new Setpoint(-5000, 27);
+        public static final Setpoint YELLOW_ZONE = new Setpoint(-5000, 16.9);
+        public static final Setpoint BLUE_ZONE = new Setpoint(-5000, 11.25);
+        public static final Setpoint RED_ZONE = new Setpoint(-5000, 10);
+
+        public static final double FARRPM = -5000;
     }
 
     public static final class Drivetrain {
@@ -270,8 +277,8 @@ public final class Constants {
         public static final String LEFT_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL = "flywheelsLeftVelocityController";
         public static final String RIGHT_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL = "flywheelsRightVelocityController";
 
-        public static final double FLYWHEELS_MAX_VELOCITY = 6000;
-        public static final double FLYWHEELS_MIN_VELOCITY = -6000;
+        public static final double FLYWHEELS_MAX_VELOCITY = 5000;
+        public static final double FLYWHEELS_MIN_VELOCITY = -5000;
 
     }
 

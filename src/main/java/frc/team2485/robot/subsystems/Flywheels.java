@@ -8,10 +8,13 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpiutil.math.MathUtil;
 import frc.team2485.WarlordsLib.Tunable;
 import frc.team2485.WarlordsLib.motorcontrol.PIDSparkMax;
+import frc.team2485.WarlordsLib.robotConfigs.Configurable;
+import frc.team2485.WarlordsLib.robotConfigs.LoadableConfigs;
 import frc.team2485.WarlordsLib.robotConfigs.RobotConfigs;
+import frc.team2485.WarlordsLib.robotConfigs.SavableConfigs;
 import frc.team2485.robot.Constants;
 
-public class Flywheels extends SubsystemBase implements Tunable {
+public class Flywheels extends SubsystemBase implements Tunable, Configurable {
 
     private PIDSparkMax m_sparkLeft;
     private PIDSparkMax m_sparkRight;
@@ -50,6 +53,7 @@ public class Flywheels extends SubsystemBase implements Tunable {
         tab.addNumber("Right Flywheel Velocity", this::getRightEncoderVelocity);
         tab.addNumber("Left Flywheel Current", m_sparkLeft::getOutputCurrent);
         tab.addNumber("Right Flywheel Current", m_sparkRight::getOutputCurrent);
+        //tab.addNumber("Right Flywheel Error", this.getRightEncoderVelocity() - Constants.Setpoints.FARRPM);
     }
 
     private void setLeftPWM(double pwm) {
@@ -113,5 +117,20 @@ public class Flywheels extends SubsystemBase implements Tunable {
     public void tunePeriodic(int layer) {
         m_sparkLeft.runPID();
         m_sparkRight.runPID();
+    }
+
+    @Override
+    public void addChild(Object child) {
+
+    }
+
+    @Override
+    public void loadConfigs(LoadableConfigs configs) {
+
+    }
+
+    @Override
+    public void saveConfigs(SavableConfigs configs) {
+
     }
 }

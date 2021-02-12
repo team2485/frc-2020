@@ -239,6 +239,29 @@ public class RobotContainer {
 //                )
 //        );
 
+
+//        m_suraj.getJoystickButton(XboxController.Button.kBumperRight).whenPressed(
+//                new IncrementHighMagazine(m_highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS)
+//        );
+
+        m_suraj.getJoystickButton(XboxController.Button.kBumperRight).whenPressed(
+                new InstantCommand(() -> {
+
+
+
+                    m_highMagazine.setPWM(-0.4);
+                    m_feeder.setPWM(-0.9);
+
+                })
+        );
+
+//        m_suraj.getJoystickButton(XboxController.Button.kY).whenPressed(
+//                new InstantCommand(() -> {
+//
+//                    m_hood.setEncoderPosition(34.9);
+//                })
+//        );
+
         m_suraj.getJoystickButton(XboxController.Button.kX).whileHeld(
                 new TurretSetAngle(m_turret, () -> {
                     return m_turret.getEncoderPosition()
@@ -270,7 +293,7 @@ public class RobotContainer {
                                 new InstantCommand(
                                         () -> {
                                             m_lowMagazine.setPWM(-0.5);
-                                            m_feeder.setPWM(-0.9);
+                                            m_feeder.setPWM(-0.9); //change
                                         }, m_lowMagazine, m_feeder
                                 ),
 //                                new WaitCommand(Constants.Magazine.NORMAL_BALL_INCREMENT_TIMEOUT),
@@ -341,13 +364,15 @@ public class RobotContainer {
 
         SmartDashboard.putNumber("Velocity RPM", -6000);
 
+
+
         DoubleSupplier flywheelsSetpoint = () -> {
             if (m_suraj.getYButton()) {
                 return Constants.Setpoints.INITIATION_LINE.RPM; // close
             } else if (m_suraj.getBButton()) {
                 return Constants.Setpoints.CLOSE_TRENCH.RPM;
             } else if (m_suraj.getAButton()) {
-                return Constants.Setpoints.FAR.RPM; // far
+                return  Constants.Setpoints.FAR.RPM; // far
 
             } else {
                 return Math.copySign(SmartDashboard.getNumber("Velocity RPM", -6000), -1);
@@ -367,23 +392,44 @@ public class RobotContainer {
         );
 
         // far
-        m_suraj.getJoystickButton(XboxController.Button.kA).whileHeld(
-                new ParallelCommandGroup(
-                        new SetHood(m_hood, () -> Constants.Setpoints.FAR.ANGLE, false)
-                )
-        );
+//        m_suraj.getJoystickButton(XboxController.Button.kA).whileHeld(
+//                new ParallelCommandGroup(
+//                        new SetHood(m_hood, () -> Constants.Setpoints.FAR.ANGLE, false)
+//                )
+//        );
 
         // close trench
-        m_suraj.getJoystickButton(XboxController.Button.kB).whileHeld(
+//        m_suraj.getJoystickButton(XboxController.Button.kB).whileHeld(
+//                new ParallelCommandGroup(
+//                        new SetHood(m_hood, () -> Constants.Setpoints.CLOSE_TRENCH.ANGLE, false)
+//                )
+//        );
+
+        //zone 1 (green) shot - close shot
+        m_suraj.getJoystickButton(XboxController.Button.kY).whileHeld(
                 new ParallelCommandGroup(
-                        new SetHood(m_hood, () -> Constants.Setpoints.CLOSE_TRENCH.ANGLE, false)
+                        new SetHood(m_hood, () -> Constants.Setpoints.GREEN_ZONE.ANGLE, false)
                 )
         );
 
-        // initiation line
-        m_suraj.getJoystickButton(XboxController.Button.kY).whileHeld(
+        //zone 2 (yellow) shot
+        m_suraj.getJoystickButton(XboxController.Button.kB).whileHeld(
                 new ParallelCommandGroup(
-                        new SetHood(m_hood, () -> Constants.Setpoints.INITIATION_LINE.ANGLE, false)
+                        new SetHood(m_hood, () -> Constants.Setpoints.YELLOW_ZONE.ANGLE, false)
+                )
+        );
+
+        //zone 3 (blue) shot
+        m_suraj.getJoystickButton(XboxController.Button.kA).whileHeld(
+                new ParallelCommandGroup(
+                        new SetHood(m_hood, () -> Constants.Setpoints.BLUE_ZONE.ANGLE, false)
+                )
+        );
+
+        //zone 4 (red) shot
+        m_suraj.getJoystickButton(XboxController.Button.kBumperLeft).whileHeld(
+                new ParallelCommandGroup(
+                        new SetHood(m_hood, () -> Constants.Setpoints.RED_ZONE.ANGLE, false)
                 )
         );
 

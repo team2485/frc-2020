@@ -75,6 +75,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testInit() {
+
+    RobotConfigs.getInstance().loadConfigsFromFile(Constants.CONFIGS_FILE);
     CommandScheduler.getInstance().cancelAll();
     m_robotContainer.testInit();
     m_robotContainer.gameInit();

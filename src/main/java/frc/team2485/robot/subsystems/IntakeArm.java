@@ -61,6 +61,9 @@ public class IntakeArm extends SubsystemBase implements PositionPIDSubsystem, Ve
         ShuffleboardTab tab = Shuffleboard.getTab("Intake Arm");
         tab.add(this);
         tab.add(m_talon);
+        tab.addBoolean("Top Limit Switch", this::getTopLimitSwitch);
+        tab.addBoolean("Bottom Limit Switch", this::getBottomLimitSwitch);
+
 
 
         tab.addNumber("Output Current", m_talon::getStatorCurrent);
