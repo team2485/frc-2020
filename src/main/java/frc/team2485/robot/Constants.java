@@ -190,6 +190,8 @@ public final class Constants {
 
         public static final double LOW_INTAKE_VELOCITY = -70;
 
+        
+
         // public static final int MAX_DEBOUNCE_TIME = 3;
     }
 
@@ -404,6 +406,9 @@ public final class Constants {
 
         public static final double X_VELOCITY = 1000;
         public static final double Z_VELOCITY = 500;
+
+        public static final double LOWERING_PWM = 0.05;
+        public static final double LOWERING_TIME = 5; //seconds
       }
 
 }

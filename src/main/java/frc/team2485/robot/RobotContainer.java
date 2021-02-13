@@ -45,6 +45,7 @@ public class RobotContainer {
 
     private Command m_autoCommand;
 
+    private boolean intakeDown;
 
     private SendableChooser<Tunable> m_tuneChooser;
 
@@ -78,6 +79,15 @@ public class RobotContainer {
         m_lowMagazine.resetPIDs();
       //  m_intakeArm.resetPIDs();
         m_feeder.resetPIDs();
+
+        if(!intakeDown) {
+            new SequentialCommandGroup(
+                new InstantCommand(()-> m_lowMagazine.setPWM(Constants.Intake.LOWERING_PWM)),
+                new WaitCommand(Constants.Intake.LOWERING_TIME),
+                new InstantCommand(()-> m_lowMagazine.setPWM(0))
+            );
+            intakeDown = true; 
+        }
     }
 
     private void configureCommands() {
