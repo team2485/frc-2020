@@ -63,6 +63,7 @@ public class RobotContainer {
         m_turret = new Turret();
         //m_intakeArm = new IntakeArm(m_drivetrain.getIntakeArmEncoder());
         m_climber = new Climber();
+        m_intake = new Intake();
 
         m_tuneChooser = new SendableChooser<Tunable>();
 
@@ -192,7 +193,7 @@ public class RobotContainer {
                 new RunCommand(() -> {
 //                            m_lowMagazine.setPWM(Constants.Magazine.LOW_BELT_INTAKE_PWM);
                     m_lowMagazine.runVelocityPID(Constants.Magazine.LOW_INTAKE_VELOCITY);
-                    
+                    m_intake.runVelocityPID(Constants.Intake.X_VELOCITY, Constants.Intake.Z_VELOCITY);
                 })
         ).whenReleased(
                 new InstantCommand(

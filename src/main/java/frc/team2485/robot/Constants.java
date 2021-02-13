@@ -401,6 +401,9 @@ public final class Constants {
 
         public static final String X_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL = "intakeXVelocityController"; 
         public static final String Z_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL = "intakeZVelocityController"; 
+
+        public static final double X_VELOCITY = 1000;
+        public static final double Z_VELOCITY = 500;
       }
 
 }
