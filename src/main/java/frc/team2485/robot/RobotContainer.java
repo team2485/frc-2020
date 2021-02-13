@@ -75,14 +75,14 @@ public class RobotContainer {
         m_flywheels.resetPIDs();
         m_highMagazine.resetPIDs();
         m_lowMagazine.resetPIDs();
-      //  m_intakeArm.resetPIDs();
+        m_intakeArm.resetPIDs();
         m_feeder.resetPIDs();
     }
 
     private void configureCommands() {
 
         this.configureDrivetrainCommands();
-       // this.configureIntakeArmCommands();
+        this.configureIntakeArmCommands();
         this.configureClimberCommands();
         this.configureHoodCommands();
         this.configureTurretCommands();
