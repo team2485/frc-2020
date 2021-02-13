@@ -40,6 +40,7 @@ public class RobotContainer {
     private Hood m_hood;
     private Climber m_climber;
     private Turret m_turret;
+    private Intake m_intake;
     //private IntakeArm m_intakeArm;
 
     private Command m_autoCommand;
@@ -99,9 +100,9 @@ public class RobotContainer {
             m_turret.getLimelight().toggleLed();
         }));
 
+        //reset ball count
         m_jack.getJoystickButton(XboxController.Button.kStart).whenPressed(new InstantCommand(() -> {
-            // m_ballCounter.setNumBallsHigh(0);
-            // m_ballCounter.setNumBallsLow(0);
+            m_flywheels.zeroCount();
         }));
 
         this.configureTuning();
@@ -170,7 +171,7 @@ public class RobotContainer {
                 }, m_highMagazine)
         );
 
-        // Run low magazine
+        // Run low magazine and intake
         m_jack.getJoystickButton(XboxController.Button.kA).whileHeld(
 //                new ConditionalCommand(
 //                        new InstantCommand(() -> {
@@ -191,7 +192,7 @@ public class RobotContainer {
                 new RunCommand(() -> {
 //                            m_lowMagazine.setPWM(Constants.Magazine.LOW_BELT_INTAKE_PWM);
                     m_lowMagazine.runVelocityPID(Constants.Magazine.LOW_INTAKE_VELOCITY);
-
+                    
                 })
         ).whenReleased(
                 new InstantCommand(
@@ -246,9 +247,6 @@ public class RobotContainer {
 
         m_suraj.getJoystickButton(XboxController.Button.kBumperRight).whenPressed(
                 new InstantCommand(() -> {
-
-
-
                     m_highMagazine.setPWM(-0.4);
                     m_feeder.setPWM(-0.9);
 
@@ -286,8 +284,12 @@ public class RobotContainer {
 
         // Increment/feed ball into shooter
         m_suraj.getJoystickButton(XboxController.Button.kBumperRight).whileHeld(
-
-                new ConditionalCommand(
+                new SequentialCommandGroup(
+                    //This is where the indexing is applied 
+                    //Supposed to move the magaine up by enough to put every ball at the top
+                    //May need fiddling to get the numbers right (new constant)
+                    new IncrementHighMagazine(m_highMagazine, (Constants.Magazine.HIGH_MAGAZINE_BALL_CAPACITY - m_flywheels.getBalls()) * Constants.Magazine.HIGH_INDEX_BY_ONE_POS),
+                    new ConditionalCommand(
                         new SequentialCommandGroup(
                                 new WaitUntilCommand(() -> m_flywheels.atVelocitySetpoint()),
                                 new InstantCommand(
@@ -301,34 +303,8 @@ public class RobotContainer {
                         ),
                         new InstantCommand(),
                         () -> m_flywheels.atVelocitySetpoint()
+                    )
                 )
-//                new SequentialCommandGroup(
-//                        new RunCommand(
-//                                () -> {
-//                                    m_highMagazine.runVelocityPID(-40);
-//                                }
-//                        ).withInterrupt(
-//                                () -> m_ballCounter.exitIRHasBall()
-//                        ).andThen(
-//                                new InstantCommand(
-//                                        () -> {
-//                                            m_highMagazine.setPWM(0);
-//                                        }
-//                                )
-//                        ),
-//                        new ConditionalCommand(
-//                                new SequentialCommandGroup(
-//                                        new InstantCommand(() -> {
-//                                            m_lowMagazine.setPWM(-0.5);
-//                                            m_feeder.setPWM(-0.8);
-//                                        }).alongWith(
-//                                                new IncrementHighMagazine(m_highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS),
-//                                                new WaitCommand(Constants.Magazine.NORMAL_BALL_INCREMENT_TIMEOUT),
-//                                        )),
-//                                new InstantCommand(),
-//                                () -> m_flywheels.getLeftEncoderVelocity() < -1000 && m_flywheels.getRightEncoderVelocity() < -1000
-//                        )
-//                ),
         ).whenReleased(
                 new InstantCommand(() -> {
                     m_lowMagazine.setPWM(0);
