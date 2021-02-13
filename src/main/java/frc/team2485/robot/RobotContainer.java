@@ -40,8 +40,8 @@ public class RobotContainer {
     private Hood m_hood;
     private Climber m_climber;
     private Turret m_turret;
-    private Intake m_intake;
-    //private IntakeArm m_intakeArm;
+    //private Intake m_intake;
+    private IntakeArm m_intakeArm;
 
     private Command m_autoCommand;
 
@@ -61,7 +61,7 @@ public class RobotContainer {
         m_flywheels = new Flywheels();
         m_hood = new Hood(m_feeder.getHoodEncoder());
         m_turret = new Turret();
-        //m_intakeArm = new IntakeArm(m_drivetrain.getIntakeArmEncoder());
+        m_intakeArm = new IntakeArm(m_drivetrain.getIntakeArmEncoder());
         m_climber = new Climber();
 
         m_tuneChooser = new SendableChooser<Tunable>();
@@ -247,6 +247,7 @@ public class RobotContainer {
 
         m_suraj.getJoystickButton(XboxController.Button.kBumperRight).whenPressed(
                 new InstantCommand(() -> {
+
                     m_highMagazine.setPWM(-0.4);
                     m_feeder.setPWM(-0.9);
 
