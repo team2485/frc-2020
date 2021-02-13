@@ -6,18 +6,35 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpiutil.math.MathUtil;
+import edu.wpi.first.wpilibj.DigitalInput;
 import frc.team2485.WarlordsLib.Tunable;
 import frc.team2485.WarlordsLib.motorcontrol.PIDSparkMax;
 import frc.team2485.WarlordsLib.robotConfigs.Configurable;
 import frc.team2485.WarlordsLib.robotConfigs.LoadableConfigs;
 import frc.team2485.WarlordsLib.robotConfigs.RobotConfigs;
 import frc.team2485.WarlordsLib.robotConfigs.SavableConfigs;
+import frc.team2485.WarlordsLib.Debounce;
+import frc.team2485.WarlordsLib.ArmAndTrigger;
 import frc.team2485.robot.Constants;
+
+//Flywheels handles IR ball sensing
 
 public class Flywheels extends SubsystemBase implements Tunable, Configurable {
 
     private PIDSparkMax m_sparkLeft;
     private PIDSparkMax m_sparkRight;
+
+    /*
+    * INDEXING HANDLED THROUGH FLYWHEELS
+    * Entrance IR handles input, increments ball count 
+    * Current dips while running flywheels at speed indicate ball output
+    */ 
+    private int m_numBalls; 
+    private DigitalInput m_entranceIR, m_transferIR;
+    private Debounce m_entranceDebounce, m_transferDebounce;
+    private boolean m_entranceVal, m_transferVal, m_entranceLastVal;
+    private boolean m_isShooting;
+    private ArmAndTrigger m_exitAT;
 
     public Flywheels() {
         this.m_sparkLeft = new PIDSparkMax(Constants.Flywheels.SPARK_FLYWHEEL_LEFT_PORT, ControlType.kVelocity);
@@ -42,17 +59,37 @@ public class Flywheels extends SubsystemBase implements Tunable, Configurable {
         RobotConfigs.getInstance().addConfigurable(Constants.Flywheels.LEFT_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL, m_sparkLeft);
         RobotConfigs.getInstance().addConfigurable(Constants.Flywheels.RIGHT_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL, m_sparkRight);
 
+
+        //BALL HANDLING
+        m_entranceIR = new DigitalInput(Constants.Flywheels.ENTRANCE_IR_PORT);
+        m_transferIR = new DigitalInput(Constants.Flywheels.TRANSFER_IR_PORT);
+        m_entranceDebounce = new Debounce(m_entranceIR.get(), Constants.Flywheels.MAX_DEBOUNCE_TIME);
+        m_transferDebounce = new Debounce(m_transferIR.get(), Constants.Flywheels.MAX_DEBOUNCE_TIME);
+        m_isShooting = false;
+        m_numBalls = 0;
+        m_exitAT = new ArmAndTrigger(Constants.Flywheels.VELOCITY_ARM, Constants.Flywheels.VELOCITY_TRIGGER, 0, false);
+
+
         this.addToShuffleboard();
     }
 
     private void addToShuffleboard() {
-        ShuffleboardTab tab = Shuffleboard.getTab(Constants.Flywheels.TAB_NAME);
-        tab.add("Left Flywheel Vel Ctrl", m_sparkLeft);
-        tab.add("Right Flywheel Vel Ctrl", m_sparkRight);
-        tab.addNumber("Left Flywheel Velocity", this::getLeftEncoderVelocity);
-        tab.addNumber("Right Flywheel Velocity", this::getRightEncoderVelocity);
-        tab.addNumber("Left Flywheel Current", m_sparkLeft::getOutputCurrent);
-        tab.addNumber("Right Flywheel Current", m_sparkRight::getOutputCurrent);
+        ShuffleboardTab flywheels = Shuffleboard.getTab(Constants.Flywheels.FLYWHEELS_TAB_NAME);
+        flywheels.add("Left Flywheel Vel Ctrl", m_sparkLeft);
+        flywheels.add("Right Flywheel Vel Ctrl", m_sparkRight);
+        flywheels.addNumber("Left Flywheel Velocity", this::getLeftEncoderVelocity);
+        flywheels.addNumber("Right Flywheel Velocity", this::getRightEncoderVelocity);
+        flywheels.addNumber("Left Flywheel Current", m_sparkLeft::getOutputCurrent);
+        flywheels.addNumber("Right Flywheel Current", m_sparkRight::getOutputCurrent);
+        
+        ShuffleboardTab indexing = Shuffleboard.getTab(Constants.Flywheels.INDEXING_TAB_NAME);
+        indexing.addNumber("Ball Count", this::getBalls);
+        indexing.addBoolean("Entrance IR Has Ball?", this::entranceIRHasBall);
+        indexing.addBoolean("Transfer IR Has Ball?", this::transferIRHasBall);
+        indexing.addBoolean("Entrance IR Value", m_entranceIR::get);
+        indexing.addBoolean("Transfer IR Value", m_transferIR::get);
+
+        indexing.add("Arm and Trigger (Flywheel Velocity)", m_exitAT);
         //tab.addNumber("Right Flywheel Error", this.getRightEncoderVelocity() - Constants.Setpoints.FARRPM);
     }
 
@@ -109,19 +146,49 @@ public class Flywheels extends SubsystemBase implements Tunable, Configurable {
         return m_sparkRight.getEncoder().getVelocity();
     }
 
+    /**
+     * True if ball is in IR
+     */
+    public boolean entranceIRHasBall() {
+        return m_entranceVal;
+    }
+
+    /**
+     * True if ball is in IR
+     */
+    public boolean transferIRHasBall() {
+        return m_transferVal;
+    }
+
+    public int getBalls() {
+        return m_numBalls;
+    }
+    public void zeroCount() {
+        m_numBalls = 0;
+    }
+
     @Override
     public void periodic() {
+        m_entranceVal = !m_entranceDebounce.getNextValue(m_entranceIR.get());
+        m_transferVal = !m_transferDebounce.getNextValue(m_transferIR.get());
+
+        if (!m_entranceVal && m_entranceLastVal) { //if ball passes entrance IR 
+            m_numBalls++;
+        }
+
+        m_entranceLastVal = m_entranceVal;
+
+        
+        if(m_exitAT.getNextValue(((this.getLeftEncoderVelocity() + this.getRightEncoderVelocity()) / 2)
+         / ((m_sparkLeft.getSetpoint() + m_sparkRight.getSetpoint()) / 2))) { // if arm&trigger detects a dip
+            m_numBalls--;
+        }
     }
 
     @Override
     public void tunePeriodic(int layer) {
         m_sparkLeft.runPID();
         m_sparkRight.runPID();
-    }
-
-    @Override
-    public void addChild(Object child) {
-
     }
 
     @Override

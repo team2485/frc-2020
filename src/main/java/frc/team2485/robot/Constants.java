@@ -124,24 +124,24 @@ public final class Constants {
         public static final String RESET_GYRO_LABEL = "Zero Gyro";
     }
 
-    public static final class IntakeArm {
+    // public static final class IntakeArm {
 
-        public static final int MAX_CURRENT = 2; //amps
+    //     public static final int MAX_CURRENT = 2; //amps
 
-        public static final int TALON_PORT = 20;
+    //     public static final int TALON_PORT = 20;
 
-        public static final int ENCODER_DIO_PORT = 0;
+    //     public static final int ENCODER_DIO_PORT = 0;
 
-        public static final double ENCODER_PULSES_PER_REVOLUTION = 174.9;
+    //     public static final double ENCODER_PULSES_PER_REVOLUTION = 174.9;
 
-        public static final double TOP_POSITION_DEGREES = 0;
+    //     public static final double TOP_POSITION_DEGREES = 0;
 
-        public static final double BOTTOM_POSITION_DEGREES = 90; //temp
+    //     public static final double BOTTOM_POSITION_DEGREES = 90; //temp
 
-        public static final double SPEED = 0.7;
+    //     public static final double SPEED = 0.7;
 
 
-    }
+    // }
 
     public static final class Magazine {
 
@@ -151,9 +151,9 @@ public final class Constants {
         public static final int SPARK_LOW_PORT = 22;
         public static final int SPARK_HIGH_PORT = 23;
 
-        public static final int ENTRANCE_IR_PORT = 2;
-        public static final int TRANSFER_IR_PORT = 3;
-        public static final int EXIT_IR_PORT = 4;
+        // public static final int ENTRANCE_IR_PORT = 2;
+        //public static final int TRANSFER_IR_PORT = 3;
+        //public static final int EXIT_IR_PORT = 4;
 
         public static final int HIGH_MAGAZINE_BALL_CAPACITY = 4;
 
@@ -190,7 +190,7 @@ public final class Constants {
 
         public static final double LOW_INTAKE_VELOCITY = -70;
 
-        public static final int MAX_DEBOUNCE_TIME = 3;
+        // public static final int MAX_DEBOUNCE_TIME = 3;
     }
 
     public static final class Feeder {
@@ -272,13 +272,22 @@ public final class Constants {
 
         public static final double RPM_THRESHOLD = 100;
 
-        public static final String TAB_NAME = "Shooter";
+        public static final String FLYWHEELS_TAB_NAME = "Shooter";
+        public static final String INDEXING_TAB_NAME = "Indexing";
 
         public static final String LEFT_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL = "flywheelsLeftVelocityController";
         public static final String RIGHT_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL = "flywheelsRightVelocityController";
 
         public static final double FLYWHEELS_MAX_VELOCITY = 5000;
         public static final double FLYWHEELS_MIN_VELOCITY = -5000;
+
+        public static final double VELOCITY_ARM = 0.98; //temp
+        public static final double VELOCITY_TRIGGER = 0.95; //temp
+
+        //IR
+        public static final int ENTRANCE_IR_PORT = 2;
+        public static final int TRANSFER_IR_PORT = 3;
+        public static final int MAX_DEBOUNCE_TIME = 3;
 
     }
 
@@ -381,13 +390,17 @@ public final class Constants {
 
     public static final class Intake {
         
-        public static final int TALONX_PORT = 20;
-        public static final int TALONZ_PORT = 21;
+        public static final int TALONX_PORT = 20; //temp
+        public static final int TALONZ_PORT = 21; //temp
     
-        public static final double MAX_VELOCITY = 6000;
-        public static final double MIN_VELOCITY = -6000;
+        public static final double MAX_VELOCITY = 6000; //temp
+        public static final double MIN_VELOCITY = -6000; //temp
+        public static final double TOLERANCE = 200; //temp
     
         public static final String TAB_NAME = "Intake Rollers";
+
+        public static final String X_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL = "intakeXVelocityController"; 
+        public static final String Z_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL = "intakeZVelocityController"; 
       }
 
 }

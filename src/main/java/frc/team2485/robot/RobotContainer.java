@@ -34,13 +34,13 @@ public class RobotContainer {
     private Drivetrain m_drivetrain;
     private LowMagazine m_lowMagazine;
     private HighMagazine m_highMagazine;
-    private BallCounter m_ballCounter;
+    //private BallCounter m_ballCounter;
     private Feeder m_feeder;
     private Flywheels m_flywheels;
     private Hood m_hood;
     private Climber m_climber;
     private Turret m_turret;
-    private IntakeArm m_intakeArm;
+    //private IntakeArm m_intakeArm;
 
     private Command m_autoCommand;
 
@@ -55,12 +55,12 @@ public class RobotContainer {
         m_drivetrain = new Drivetrain();
         m_lowMagazine = new LowMagazine();
         m_highMagazine = new HighMagazine();
-        m_ballCounter = new BallCounter(m_lowMagazine::getEncoderVelocity, m_highMagazine::getEncoderVelocity);
+        //m_ballCounter = new BallCounter(m_lowMagazine::getEncoderVelocity, m_highMagazine::getEncoderVelocity);
         m_feeder = new Feeder();
         m_flywheels = new Flywheels();
         m_hood = new Hood(m_feeder.getHoodEncoder());
         m_turret = new Turret();
-        m_intakeArm = new IntakeArm(m_drivetrain.getIntakeArmEncoder());
+        //m_intakeArm = new IntakeArm(m_drivetrain.getIntakeArmEncoder());
         m_climber = new Climber();
 
         m_tuneChooser = new SendableChooser<Tunable>();
@@ -74,14 +74,14 @@ public class RobotContainer {
         m_flywheels.resetPIDs();
         m_highMagazine.resetPIDs();
         m_lowMagazine.resetPIDs();
-        m_intakeArm.resetPIDs();
+      //  m_intakeArm.resetPIDs();
         m_feeder.resetPIDs();
     }
 
     private void configureCommands() {
 
         this.configureDrivetrainCommands();
-        this.configureIntakeArmCommands();
+       // this.configureIntakeArmCommands();
         this.configureClimberCommands();
         this.configureHoodCommands();
         this.configureTurretCommands();
@@ -100,8 +100,8 @@ public class RobotContainer {
         }));
 
         m_jack.getJoystickButton(XboxController.Button.kStart).whenPressed(new InstantCommand(() -> {
-            m_ballCounter.setNumBallsHigh(0);
-            m_ballCounter.setNumBallsLow(0);
+            // m_ballCounter.setNumBallsHigh(0);
+            // m_ballCounter.setNumBallsLow(0);
         }));
 
         this.configureTuning();
@@ -123,30 +123,30 @@ public class RobotContainer {
         );
     }
 
-    public void configureIntakeArmCommands() {
+//   public void configureIntakeArmCommands() {
 
-//        m_intakeArm.setDefaultCommand(
-//                new RunCommand(() -> {
-//                    if (!m_intakeArm.getTopLimitSwitch()) {
-//                        m_intakeArm.setPWM(Constants.IntakeArm.SPEED);
-//                    } else {
-//                        m_intakeArm.setPWM(0);
-//                    }
-//                }, m_intakeArm)
-////                new ConditionalCommand(
-////                                new IntakeArmMove(m_intakeArm, IntakeArmMove.IntakeArmPosition.TOP, Constants.IntakeArm.SPEED),
-////                                new InstantCommand(() -> m_intakeArm.setPWM(0), m_intakeArm),
-////                                () -> !m_intakeArm.getTopLimitSwitch()
-//////                        )
-//        );
+// //        m_intakeArm.setDefaultCommand(
+// //                new RunCommand(() -> {
+// //                    if (!m_intakeArm.getTopLimitSwitch()) {
+// //                        m_intakeArm.setPWM(Constants.IntakeArm.SPEED);
+// //                    } else {
+// //                        m_intakeArm.setPWM(0);
+// //                    }
+// //                }, m_intakeArm)
+// ////                new ConditionalCommand(
+// ////                                new IntakeArmMove(m_intakeArm, IntakeArmMove.IntakeArmPosition.TOP, Constants.IntakeArm.SPEED),
+// ////                                new InstantCommand(() -> m_intakeArm.setPWM(0), m_intakeArm),
+// ////                                () -> !m_intakeArm.getTopLimitSwitch()
+// //////                        )
+// //        );
 
-        m_jack.getJoystickButton(XboxController.Button.kBumperRight)
-                .toggleWhenPressed(new IntakeArmMove(m_intakeArm, IntakeArmMove.IntakeArmPosition.TOP, Constants.IntakeArm.SPEED)
-                );
+//         m_jack.getJoystickButton(XboxController.Button.kBumperRight)
+//                 .toggleWhenPressed(new IntakeArmMove(m_intakeArm, IntakeArmMove.IntakeArmPosition.TOP, Constants.IntakeArm.SPEED)
+//                 );
 
-        m_jack.getJoystickButton(XboxController.Button.kBumperLeft)
-                .toggleWhenPressed(new IntakeArmMove(m_intakeArm, IntakeArmMove.IntakeArmPosition.BOTTOM, Constants.IntakeArm.SPEED));
-    }
+//         m_jack.getJoystickButton(XboxController.Button.kBumperLeft)
+//                 .toggleWhenPressed(new IntakeArmMove(m_intakeArm, IntakeArmMove.IntakeArmPosition.BOTTOM, Constants.IntakeArm.SPEED));
+//     }
 
     public void configureIntakingCommands() {
 
@@ -160,7 +160,7 @@ public class RobotContainer {
                         () -> {
                             return
                                     // !m_ballCounter.entranceIRHasBall() && m_ballCounter.getEntranceLastVal()
-                                    m_ballCounter.transferIRHasBall();
+                                    m_flywheels.transferIRHasBall();
 //                                            (m_ballCounter.getNumBallsHigh() <= Constants.Magazine.HIGH_MAGAZINE_BALL_CAPACITY);
                         }
                 )
@@ -334,9 +334,9 @@ public class RobotContainer {
                     m_lowMagazine.setPWM(0);
                     m_highMagazine.setPWM(0);
                     m_feeder.setPWM(0);
-                    m_ballCounter.setNumBallsLow(0);
-                    m_ballCounter.setNumBallsHigh(0);
-                }, m_lowMagazine, m_highMagazine, m_feeder, m_ballCounter
+                    //m_ballCounter.setNumBallsLow(0);
+                    //m_ballCounter.setNumBallsHigh(0);
+                }, m_lowMagazine, m_highMagazine, m_feeder
                 )
         );
 
