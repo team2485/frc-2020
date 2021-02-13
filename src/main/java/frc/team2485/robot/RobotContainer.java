@@ -79,6 +79,7 @@ public class RobotContainer {
         m_lowMagazine.resetPIDs();
       //  m_intakeArm.resetPIDs();
         m_feeder.resetPIDs();
+        m_intake.resetPIDs();
 
         if(!intakeDown) {
             new SequentialCommandGroup(
@@ -660,6 +661,7 @@ public class RobotContainer {
         m_tuneChooser.addOption("Feeder", m_feeder);
         m_tuneChooser.addOption("Hood", m_hood);
         m_tuneChooser.addOption("Flywheels", m_flywheels);
+        m_tuneChooser.addOption("Intake", m_intake);
 
         SmartDashboard.putData("Tune Chooser", m_tuneChooser);
     }
