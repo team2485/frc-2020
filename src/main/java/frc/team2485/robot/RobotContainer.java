@@ -124,30 +124,30 @@ public class RobotContainer {
         );
     }
 
-//   public void configureIntakeArmCommands() {
+  public void configureIntakeArmCommands() {
 
-// //        m_intakeArm.setDefaultCommand(
-// //                new RunCommand(() -> {
-// //                    if (!m_intakeArm.getTopLimitSwitch()) {
-// //                        m_intakeArm.setPWM(Constants.IntakeArm.SPEED);
-// //                    } else {
-// //                        m_intakeArm.setPWM(0);
-// //                    }
-// //                }, m_intakeArm)
-// ////                new ConditionalCommand(
-// ////                                new IntakeArmMove(m_intakeArm, IntakeArmMove.IntakeArmPosition.TOP, Constants.IntakeArm.SPEED),
-// ////                                new InstantCommand(() -> m_intakeArm.setPWM(0), m_intakeArm),
-// ////                                () -> !m_intakeArm.getTopLimitSwitch()
-// //////                        )
-// //        );
+//        m_intakeArm.setDefaultCommand(
+//                new RunCommand(() -> {
+//                    if (!m_intakeArm.getTopLimitSwitch()) {
+//                        m_intakeArm.setPWM(Constants.IntakeArm.SPEED);
+//                    } else {
+//                        m_intakeArm.setPWM(0);
+//                    }
+//                }, m_intakeArm)
+////                new ConditionalCommand(
+////                                new IntakeArmMove(m_intakeArm, IntakeArmMove.IntakeArmPosition.TOP, Constants.IntakeArm.SPEED),
+////                                new InstantCommand(() -> m_intakeArm.setPWM(0), m_intakeArm),
+////                                () -> !m_intakeArm.getTopLimitSwitch()
+//////                        )
+//        );
 
-//         m_jack.getJoystickButton(XboxController.Button.kBumperRight)
-//                 .toggleWhenPressed(new IntakeArmMove(m_intakeArm, IntakeArmMove.IntakeArmPosition.TOP, Constants.IntakeArm.SPEED)
-//                 );
+        m_jack.getJoystickButton(XboxController.Button.kBumperRight)
+                .toggleWhenPressed(new IntakeArmMove(m_intakeArm, IntakeArmMove.IntakeArmPosition.TOP, Constants.IntakeArm.SPEED)
+                );
 
-//         m_jack.getJoystickButton(XboxController.Button.kBumperLeft)
-//                 .toggleWhenPressed(new IntakeArmMove(m_intakeArm, IntakeArmMove.IntakeArmPosition.BOTTOM, Constants.IntakeArm.SPEED));
-//     }
+        m_jack.getJoystickButton(XboxController.Button.kBumperLeft)
+                .toggleWhenPressed(new IntakeArmMove(m_intakeArm, IntakeArmMove.IntakeArmPosition.BOTTOM, Constants.IntakeArm.SPEED));
+    }
 
     public void configureIntakingCommands() {
 

@@ -124,24 +124,24 @@ public final class Constants {
         public static final String RESET_GYRO_LABEL = "Zero Gyro";
     }
 
-    // public static final class IntakeArm {
+    public static final class IntakeArm {
 
-    //     public static final int MAX_CURRENT = 2; //amps
+        public static final int MAX_CURRENT = 2; //amps
 
-    //     public static final int TALON_PORT = 20;
+        public static final int TALON_PORT = 20;
 
-    //     public static final int ENCODER_DIO_PORT = 0;
+        public static final int ENCODER_DIO_PORT = 0;
 
-    //     public static final double ENCODER_PULSES_PER_REVOLUTION = 174.9;
+        public static final double ENCODER_PULSES_PER_REVOLUTION = 174.9;
 
-    //     public static final double TOP_POSITION_DEGREES = 0;
+        public static final double TOP_POSITION_DEGREES = 0;
 
-    //     public static final double BOTTOM_POSITION_DEGREES = 90; //temp
+        public static final double BOTTOM_POSITION_DEGREES = 90; //temp
 
-    //     public static final double SPEED = 0.7;
+        public static final double SPEED = 0.7;
 
 
-    // }
+    }
 
     public static final class Magazine {
 

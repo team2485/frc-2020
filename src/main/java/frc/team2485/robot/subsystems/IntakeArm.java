@@ -17,7 +17,6 @@ import frc.team2485.WarlordsLib.VelocityPIDSubsystem;
 import frc.team2485.WarlordsLib.control.WL_PIDController;
 import frc.team2485.WarlordsLib.motorcontrol.PIDTalonSRX;
 import frc.team2485.WarlordsLib.motorcontrol.WL_TalonSRX;
-import frc.team2485.WarlordsLib.motorcontrol.currentmanagement.CurrentTalonSRX;
 import frc.team2485.robot.Constants;
 
 public class IntakeArm extends SubsystemBase implements PositionPIDSubsystem, VelocityPIDSubsystem {
