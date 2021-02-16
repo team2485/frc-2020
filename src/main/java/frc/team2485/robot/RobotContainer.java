@@ -656,152 +656,152 @@ public class RobotContainer {
 
         return m_autoCommand;
 
-
-
-
-        //2021 Galactic Search Paths
+  //2021 Galactic Search Paths
         
-        var autoVoltageConstraint = new DifferentialDriveVoltageConstraint(
-            new SimpleMotorFeedforward(Constants.KS_VOLTS,
-                                       Constants.KV_VOLT_SECONDS_PER_METER,
-                                       Constants.KA_VOLT_SECONDS_SQUARED_PER_METER), Constants.K_DRIVE_KINEMATICS, 10);
+  var autoVoltageConstraint = new DifferentialDriveVoltageConstraint(
+    new SimpleMotorFeedforward(Constants.KS_VOLTS,
+                               Constants.KV_VOLT_SECONDS_PER_METER,
+                               Constants.KA_VOLT_SECONDS_SQUARED_PER_METER), Constants.K_DRIVE_KINEMATICS, 10);
 
-      TrajectoryConfig config = new TrajectoryConfig(Constants.K_MAX_SPEED_METERS_PER_SECOND,
-             Constants.K_MAX_ACCELERATION_METERS_PER_SECOND_SQUARED)
-                      .setKinematics(DriveConstants.kDriveKinematics)
-                       .addConstraint(autoVoltageConstraint);
+TrajectoryConfig config = new TrajectoryConfig(Constants.K_MAX_SPEED_METERS_PER_SECOND,
+     Constants.K_MAX_ACCELERATION_METERS_PER_SECOND_SQUARED)
+              .setKinematics(DriveConstants.kDriveKinematics)
+               .addConstraint(autoVoltageConstraint);
 
-        public static double START_X; 
-        public static double START_Y;                             
-                                 
-        //Path A, Red
+public static double START_X; 
+public static double START_Y;                             
+                         
+//Path A, Red
 
-        Pose2d A_RedStart = new Pose2d(inchesToMeters(START_X), inchesToMeters(START_Y), new Rotation2d(0));
-        //End coordinates: X = middle of endzone, Y = y coordinate of last inner waypoint
-        Pose2d A_RedEnd = new Pose2d(inchesToMeters(28.75), inchesToMeters(12.5), new Rotation2d(0));
-        Translation2d A_Red1 = new Translation2d(inchesToMeters(7.5), inchesToMeters(7.5));
-        Translation2d A_Red2 = new Translation2d(inchesToMeters(12.5), inchesToMeters(5));
-        Translation2d A_Red3 = new Translation2d(inchesToMeters(15), inchesToMeters(12.5));
-        ArrayList <Translation2d> A_RedWaypoints = new ArrayList<Translation2d>();
-        A_RedWaypoints.add(A_Red1);
-        A_RedWaypoints.add(A_Red2);
-        A_RedWaypoints.add(A_Red3);
-  
-        Trajectory A_RedTrajectory = TrajectoryGenerator.generateTrajectory(A_RedStart, A_RedWaypoints, A_RedEnd, config);   
-        
-        RamseteCommand A_RedRamsete = new RamseteCommand(
-            A_RedTrajectory, m_driveTrain::getPose,
-            new RamseteController(Constants.K_RAMSETE_B, Constants.K_RAMSETE_ZETA),
-            new SimpleMotorFeedforward(Constants.KS_VOLTS,
-                                       Constants.KV_VOLT_SECONDS_PER_METER,
-                                       Constants.KA_VOLT_SECONDS_SQUARED_PER_METER),
-            Constants.K_DRIVE_KINEMATICS,
-            m_driveTrain::getWheelSpeeds,
-            new PIDController(Constants.KP_DRIVE_VEL, 0, 0),
-            new PIDController(Constants.KP_DRIVE_VEL, 0, 0),
-            //Ramsete command passes volts to the callback
-            m_driveTrain::tankDriveVolts,
-            m_driveTrain
-    );
+Pose2d A_RedStart = new Pose2d(feetToMeters(START_X), feetToMeters(START_Y), new Rotation2d(0));
+//End coordinates: X = middle of endzone, Y = y coordinate of last inner waypoint
+Pose2d A_RedEnd = new Pose2d(feetToMeters(28.75), feetToMeters(12.5), new Rotation2d(0));
+Translation2d A_Red1 = new Translation2d(feetToMeters(7.5), feetToMeters(7.5));
+Translation2d A_Red2 = new Translation2d(feetToMeters(12.5), feetToMeters(5));
+Translation2d A_Red3 = new Translation2d(feetToMeters(15), feetToMeters(12.5));
+ArrayList <Translation2d> A_RedWaypoints = new ArrayList<Translation2d>();
+A_RedWaypoints.add(A_Red1);
+A_RedWaypoints.add(A_Red2);
+A_RedWaypoints.add(A_Red3);
 
-        return A_RedRamsete.andThen(() -> m_driveTrain.tankDriveVolts(0,0));
+Trajectory A_RedTrajectory = TrajectoryGenerator.generateTrajectory(A_RedStart, A_RedWaypoints, A_RedEnd, config);   
 
-        //Path A, Blue
+RamseteCommand A_RedRamsete = new RamseteCommand(
+    A_RedTrajectory, m_driveTrain::getPose,
+    new RamseteController(Constants.K_RAMSETE_B, Constants.K_RAMSETE_ZETA),
+    new SimpleMotorFeedforward(Constants.KS_VOLTS,
+                               Constants.KV_VOLT_SECONDS_PER_METER,
+                               Constants.KA_VOLT_SECONDS_SQUARED_PER_METER),
+    Constants.K_DRIVE_KINEMATICS,
+    m_driveTrain::getWheelSpeeds,
+    new PIDController(Constants.KP_DRIVE_VEL, 0, 0),
+    new PIDController(Constants.KP_DRIVE_VEL, 0, 0),
+    //Ramsete command passes volts to the callback
+    m_driveTrain::tankDriveVolts,
+    m_driveTrain
+);
 
-        Pose2d A_BlueStart = new Pose2d(inchesToMeters(START_X), inchesToMeters(START_Y), new Rotation2d(0));
-        //End coordinates: X = middle of endzone, Y = y coordinate of last inner waypoint
-        Pose2d A_BlueEnd = new Pose2d(inchesToMeters(28.75), inchesToMeters(7.5), new Rotation2d(0));
-        Translation2d A_Blue1 = new Translation2d(inchesToMeters(15), inchesToMeters(2.5));
-        Translation2d A_Blue2 = new Translation2d(inchesToMeters(17.5), inchesToMeters(10));
-        Translation2d A_Blue3 = new Translation2d(inchesToMeters(22.5), inchesToMeters(7.5));
-        ArrayList <Translation2d> A_BlueWaypoints = new ArrayList<Translation2d>();
-        A_BlueWaypoints.add(A_Blue1);
-        A_BlueWaypoints.add(A_Blue2);
-        A_BlueWaypoints.add(A_Blue3);
-  
-        Trajectory A_BlueTrajectory = TrajectoryGenerator.generateTrajectory(A_BlueStart, A_BlueWaypoints, A_BlueEnd, config);
+return A_RedRamsete.andThen(() -> m_driveTrain.tankDriveVolts(0,0));
 
-        RamseteCommand A_BlueRamsete = new RamseteCommand(
-            A_BlueTrajectory, m_driveTrain::getPose,
-            new RamseteController(Constants.K_RAMSETE_B, Constants.K_RAMSETE_ZETA),
-            new SimpleMotorFeedforward(Constants.KS_VOLTS,
-                                       Constants.KV_VOLT_SECONDS_PER_METER,
-                                       Constants.KA_VOLT_SECONDS_SQUARED_PER_METER),
-            Constants.K_DRIVE_KINEMATICS,
-            m_driveTrain::getWheelSpeeds,
-            new PIDController(Constants.KP_DRIVE_VEL, 0, 0),
-            new PIDController(Constants.KP_DRIVE_VEL, 0, 0),
-            //Ramsete command passes volts to the callback
-            m_driveTrain::tankDriveVolts,
-            m_driveTrain
-    );
+//Path A, Blue
 
-        return A_BlueRamsete.andThen(() -> m_driveTrain.tankDriveVolts(0,0));
+Pose2d A_BlueStart = new Pose2d(feetToMeters(START_X), feetToMeters(START_Y), new Rotation2d(0));
+//End coordinates: X = middle of endzone, Y = y coordinate of last inner waypoint
+Pose2d A_BlueEnd = new Pose2d(feetToMeters(28.75), feetToMeters(7.5), new Rotation2d(0));
+Translation2d A_Blue1 = new Translation2d(feetToMeters(15), feetToMeters(2.5));
+Translation2d A_Blue2 = new Translation2d(feetToMeters(17.5), feetToMeters(10));
+Translation2d A_Blue3 = new Translation2d(feetToMeters(22.5), feetToMeters(7.5));
+ArrayList <Translation2d> A_BlueWaypoints = new ArrayList<Translation2d>();
+A_BlueWaypoints.add(A_Blue1);
+A_BlueWaypoints.add(A_Blue2);
+A_BlueWaypoints.add(A_Blue3);
 
-        //Path B, Red
+Trajectory A_BlueTrajectory = TrajectoryGenerator.generateTrajectory(A_BlueStart, A_BlueWaypoints, A_BlueEnd, config);
 
-        Pose2d B_RedStart = new Pose2d(inchesToMeters(START_X), inchesToMeters(START_Y), new Rotation2d(0));
-        //End coordinates: X = middle of endzone, Y = y coordinate of last inner waypoint
-        Pose2d B_RedEnd = new Pose2d(inchesToMeters(28.75), inchesToMeters(10), new Rotation2d(0));
-        Translation2d B_Red1 = new Translation2d(inchesToMeters(7.5), inchesToMeters(10));
-        Translation2d B_Red2 = new Translation2d(inchesToMeters(12.5), inchesToMeters(5));
-        Translation2d B_Red3 = new Translation2d(inchesToMeters(17.5), inchesToMeters(10));
-        ArrayList <Translation2d> B_RedWaypoints = new ArrayList<Translation2d>();
-        B_RedWaypoints.add(B_Red1);
-        B_RedWaypoints.add(B_Red2);
-        B_RedWaypoints.add(B_Red3);
-  
-        Trajectory B_RedTrajectory = TrajectoryGenerator.generateTrajectory(B_RedStart, B_RedWaypoints, B_RedEnd, config);  
+RamseteCommand A_BlueRamsete = new RamseteCommand(
+    A_BlueTrajectory, m_driveTrain::getPose,
+    new RamseteController(Constants.K_RAMSETE_B, Constants.K_RAMSETE_ZETA),
+    new SimpleMotorFeedforward(Constants.KS_VOLTS,
+                               Constants.KV_VOLT_SECONDS_PER_METER,
+                               Constants.KA_VOLT_SECONDS_SQUARED_PER_METER),
+    Constants.K_DRIVE_KINEMATICS,
+    m_driveTrain::getWheelSpeeds,
+    new PIDController(Constants.KP_DRIVE_VEL, 0, 0),
+    new PIDController(Constants.KP_DRIVE_VEL, 0, 0),
+    //Ramsete command passes volts to the callback
+    m_driveTrain::tankDriveVolts,
+    m_driveTrain
+);
 
-        RamseteCommand B_RedRamsete = new RamseteCommand(
-            B_RedTrajectory, m_driveTrain::getPose,
-            new RamseteController(Constants.K_RAMSETE_B, Constants.K_RAMSETE_ZETA),
-            new SimpleMotorFeedforward(Constants.KS_VOLTS,
-                                       Constants.KV_VOLT_SECONDS_PER_METER,
-                                       Constants.KA_VOLT_SECONDS_SQUARED_PER_METER),
-            Constants.K_DRIVE_KINEMATICS,
-            m_driveTrain::getWheelSpeeds,
-            new PIDController(Constants.KP_DRIVE_VEL, 0, 0),
-            new PIDController(Constants.KP_DRIVE_VEL, 0, 0),
-            //Ramsete command passes volts to the callback
-            m_driveTrain::tankDriveVolts,
-            m_driveTrain
-    );
+return A_BlueRamsete.andThen(() -> m_driveTrain.tankDriveVolts(0,0));
 
-        return B_RedRamsete.andThen(() -> m_driveTrain.tankDriveVolts(0,0));
+//Path B, Red
 
-        //Path B, Blue
+Pose2d B_RedStart = new Pose2d(feetToMeters(START_X), feetToMeters(START_Y), new Rotation2d(0));
+//End coordinates: X = middle of endzone, Y = y coordinate of last inner waypoint
+Pose2d B_RedEnd = new Pose2d(feetToMeters(28.75), feetToMeters(10), new Rotation2d(0));
+Translation2d B_Red1 = new Translation2d(feetToMeters(7.5), feetToMeters(10));
+Translation2d B_Red2 = new Translation2d(feetToMeters(12.5), feetToMeters(5));
+Translation2d B_Red3 = new Translation2d(feetToMeters(17.5), feetToMeters(10));
+ArrayList <Translation2d> B_RedWaypoints = new ArrayList<Translation2d>();
+B_RedWaypoints.add(B_Red1);
+B_RedWaypoints.add(B_Red2);
+B_RedWaypoints.add(B_Red3);
 
-        Pose2d B_BlueStart = new Pose2d(inchesToMeters(START_X), inchesToMeters(START_Y), new Rotation2d(0));
-        //End coordinates: X = middle of endzone, Y = y coordinate of last inner waypoint
-        Pose2d B_BlueEnd = new Pose2d(inchesToMeters(28.75), inchesToMeters(7.5), new Rotation2d(0));
-        Translation2d B_Blue1 = new Translation2d(inchesToMeters(15), inchesToMeters(5));
-        Translation2d B_Blue2 = new Translation2d(inchesToMeters(20), inchesToMeters(10));
-        Translation2d B_Blue3 = new Translation2d(inchesToMeters(25), inchesToMeters(5));
-        ArrayList <Translation2d> B_BlueWaypoints = new ArrayList<Translation2d>();
-        B_BlueWaypoints.add(B_Blue1);
-        B_BlueWaypoints.add(B_Blue2);
-        B_BlueWaypoints.add(B_Blue3);
-  
-        Trajectory B_BlueTrajectory = TrajectoryGenerator.generateTrajectory(B_BlueStart, B_BlueWaypoints, B_BlueEnd, config);
-        
-        RamseteCommand B_BlueRamsete = new RamseteCommand(
-            B_BlueTrajectory, m_driveTrain::getPose,
-            new RamseteController(Constants.K_RAMSETE_B, Constants.K_RAMSETE_ZETA),
-            new SimpleMotorFeedforward(Constants.KS_VOLTS,
-                                       Constants.KV_VOLT_SECONDS_PER_METER,
-                                       Constants.KA_VOLT_SECONDS_SQUARED_PER_METER),
-            Constants.K_DRIVE_KINEMATICS,
-            m_driveTrain::getWheelSpeeds,
-            new PIDController(Constants.KP_DRIVE_VEL, 0, 0),
-            new PIDController(Constants.KP_DRIVE_VEL, 0, 0),
-            //Ramsete command passes volts to the callback
-            m_driveTrain::tankDriveVolts,
-            m_driveTrain
-    );
+Trajectory B_RedTrajectory = TrajectoryGenerator.generateTrajectory(B_RedStart, B_RedWaypoints, B_RedEnd, config);  
 
-        return B_BlueRamsete.andThen(() -> m_driveTrain.tankDriveVolts(0,0));
+RamseteCommand B_RedRamsete = new RamseteCommand(
+    B_RedTrajectory, m_driveTrain::getPose,
+    new RamseteController(Constants.K_RAMSETE_B, Constants.K_RAMSETE_ZETA),
+    new SimpleMotorFeedforward(Constants.KS_VOLTS,
+                               Constants.KV_VOLT_SECONDS_PER_METER,
+                               Constants.KA_VOLT_SECONDS_SQUARED_PER_METER),
+    Constants.K_DRIVE_KINEMATICS,
+    m_driveTrain::getWheelSpeeds,
+    new PIDController(Constants.KP_DRIVE_VEL, 0, 0),
+    new PIDController(Constants.KP_DRIVE_VEL, 0, 0),
+    //Ramsete command passes volts to the callback
+    m_driveTrain::tankDriveVolts,
+    m_driveTrain
+);
 
+return B_RedRamsete.andThen(() -> m_driveTrain.tankDriveVolts(0,0));
+
+//Path B, Blue
+
+Pose2d B_BlueStart = new Pose2d(feetToMeters(START_X), feetToMeters(START_Y), new Rotation2d(0));
+//End coordinates: X = middle of endzone, Y = y coordinate of last inner waypoint
+Pose2d B_BlueEnd = new Pose2d(feetToMeters(28.75), feetToMeters(7.5), new Rotation2d(0));
+Translation2d B_Blue1 = new Translation2d(feetToMeters(15), feetToMeters(5));
+Translation2d B_Blue2 = new Translation2d(feetToMeters(20), feetToMeters(10));
+Translation2d B_Blue3 = new Translation2d(feetToMeters(25), feetToMeters(5));
+ArrayList <Translation2d> B_BlueWaypoints = new ArrayList<Translation2d>();
+B_BlueWaypoints.add(B_Blue1);
+B_BlueWaypoints.add(B_Blue2);
+B_BlueWaypoints.add(B_Blue3);
+
+Trajectory B_BlueTrajectory = TrajectoryGenerator.generateTrajectory(B_BlueStart, B_BlueWaypoints, B_BlueEnd, config);
+
+RamseteCommand B_BlueRamsete = new RamseteCommand(
+    B_BlueTrajectory, m_driveTrain::getPose,
+    new RamseteController(Constants.K_RAMSETE_B, Constants.K_RAMSETE_ZETA),
+    new SimpleMotorFeedforward(Constants.KS_VOLTS,
+                               Constants.KV_VOLT_SECONDS_PER_METER,
+                               Constants.KA_VOLT_SECONDS_SQUARED_PER_METER),
+    Constants.K_DRIVE_KINEMATICS,
+    m_driveTrain::getWheelSpeeds,
+    new PIDController(Constants.KP_DRIVE_VEL, 0, 0),
+    new PIDController(Constants.KP_DRIVE_VEL, 0, 0),
+    //Ramsete command passes volts to the callback
+    m_driveTrain::tankDriveVolts,
+    m_driveTrain
+);
+
+return B_BlueRamsete.andThen(() -> m_driveTrain.tankDriveVolts(0,0));
+
+
+
+      
     }
 
 
