@@ -157,7 +157,7 @@ public class RobotContainer {
 
 
         //Intake lowering (CONFIGURE CONSTANTS)
-        m_jack.getJoystickButton(XboxController.Button.Y).whenPressed(
+        m_jack.getJoystickButton(XboxController.Button.kY).whenPressed(
             new ConditionalCommand(
                 new SequentialCommandGroup(
                     new InstantCommand(()-> m_lowMagazine.setPWM(Constants.Intake.LOWERING_PWM)),
@@ -166,7 +166,7 @@ public class RobotContainer {
                     new InstantCommand(()->{intakeDown = true;})
                 ), 
                 new InstantCommand(()->{}),
-                ()-> {intakeDown = false;}
+                ()-> {return intakeDown = false;}
             )
         );
         
