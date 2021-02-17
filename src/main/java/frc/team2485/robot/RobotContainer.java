@@ -81,14 +81,6 @@ public class RobotContainer {
         m_feeder.resetPIDs();
         m_intake.resetPIDs();
 
-        if(!intakeDown) {
-            new SequentialCommandGroup(
-                new InstantCommand(()-> m_lowMagazine.setPWM(Constants.Intake.LOWERING_PWM)),
-                new WaitCommand(Constants.Intake.LOWERING_TIME),
-                new InstantCommand(()-> m_lowMagazine.setPWM(0))
-            );
-            intakeDown = true; 
-        }
     }
 
     private void configureCommands() {
@@ -163,6 +155,21 @@ public class RobotContainer {
 
     public void configureIntakingCommands() {
 
+
+        //Intake lowering (CONFIGURE CONSTANTS)
+        m_jack.getJoystickButton(XboxController.Button.Y).whenPressed(
+            new ConditionalCommand(
+                new SequentialCommandGroup(
+                    new InstantCommand(()-> m_lowMagazine.setPWM(Constants.Intake.LOWERING_PWM)),
+                    new WaitCommand(Constants.Intake.LOWERING_TIME),
+                    new InstantCommand(()-> m_lowMagazine.setPWM(0)),
+                    new InstantCommand(()->{intakeDown = true;})
+                ), 
+                new InstantCommand(()->{}),
+                ()-> {intakeDown = false;}
+            )
+        );
+        
         // Increment high magazine
         m_jack.getJoystickButton(XboxController.Button.kA).whileHeld(
                 new ConditionalCommand(
@@ -563,23 +570,23 @@ public class RobotContainer {
 
         // new TurretSetAngle(m_turret, m_turret.getEncoderPosition() > 0? 90: -90, false);
 
-        m_jack.getJoystickButton(XboxController.Button.kY).whileHeld(
-                new ParallelCommandGroup(
-                        new ConditionalCommand(
-                                new TurretSetAngle(m_turret, 90, false),
-                                new TurretSetAngle(m_turret, -90, false),
-                                () -> m_turret.getEncoderPosition() > 0
-                        ),
-                        new SequentialCommandGroup(
-                                new WaitUntilCommand(
-                                        () -> Math.abs(m_turret.getEncoderPosition()) >= 45
-                                ),
-                                new InstantCommand(() -> m_climber.setPWM(Constants.Climber.DEFAULT_PWM)
-                                )
-                        )
-                )).whenReleased(
-                new InstantCommand(() -> m_climber.setPWM(0))
-        );
+        // m_jack.getJoystickButton(XboxController.Button.kY).whileHeld(
+        //         new ParallelCommandGroup(
+        //                 new ConditionalCommand(
+        //                         new TurretSetAngle(m_turret, 90, false),
+        //                         new TurretSetAngle(m_turret, -90, false),
+        //                         () -> m_turret.getEncoderPosition() > 0
+        //                 ),
+        //                 new SequentialCommandGroup(
+        //                         new WaitUntilCommand(
+        //                                 () -> Math.abs(m_turret.getEncoderPosition()) >= 45
+        //                         ),
+        //                         new InstantCommand(() -> m_climber.setPWM(Constants.Climber.DEFAULT_PWM)
+        //                         )
+        //                 )
+        //         )).whenReleased(
+        //         new InstantCommand(() -> m_climber.setPWM(0))
+        // );
     }
 
     public Command getAutonomousCommand() {
