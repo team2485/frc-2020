@@ -157,18 +157,27 @@ public class RobotContainer {
 
 
         //Intake lowering (CONFIGURE CONSTANTS)
-        m_jack.getJoystickButton(XboxController.Button.kY).whenPressed(
-            new ConditionalCommand(
-                new SequentialCommandGroup(
-                    new InstantCommand(()-> m_lowMagazine.setPWM(Constants.Intake.LOWERING_PWM)),
-                    new WaitCommand(Constants.Intake.LOWERING_TIME),
-                    new InstantCommand(()-> m_lowMagazine.setPWM(0)),
-                    new InstantCommand(()->{intakeDown = true;})
-                ), 
-                new InstantCommand(()->{}),
-                ()-> {return intakeDown = false;}
-            )
-        );
+//        m_jack.getJoystickButton(XboxController.Button.kY).whenPressed(
+//            new ConditionalCommand(
+//                new SequentialCommandGroup(
+//                    new InstantCommand(()-> m_lowMagazine.setPWM(Constants.Intake.LOWERING_PWM)),
+//                    new WaitCommand(Constants.Intake.LOWERING_TIME),
+//                    new InstantCommand(()-> m_lowMagazine.setPWM(0)),
+//                    new InstantCommand(()->{intakeDown = true;})
+//                ),
+//                new InstantCommand(()->{}),
+//                ()-> {return intakeDown = false;}
+//            )
+//        );
+
+        //holding command to lower intake
+//        m_jack.getJoystickButton(XboxController.Button.kY).whileHeld(
+//                new InstantCommand(() ->
+//                        m_lowMagazine.setPWM(Constants.Intake.LOWERING_PWM))
+//                        .whenReleased(
+//                                new InstantCommand(() -> m_lowMagazine.setPWM(0))
+//                        )
+//        );
         
         // Increment high magazine
         m_jack.getJoystickButton(XboxController.Button.kA).whileHeld(
@@ -210,14 +219,22 @@ public class RobotContainer {
 //                )
                 new RunCommand(() -> {
 //                            m_lowMagazine.setPWM(Constants.Magazine.LOW_BELT_INTAKE_PWM);
-                    m_lowMagazine.runVelocityPID(Constants.Magazine.LOW_INTAKE_VELOCITY);
-                    m_intake.runVelocityPID(Constants.Intake.X_VELOCITY, Constants.Intake.Z_VELOCITY);
+                    //m_lowMagazine.runVelocityPID(Constants.Magazine.LOW_INTAKE_VELOCITY);
+                    m_lowMagazine.setPWM(Constants.Magazine.LOW_INTAKE_VELOCITY);
+                    //m_intake.runVelocityPID(Constants.Intake.X_VELOCITY, Constants.Intake.Z_VELOCITY);
+                    m_intake.setPWM(-0.5, -0.5);
+
                 })
+
         ).whenReleased(
                 new InstantCommand(
-                        () ->
-                                m_lowMagazine.setPWM(0)
-                )
+                        () -> {
+                                m_lowMagazine.setPWM(0);
+                                m_intake.setPWM(0);
+
+                })
+
+
         );
 
 
@@ -227,6 +244,7 @@ public class RobotContainer {
                     m_highMagazine.setPWM(Constants.Magazine.OUTTAKE_PWM);
                     m_feeder.setPWM(Constants.Feeder.OUTTAKE_PWM);
                     m_flywheels.setPWM(Constants.Flywheels.FYWHEEL_OUTTAKE_PWM);
+                    m_intake.setPWM(Constants.Intake.OUTTAKE_PWM);
                 }, m_lowMagazine, m_highMagazine, m_feeder, m_flywheels)
         ).whenReleased(
                 new InstantCommand(() -> {
@@ -234,6 +252,7 @@ public class RobotContainer {
                     m_highMagazine.setPWM(0);
                     m_feeder.setPWM(0);
                     m_flywheels.setPWM(0);
+                    m_intake.setPWM(0);
                 })
         );
 

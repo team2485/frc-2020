@@ -39,6 +39,7 @@ public class Flywheels extends SubsystemBase implements Tunable, Configurable {
     public Flywheels() {
         this.m_sparkLeft = new PIDSparkMax(Constants.Flywheels.SPARK_FLYWHEEL_LEFT_PORT, ControlType.kVelocity);
         this.m_sparkRight = new PIDSparkMax(Constants.Flywheels.SPARK_FLYWHEEL_RIGHT_PORT, ControlType.kVelocity);
+        this.m_sparkRight = new PIDSparkMax(Constants.Flywheels.SPARK_FLYWHEEL_RIGHT_PORT, ControlType.kVelocity);
         m_sparkRight.setInverted(true);
 
         m_sparkRight.getEncoder().setVelocityConversionFactor(Constants.Flywheels.GEAR_RATIO);

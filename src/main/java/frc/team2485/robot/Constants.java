@@ -392,8 +392,8 @@ public final class Constants {
 
     public static final class Intake {
         
-        public static final int TALONX_PORT = 20; //temp
-        public static final int TALONZ_PORT = 21; //temp
+        public static final int SPARKX_PORT = 26; //temp
+        public static final int SPARKZ_PORT = 27; //temp
     
         public static final double MAX_VELOCITY = 6000; //temp
         public static final double MIN_VELOCITY = -6000; //temp
@@ -408,7 +408,9 @@ public final class Constants {
         public static final double Z_VELOCITY = 500;
 
         public static final double LOWERING_PWM = 0.05;
-        public static final double LOWERING_TIME = 5; //seconds
+        public static final double LOWERING_TIME = 10; //seconds
+
+        public static final double OUTTAKE_PWM = 0.7;
       }
 
 }
