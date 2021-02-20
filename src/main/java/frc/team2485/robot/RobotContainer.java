@@ -125,9 +125,9 @@ public class RobotContainer {
                                     * Constants.Drivetrain.STEERING_SCALE,
                             m_jack.getXButton());
                 }, m_drivetrain)
-        );
-    }
 
+        );
+}
 //   public void configureIntakeArmCommands() {
 
 // //        m_intakeArm.setDefaultCommand(
@@ -171,13 +171,12 @@ public class RobotContainer {
 //        );
 
         //holding command to lower intake
-//        m_jack.getJoystickButton(XboxController.Button.kY).whileHeld(
-//                new InstantCommand(() ->
-//                        m_lowMagazine.setPWM(Constants.Intake.LOWERING_PWM))
-//                        .whenReleased(
-//                                new InstantCommand(() -> m_lowMagazine.setPWM(0))
-//                        )
-//        );
+        m_jack.getJoystickButton(XboxController.Button.kY).whileHeld(
+                new InstantCommand(() ->
+                        m_lowMagazine.setPWM(Constants.Intake.LOWERING_PWM)))
+                        .whenReleased(
+                                new InstantCommand(() -> m_lowMagazine.setPWM(0))
+                        );
         
         // Increment high magazine
         m_jack.getJoystickButton(XboxController.Button.kA).whileHeld(
@@ -218,11 +217,11 @@ public class RobotContainer {
 //                        }
 //                )
                 new RunCommand(() -> {
-//                            m_lowMagazine.setPWM(Constants.Magazine.LOW_BELT_INTAKE_PWM);
+                    m_lowMagazine.setPWM(Constants.Magazine.LOW_BELT_INTAKE_PWM);
                     //m_lowMagazine.runVelocityPID(Constants.Magazine.LOW_INTAKE_VELOCITY);
-                    m_lowMagazine.setPWM(Constants.Magazine.LOW_INTAKE_VELOCITY);
-                    //m_intake.runVelocityPID(Constants.Intake.X_VELOCITY, Constants.Intake.Z_VELOCITY);
-                    m_intake.setPWM(-0.5, -0.5);
+                    //m_lowMagazine.setPWM(-0.4);
+                    m_intake.runVelocityPID(Constants.Intake.X_VELOCITY, Constants.Intake.Z_VELOCITY);
+                    //m_intake.setPWM(-0.5, -0.5);
 
                 })
 

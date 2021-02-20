@@ -60,6 +60,9 @@ public class Intake extends SubsystemBase implements Tunable{
 
     RobotConfigs.getInstance().addConfigurable(Constants.Intake.X_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL, m_sparkX);
     RobotConfigs.getInstance().addConfigurable(Constants.Intake.Z_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL, m_sparkZ);
+
+    this.addToShuffleboard();
+
   }
 
   private void addToShuffleboard() {
