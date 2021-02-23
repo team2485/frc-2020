@@ -184,6 +184,7 @@ public class RobotContainer {
                         new IncrementHighMagazine(m_highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS),//.withInterrupt(() -> !m_ballCounter.transferIRHasBall()),
                         new InstantCommand(() -> {
                             m_highMagazine.setPWM(0);
+                            m_flywheels.incrementBalls(true);
                         }, m_highMagazine),
                         () -> {
                             return
@@ -319,13 +320,50 @@ public class RobotContainer {
                 }, m_feeder)
         );
 
-        // Increment/feed ball into shooter
+
+        //Index and increment once
+        m_suraj.getJoystickButton(XboxController.Button.kStickRight).whenPressed(
+            new SequentialCommandGroup( 
+                new ConditionalCommand(
+                    new InstantCommand(()->{}),
+                    new SequentialCommandGroup(
+                        //This is where the indexing is applied 
+                        //Supposed to move the magaine up by enough to put every ball at the top
+                        //May need fiddling to get the numbers right (new constant)
+                        new IncrementHighMagazine(m_highMagazine, (Constants.Magazine.HIGH_MAGAZINE_BALL_CAPACITY - m_flywheels.getBalls()) * Constants.Magazine.HIGH_INDEX_BY_ONE_POS),
+                        new InstantCommand(()->{m_flywheels.updateBallPosition(true);})
+                    ),
+                    ()->{return m_flywheels.getBallPosition();}
+                ), 
+                new SequentialCommandGroup(
+                    new WaitUntilCommand(() -> m_flywheels.atVelocitySetpoint()),
+                    new InstantCommand(
+                            () -> {
+                                m_lowMagazine.setPWM(-0.5);
+                                m_feeder.setPWM(-0.9); //change
+                                m_flywheels.incrementBalls(false);
+                            }, m_lowMagazine, m_feeder
+                    ),
+    //                                new WaitCommand(Constants.Magazine.NORMAL_BALL_INCREMENT_TIMEOUT),
+                    new IncrementHighMagazine(m_highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS)
+                    )
+            )
+        );
+
+        // Increment/feed ball into shooter (this is for shooting all the balls one after another, generally,)
         m_suraj.getJoystickButton(XboxController.Button.kBumperRight).whileHeld(
                 new SequentialCommandGroup(
-                    //This is where the indexing is applied 
-                    //Supposed to move the magaine up by enough to put every ball at the top
-                    //May need fiddling to get the numbers right (new constant)
-                    new IncrementHighMagazine(m_highMagazine, (Constants.Magazine.HIGH_MAGAZINE_BALL_CAPACITY - m_flywheels.getBalls()) * Constants.Magazine.HIGH_INDEX_BY_ONE_POS),
+                    new ConditionalCommand(
+                        new InstantCommand(()->{}),
+                        new SequentialCommandGroup(
+                            //This is where the indexing is applied 
+                            //Supposed to move the magaine up by enough to put every ball at the top
+                            //May need fiddling to get the numbers right (new constant)
+                            new IncrementHighMagazine(m_highMagazine, (Constants.Magazine.HIGH_MAGAZINE_BALL_CAPACITY - m_flywheels.getBalls()) * Constants.Magazine.HIGH_INDEX_BY_ONE_POS),
+                            new InstantCommand(()->{m_flywheels.updateBallPosition(true);})
+                        ),
+                        ()->{return m_flywheels.getBallPosition();}
+                    ),
                     new ConditionalCommand(
                         new SequentialCommandGroup(
                                 new WaitUntilCommand(() -> m_flywheels.atVelocitySetpoint()),
@@ -333,6 +371,7 @@ public class RobotContainer {
                                         () -> {
                                             m_lowMagazine.setPWM(-0.5);
                                             m_feeder.setPWM(-0.9); //change
+                                            m_flywheels.incrementBalls(false);
                                         }, m_lowMagazine, m_feeder
                                 ),
 //                                new WaitCommand(Constants.Magazine.NORMAL_BALL_INCREMENT_TIMEOUT),

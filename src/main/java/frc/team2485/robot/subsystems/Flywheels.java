@@ -30,6 +30,7 @@ public class Flywheels extends SubsystemBase implements Tunable, Configurable {
     * Current dips while running flywheels at speed indicate ball output
     */ 
     private int m_numBalls; 
+    private boolean m_ballsAtTop;
     private DigitalInput m_entranceIR, m_transferIR;
     private Debounce m_entranceDebounce, m_transferDebounce;
     private boolean m_entranceVal, m_transferVal, m_entranceLastVal;
@@ -68,7 +69,8 @@ public class Flywheels extends SubsystemBase implements Tunable, Configurable {
         m_transferDebounce = new Debounce(m_transferIR.get(), Constants.Flywheels.MAX_DEBOUNCE_TIME);
         m_isShooting = false;
         m_numBalls = 0;
-        m_exitAT = new ArmAndTrigger(Constants.Flywheels.VELOCITY_ARM, Constants.Flywheels.VELOCITY_TRIGGER, 0, false);
+        m_ballsAtTop = false;
+        //m_exitAT = new ArmAndTrigger(Constants.Flywheels.VELOCITY_ARM, Constants.Flywheels.VELOCITY_TRIGGER, 0, false);
 
 
         this.addToShuffleboard();
@@ -90,7 +92,7 @@ public class Flywheels extends SubsystemBase implements Tunable, Configurable {
         indexing.addBoolean("Entrance IR Value", m_entranceIR::get);
         indexing.addBoolean("Transfer IR Value", m_transferIR::get);
 
-        indexing.add("Arm and Trigger (Flywheel Velocity)", m_exitAT);
+        //indexing.add("Arm and Trigger (Flywheel Velocity)", m_exitAT);
         //tab.addNumber("Right Flywheel Error", this.getRightEncoderVelocity() - Constants.Setpoints.FARRPM);
     }
 
@@ -164,26 +166,39 @@ public class Flywheels extends SubsystemBase implements Tunable, Configurable {
     public int getBalls() {
         return m_numBalls;
     }
+
     public void zeroCount() {
         m_numBalls = 0;
     }
 
+    public void incrementBalls(boolean pos) {
+        m_numBalls = pos ? m_numBalls + 1 : m_numBalls - 1;
+    }
+
+    public void updateBallPosition(boolean ballsAtTop) {
+        m_ballsAtTop = ballsAtTop;
+    }
+
+    public boolean getBallPosition() {
+        return m_ballsAtTop;
+    }
+
     @Override
     public void periodic() {
-        m_entranceVal = !m_entranceDebounce.getNextValue(m_entranceIR.get());
-        m_transferVal = !m_transferDebounce.getNextValue(m_transferIR.get());
+        // m_entranceVal = !m_entranceDebounce.getNextValue(m_entranceIR.get());
+        // m_transferVal = !m_transferDebounce.getNextValue(m_transferIR.get());
 
-        if (!m_entranceVal && m_entranceLastVal) { //if ball passes entrance IR 
-            m_numBalls++;
-        }
+        // if (!m_entranceVal && m_entranceLastVal) { //if ball passes entrance IR 
+        //     m_numBalls++;
+        // }
 
-        m_entranceLastVal = m_entranceVal;
+        // m_entranceLastVal = m_entranceVal;
 
         
-        if(m_exitAT.getNextValue(((this.getLeftEncoderVelocity() + this.getRightEncoderVelocity()) / 2)
-         / ((m_sparkLeft.getSetpoint() + m_sparkRight.getSetpoint()) / 2))) { // if arm&trigger detects a dip
-            m_numBalls--;
-        }
+        // if(m_exitAT.getNextValue(((this.getLeftEncoderVelocity() + this.getRightEncoderVelocity()) / 2)
+        //  / ((m_sparkLeft.getSetpoint() + m_sparkRight.getSetpoint()) / 2))) { // if arm&trigger detects a dip
+        //     m_numBalls--;
+        // }
     }
 
     @Override
