@@ -185,6 +185,7 @@ public class RobotContainer {
                         new InstantCommand(() -> {
                             m_highMagazine.setPWM(0);
                             m_flywheels.incrementBalls(true);
+                            m_flywheels.updateBallPosition(false);
                         }, m_highMagazine),
                         () -> {
                             return
@@ -321,7 +322,7 @@ public class RobotContainer {
         );
 
 
-        //Index and increment once
+        //Index and increment into shooter once
         m_suraj.getJoystickButton(XboxController.Button.kStickRight).whenPressed(
             new SequentialCommandGroup( 
                 new ConditionalCommand(
