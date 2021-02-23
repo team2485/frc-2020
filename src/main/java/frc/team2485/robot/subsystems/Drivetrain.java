@@ -91,6 +91,7 @@ public class Drivetrain extends SubsystemBase  {
         tab.addNumber("Right Encoder Velocity", this::getRightEncoderVelocity);
         tab.addNumber("Left Spark Master Current", m_sparkLeft1Master::getOutputCurrent);
         tab.addNumber("Right Spark Master Current", m_sparkRight1Master::getOutputCurrent);
+
     }
 
     public void curvatureDrive(double throttle, double steering, boolean isQuickTurn) {
