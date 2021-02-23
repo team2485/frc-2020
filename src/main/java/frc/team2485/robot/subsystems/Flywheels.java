@@ -92,6 +92,8 @@ public class Flywheels extends SubsystemBase implements Tunable, Configurable {
         indexing.addBoolean("Entrance IR Value", m_entranceIR::get);
         indexing.addBoolean("Transfer IR Value", m_transferIR::get);
 
+
+
         //indexing.add("Arm and Trigger (Flywheel Velocity)", m_exitAT);
         //tab.addNumber("Right Flywheel Error", this.getRightEncoderVelocity() - Constants.Setpoints.FARRPM);
     }
