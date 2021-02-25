@@ -358,7 +358,7 @@ public class RobotContainer {
                             //This is where the indexing is applied 
                             //Supposed to move the magaine up by enough to put every ball at the top
                             //May need fiddling to get the numbers right (new constant)
-                            new IncrementHighMagazine(m_highMagazine, (Constants.Magazine.HIGH_MAGAZINE_BALL_CAPACITY - m_flywheels.getBalls()) * Constants.Magazine.HIGH_INDEX_BY_ONE_POS),
+                            new IncrementHighMagazine(m_highMagazine, (Constants.Magazine.HIGH_MAGAZINE_BALL_CAPACITY - m_flywheels.getBalls()) * Constants.Magazine.HIGH_INCREMENT_TOP),
                             new InstantCommand(()->{m_flywheels.updateBallPosition(true);})
                         ),
                         ()->{return m_flywheels.getBallPosition();}
@@ -374,7 +374,7 @@ public class RobotContainer {
                                         }, m_lowMagazine, m_feeder
                                 ),
 //                                new WaitCommand(Constants.Magazine.NORMAL_BALL_INCREMENT_TIMEOUT),
-                                new IncrementHighMagazine(m_highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS)
+                                new IncrementHighMagazine(m_highMagazine, Constants.Magazine.HIGH_INCREMENT_TOP)
                         ),
                         new InstantCommand(),
                         () -> m_flywheels.atVelocitySetpoint()
