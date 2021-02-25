@@ -331,7 +331,7 @@ public class RobotContainer {
                         //May need fiddling to get the numbers right (new constant)
                         new IncrementHighMagazine(m_highMagazine, (Constants.Magazine.HIGH_MAGAZINE_BALL_CAPACITY - m_flywheels.getBalls()) * Constants.Magazine.HIGH_INCREMENT_TOP),
                         new InstantCommand(()->{m_flywheels.updateBallPosition(true);
-                        System.out.println("Banana: " + Constants.Magazine.HIGH_MAGAZINE_BALL_CAPACITY - m_flywheels.getBalls());})
+                        System.out.println("Banana: " + String.valueOf(Constants.Magazine.HIGH_MAGAZINE_BALL_CAPACITY - m_flywheels.getBalls()));})
                         
                     ),
                     ()->{return m_flywheels.getBallPosition();}
@@ -428,14 +428,14 @@ public class RobotContainer {
                 return  Constants.Setpoints.FAR.RPM; // far
 
             } else {
-                return Math.copySign(SmartDashboard.getNumber("Velocity RPM", -6000), -1);
+                return Math.copySign(SmartDashboard.getNumber("Velocity RPM", -3000), -1);
             }
 
         };
 
         // shoot left trigger
         m_suraj.getJoystickAxisButton(Axis.kLeftTrigger, 0.2).whileHeld(
-                new SetFlywheels(m_flywheels, flywheelsSetpoint)
+                new SetFlywheels(m_flywheels, () -> {return -3000;})
         ).whenReleased(
                 new InstantCommand(
                         () -> {
