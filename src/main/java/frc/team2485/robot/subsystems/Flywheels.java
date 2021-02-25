@@ -162,6 +162,10 @@ public class Flywheels extends SubsystemBase implements Tunable, Configurable {
      * True if ball is in IR
      */
     public boolean transferIRHasBall() {
+        if (m_transferVal) {
+            this.incrementBalls(true);
+            this.updateBallPosition(false);
+        } 
         return m_transferVal;
     }
 

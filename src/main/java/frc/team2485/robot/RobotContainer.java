@@ -184,8 +184,6 @@ public class RobotContainer {
                         new IncrementHighMagazine(m_highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS),//.withInterrupt(() -> !m_ballCounter.transferIRHasBall()),
                         new InstantCommand(() -> {
                             m_highMagazine.setPWM(0);
-                            m_flywheels.incrementBalls(true);
-                            m_flywheels.updateBallPosition(false);
                         }, m_highMagazine),
                         () -> {
                             return
