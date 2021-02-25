@@ -348,7 +348,9 @@ public class RobotContainer {
     //                                new WaitCommand(Constants.Magazine.NORMAL_BALL_INCREMENT_TIMEOUT),
                     new IncrementHighMagazine(m_highMagazine, Constants.Magazine.HIGH_INCREMENT_TOP)
                     )
-            ).andThen(
+            ));
+
+            m_suraj.getJoystickButton(XboxController.Button.kStickRight).whenPressed(
                 new InstantCommand(() -> {
                     m_lowMagazine.setPWM(0);
                     m_highMagazine.setPWM(0);
@@ -357,7 +359,8 @@ public class RobotContainer {
                     //m_ballCounter.setNumBallsHigh(0);
                 }, m_lowMagazine, m_highMagazine, m_feeder
                 )
-            ));
+            );
+
         
 
 
