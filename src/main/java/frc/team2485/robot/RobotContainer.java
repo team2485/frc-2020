@@ -21,6 +21,7 @@ import frc.team2485.robot.commands.*;
 import frc.team2485.robot.subsystems.*;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpiutil.math.MathUtil;
 
 import frc.team2485.robot.subsystems.Drivetrain;
 
@@ -329,7 +330,7 @@ public class RobotContainer {
                         //This is where the indexing is applied 
                         //Supposed to move the magaine up by enough to put every ball at the top
                         //May need fiddling to get the numbers right (new constant)
-                        new IncrementHighMagazine(m_highMagazine, (Math.clamp(Constants.Magazine.HIGH_MAGAZINE_BALL_CAPACITY - m_flywheels.getBalls(), 0, Constants.Magazine.HIGH_MAGAZINE_BALL_CAPACITY) * Constants.Magazine.HIGH_INCREMENT_TOP),
+                        new IncrementHighMagazine(m_highMagazine, MathUtil.clamp(Constants.Magazine.HIGH_MAGAZINE_BALL_CAPACITY - m_flywheels.getBalls(), 0, Constants.Magazine.HIGH_MAGAZINE_BALL_CAPACITY) * Constants.Magazine.HIGH_INCREMENT_TOP),
                         new InstantCommand(()->{m_flywheels.updateBallPosition(true);
                         System.out.println("Banana: " + String.valueOf(Constants.Magazine.HIGH_MAGAZINE_BALL_CAPACITY - m_flywheels.getBalls()));})
                         
