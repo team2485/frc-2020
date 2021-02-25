@@ -324,13 +324,15 @@ public class RobotContainer {
         m_suraj.getJoystickButton(XboxController.Button.kStickRight).whenPressed(
             new SequentialCommandGroup( 
                 new ConditionalCommand(
-                    new InstantCommand(()->{}),
+                    new InstantCommand(()->{System.out.println("apple");}),
                     new SequentialCommandGroup(
                         //This is where the indexing is applied 
                         //Supposed to move the magaine up by enough to put every ball at the top
                         //May need fiddling to get the numbers right (new constant)
                         new IncrementHighMagazine(m_highMagazine, (Constants.Magazine.HIGH_MAGAZINE_BALL_CAPACITY - m_flywheels.getBalls()) * Constants.Magazine.HIGH_INCREMENT_TOP),
-                        new InstantCommand(()->{m_flywheels.updateBallPosition(true);})
+                        new InstantCommand(()->{m_flywheels.updateBallPosition(true);
+                        System.out.println("Banana: " + Constants.Magazine.HIGH_MAGAZINE_BALL_CAPACITY - m_flywheels.getBalls());})
+                        
                     ),
                     ()->{return m_flywheels.getBallPosition();}
                 ), 
