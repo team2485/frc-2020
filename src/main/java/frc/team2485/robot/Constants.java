@@ -155,7 +155,7 @@ public final class Constants {
         //public static final int TRANSFER_IR_PORT = 3;
         //public static final int EXIT_IR_PORT = 4;
 
-        public static final int HIGH_MAGAZINE_BALL_CAPACITY = 3;
+        public static final int HIGH_MAGAZINE_BALL_CAPACITY = 4;
 
         public static final double ROLLER_RADIUS = 1.3 / 2;
 
