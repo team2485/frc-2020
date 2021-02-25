@@ -192,7 +192,7 @@ public class Flywheels extends SubsystemBase implements Tunable, Configurable {
     @Override
     public void periodic() {
         // m_entranceVal = !m_entranceDebounce.getNextValue(m_entranceIR.get());
-        // m_transferVal = !m_transferDebounce.getNextValue(m_transferIR.get());
+        m_transferVal = !m_transferDebounce.getNextValue(m_transferIR.get());
 
         // if (!m_entranceVal && m_entranceLastVal) { //if ball passes entrance IR 
         //     m_numBalls++;
