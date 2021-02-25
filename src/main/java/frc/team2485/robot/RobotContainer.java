@@ -350,7 +350,7 @@ public class RobotContainer {
                     )
             ));
 
-            m_suraj.getJoystickButton(XboxController.Button.kStickRight).whenPressed(
+            m_suraj.getJoystickButton(XboxController.Button.kStickLeft).whenPressed(
                 new InstantCommand(() -> {
                     m_lowMagazine.setPWM(0);
                     m_highMagazine.setPWM(0);
