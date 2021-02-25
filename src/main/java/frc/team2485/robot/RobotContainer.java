@@ -349,7 +349,17 @@ public class RobotContainer {
                     new IncrementHighMagazine(m_highMagazine, Constants.Magazine.HIGH_INCREMENT_TOP)
                     )
             )
+        ).whenReleased(
+            new InstantCommand(() -> {
+                m_lowMagazine.setPWM(0);
+                m_highMagazine.setPWM(0);
+                m_feeder.setPWM(0);
+                //m_ballCounter.setNumBallsLow(0);
+                //m_ballCounter.setNumBallsHigh(0);
+            }, m_lowMagazine, m_highMagazine, m_feeder
+            )
         );
+
 
         // Increment/feed ball into shooter (this is for shooting all the balls one after another, generally,)
         m_suraj.getJoystickButton(XboxController.Button.kBumperRight).whileHeld(
