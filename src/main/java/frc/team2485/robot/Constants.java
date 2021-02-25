@@ -155,7 +155,7 @@ public final class Constants {
         //public static final int TRANSFER_IR_PORT = 3;
         //public static final int EXIT_IR_PORT = 4;
 
-        public static final int HIGH_MAGAZINE_BALL_CAPACITY = 4;
+        public static final int HIGH_MAGAZINE_BALL_CAPACITY = 3;
 
         public static final double ROLLER_RADIUS = 1.3 / 2;
 
@@ -168,6 +168,7 @@ public final class Constants {
         public static final double LOW_INTAKE_BY_ONE_POS = -7;
         public static final double HIGH_INDEX_BY_ONE_POS = -6.5;
         public static final double HIGH_INCREMENT_TOP = -4;
+        public static final double PUSH_IN_INCREMENT = -3;
 
         //replace below with actual number
         public static final double LOW_BELT_INTAKE_PWM = -0.4;

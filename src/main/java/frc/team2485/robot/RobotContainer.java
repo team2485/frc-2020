@@ -347,7 +347,7 @@ public class RobotContainer {
                             }, m_lowMagazine, m_feeder
                     ),
     //                                new WaitCommand(Constants.Magazine.NORMAL_BALL_INCREMENT_TIMEOUT),
-                    new IncrementHighMagazine(m_highMagazine, Constants.Magazine.HIGH_INCREMENT_TOP)
+                    new IncrementHighMagazine(m_highMagazine, Constants.Magazine.PUSH_IN_INCREMENT)
                     )
             ));
 
