@@ -170,7 +170,7 @@ public class Flywheels extends SubsystemBase implements Tunable, Configurable {
     }
 
     public int getBalls() {
-        return m_numBalls;
+        return m_numBalls/5;
     }
 
     public void zeroCount() {
