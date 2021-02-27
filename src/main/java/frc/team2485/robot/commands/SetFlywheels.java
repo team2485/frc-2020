@@ -33,6 +33,11 @@ public class SetFlywheels extends CommandBase {
         m_flywheels.setVelocity(m_leftVelocity.getAsDouble(), m_rightVelocity.getAsDouble());
     }
 
+    //if something's broken, this is it
+    public boolean isFinished() {
+        return m_flywheels.atVelocitySetpoint();
+    }
+
 
 
 }
