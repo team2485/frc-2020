@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team2485.WarlordsLib.robotConfigs.RobotConfigs;
 import frc.team2485.WarlordsLib.sensors.SparkMaxAlternateEncoder;
 import frc.team2485.robot.Constants;
+import com.revrobotics.CANSparkMax;
 
 
 public class Drivetrain extends SubsystemBase  {
@@ -38,6 +39,7 @@ public class Drivetrain extends SubsystemBase  {
     private RampRate m_throttleRamp;
 
     private PigeonIMU m_pigeon;
+
 
     public Drivetrain() {
         this.m_sparkLeft1Master = new WL_SparkMax(Constants.Drivetrain.SPARK_LEFT_PORT_MASTER);
@@ -65,8 +67,8 @@ public class Drivetrain extends SubsystemBase  {
         this.m_encoderRight.setInverted(true);
 
 
-        this.m_encoderLeft.setDistancePerRevolution(Constants.Drivetrain.DISTANCE_PER_REVOLUTION);
-        this.m_encoderRight.setDistancePerRevolution(Constants.Drivetrain.DISTANCE_PER_REVOLUTION);
+        this.m_encoderLeft.setPositionConversionFactor(Constants.Drivetrain.DISTANCE_PER_REVOLUTION);
+        this.m_encoderRight.setPositionConversionFactor(Constants.Drivetrain.DISTANCE_PER_REVOLUTION);
 
         this.m_throttleRamp = new RampRate();
 
@@ -75,6 +77,15 @@ public class Drivetrain extends SubsystemBase  {
         RobotConfigs.getInstance().addConfigurable("drivetrainThrottleRamp", m_throttleRamp);
 
         this.addToShuffleboard();
+
+        m_sparkLeft1Master.setIdleMode(CANSparkMax.IdleMode.kBrake);
+        m_sparkLeft2.setIdleMode(CANSparkMax.IdleMode.kBrake);
+        m_sparkLeft3.setIdleMode(CANSparkMax.IdleMode.kBrake);
+        m_sparkRight1Master.setIdleMode(CANSparkMax.IdleMode.kBrake);
+        m_sparkRight2.setIdleMode(CANSparkMax.IdleMode.kBrake);
+        m_sparkRight3.setIdleMode(CANSparkMax.IdleMode.kBrake);
+
+
     }
 
     public void addToShuffleboard() {

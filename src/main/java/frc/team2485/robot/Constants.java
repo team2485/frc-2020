@@ -113,7 +113,7 @@ public final class Constants {
 
         public static final double WHEEL_RADIUS = 3; // inches
 
-        public static final double DISTANCE_PER_REVOLUTION = 2 * Math.PI * WHEEL_RADIUS;
+        public static final double DISTANCE_PER_REVOLUTION = 2 * Math.PI * 0.0762;
 
         public static final double UP_RAMP_RATE = 0.4;
         public static final double DOWN_RAMP_RATE = 0.1; //pwm deltas
@@ -359,9 +359,10 @@ public final class Constants {
 
         //create config for trajectory
 
-        public static final TrajectoryConfig TRAJECTORY_CONFIG = new TrajectoryConfig(4, 2)
+        public static final TrajectoryConfig TRAJECTORY_CONFIG = new TrajectoryConfig(0.5, 0.5)
                 //kinematics to ensure max speed is obeyed + applying voltage constraint
-                .setKinematics(ArtemisTerms.K_DRIVE_KINEMATICS).addConstraint(AUTO_VOLTAGE_CONSTRAINT);
+                .setKinematics(ArtemisTerms.K_DRIVE_KINEMATICS).addConstraint(AUTO_VOLTAGE_CONSTRAINT)
+                .setReversed(true);
 
         public static final TrajectoryConfig COMPLEX_TRAJECTORY_CONFIG = new TrajectoryConfig(1, 2)
                 //kinematics to ensure max speed is obeyed + applying voltage constraint

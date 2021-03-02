@@ -54,7 +54,7 @@ public class LineToRightTrenchPath extends SequentialCommandGroup {
 
         //initial + (90% of delta)k
 
-        Rotation2d submissionRotation = new Rotation2d(0);
+        Rotation2d submissionRotation = new Rotation2d(Math.PI);
         Pose2d submissionAutoStart = new Pose2d(3.19, startPointY, submissionRotation); //maybe maybe it zero at least to start
         Pose2d submissionAutoEnd = new Pose2d(7.62, -0.88, submissionRotation);
         Translation2d submissionAutoTranslation = new Translation2d(6.192, -0.88); //change names
