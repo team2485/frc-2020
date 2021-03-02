@@ -352,21 +352,46 @@ public final class Constants {
 
 
         public static final DifferentialDriveVoltageConstraint AUTO_VOLTAGE_CONSTRAINT = new DifferentialDriveVoltageConstraint(
-                new SimpleMotorFeedforward(ApolloTerms.KS_VOLTS,
-                        ApolloTerms.KV_VOLT_SECONDS_PER_METER,
-                        ApolloTerms.KA_VOLT_SECONDS_SQUARED_PER_METER), ApolloTerms.K_DRIVE_KINEMATICS, 10);
+                new SimpleMotorFeedforward(ArtemisTerms.KS_VOLTS,
+                        ArtemisTerms.KV_VOLT_SECONDS_PER_METER,
+                        ArtemisTerms.KA_VOLT_SECONDS_SQUARED_PER_METER), ArtemisTerms.K_DRIVE_KINEMATICS, 10);
 
 
         //create config for trajectory
 
         public static final TrajectoryConfig TRAJECTORY_CONFIG = new TrajectoryConfig(4, 2)
                 //kinematics to ensure max speed is obeyed + applying voltage constraint
-                .setKinematics(ApolloTerms.K_DRIVE_KINEMATICS).addConstraint(AUTO_VOLTAGE_CONSTRAINT);
+                .setKinematics(ArtemisTerms.K_DRIVE_KINEMATICS).addConstraint(AUTO_VOLTAGE_CONSTRAINT);
 
         public static final TrajectoryConfig COMPLEX_TRAJECTORY_CONFIG = new TrajectoryConfig(1, 2)
                 //kinematics to ensure max speed is obeyed + applying voltage constraint
-                .setKinematics(ApolloTerms.K_DRIVE_KINEMATICS).addConstraint(AUTO_VOLTAGE_CONSTRAINT); //change the fucking names
+                .setKinematics(ArtemisTerms.K_DRIVE_KINEMATICS).addConstraint(AUTO_VOLTAGE_CONSTRAINT);//sfw now
 
+
+    }
+
+    public static final class ArtemisTerms {
+        //Constants for Artemis
+        public static final double KS_VOLTS = 0.171;
+        public static final double KV_VOLT_SECONDS_PER_METER = 2.69;
+        public static final double KA_VOLT_SECONDS_SQUARED_PER_METER = 0.561;
+        public static final double KP_DRIVE_VEL = 0.0005;
+
+        public static final double K_TRACK_WIDTH_METERS = 0.62;
+
+        public static final DifferentialDriveKinematics K_DRIVE_KINEMATICS = new DifferentialDriveKinematics(K_TRACK_WIDTH_METERS);
+
+        public static final double K_MAX_SPEED_METERS_PER_SECOND = 3;
+        public static final double K_MAX_ACCELERATION_METERS_PER_SECOND_SQUARE = 3;
+
+        //public static final double kEncoderDistancePerPulse = (3 * 2 * Math.PI/250);
+
+        public static final double K_ENCODER_DISTANCE_PER_ROTATIO = 2 * Math.PI * 0.0762;
+
+        public static final double K_RAMSETE_B = 2;
+        public static final double K_RAMSETE_ZETA = 0.7;
+
+        public static final double K_PATH_Y = 0.9;
 
     }
 

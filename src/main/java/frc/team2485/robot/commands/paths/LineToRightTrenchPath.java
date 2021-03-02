@@ -8,6 +8,18 @@ import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.geometry.Translation2d;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.controller.RamseteController;
+import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.geometry.Translation2d;
+import edu.wpi.first.wpilibj.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
+import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
+import edu.wpi.first.wpilibj.util.Units;
+import edu.wpi.first.wpilibj2.command.RamseteCommand;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.team2485.WarlordsLib.Limelight;
 import frc.team2485.robot.Constants;
@@ -22,46 +34,52 @@ public class LineToRightTrenchPath extends SequentialCommandGroup {
     public LineToRightTrenchPath(Drivetrain drivetrain, Limelight limelight) {
         super();
 
-        addCommands(this.getRamseteCommand(limelight), new RunCommand(()-> m_drivetrain.driveVolts(0,0)));
+        addCommands(this.getRamseteCommand(drivetrain, limelight), new RunCommand(()-> m_drivetrain.driveVolts(0,0)));
     }
 
-    private RamseteCommand getRamseteCommand (Limelight limelight) {
+    private RamseteCommand getRamseteCommand (Drivetrain driveTrain, Limelight limelight) {
+
         double tx = limelight.getTargetHorizontalOffset(0);
         double startPointY = -1 * (Constants.Autonomous.POWER_PORT_X_POS + (Constants.Autonomous.INITIATION_LINE_X * Math.tan( Math.toRadians(tx)))); //check sign of tx
         double endPointY = Constants.Autonomous.RIGHT_TRENCH_END_Y;
         double startPointX = Constants.Autonomous.INITIATION_LINE_X;
 
+        //voltage constant to ensure we don't accelerate too fast
+
+        DifferentialDriveVoltageConstraint autoVoltageConstraint = Constants.Autonomous.AUTO_VOLTAGE_CONSTRAINT;
+
+        //create config for trajectory
+
+        TrajectoryConfig trajectoryConfig = Constants.Autonomous.TRAJECTORY_CONFIG;
+
         //initial + (90% of delta)k
 
-        Rotation2d zeroRotation = new Rotation2d(0);
-        Pose2d rightTrenchStart = new Pose2d(3.169, startPointY, zeroRotation);
-        //Pose2d threeBallStart = new Pose2d(startPointX, 3.169, zeroRotation);
-        Pose2d rightTrenchEnd = new Pose2d(8.106, -0.71, zeroRotation);
-        //Pose2d threeBallEnd = new Pose2d(0.71, 8.106, zeroRotation);
-        Translation2d middleTranslation = new Translation2d(5.768, startPointY + (Constants.ApolloTerms.K_PATH_Y * (endPointY - startPointY)));
-        //Translation2d middleTranslation = new Translation2d(startPointX + (Constants.kPathY * (endPointX - startPointX)), 5.768);
-        ArrayList<Translation2d> rightTrenchInteriorWaypoints = new ArrayList<>();
-        rightTrenchInteriorWaypoints.add(middleTranslation);
+        Rotation2d submissionRotation = new Rotation2d(0);
+        Pose2d submissionAutoStart = new Pose2d(3.19, startPointY, submissionRotation); //maybe maybe it zero at least to start
+        Pose2d submissionAutoEnd = new Pose2d(7.62, -0.88, submissionRotation);
+        Translation2d submissionAutoTranslation = new Translation2d(6.192, -0.88); //change names
+        ArrayList<Translation2d> submissionAutoWaypoints = new ArrayList<Translation2d>();
+        submissionAutoWaypoints.add(submissionAutoTranslation);
 
+        Trajectory submissionAuto = TrajectoryGenerator.generateTrajectory(submissionAutoStart, submissionAutoWaypoints, submissionAutoEnd, trajectoryConfig);
 
-        Trajectory rightTrenchTrajectory = TrajectoryGenerator.generateTrajectory(rightTrenchStart, rightTrenchInteriorWaypoints, rightTrenchEnd, Constants.Autonomous.TRAJECTORY_CONFIG);
-
-        RamseteCommand rightTrenchPath = new RamseteCommand(
-                rightTrenchTrajectory, //giving the trajectory itself
-                m_drivetrain::getPose, //method reference to the method that returns pose
-                new RamseteController(Constants.ApolloTerms.K_RAMSETE_B, Constants.ApolloTerms.K_RAMSETE_ZETA), //the ramsete controller object
-                new SimpleMotorFeedforward(Constants.ApolloTerms.KS_VOLTS, //drive feedforward
-                        Constants.ApolloTerms.KV_VOLT_SECONDS_PER_METER,
-                        Constants.ApolloTerms.KA_VOLT_SECONDS_SQUARED_PER_METER),
-                Constants.ApolloTerms.K_DRIVE_KINEMATICS, //drive kinematics used to convert chassis speeds to wheel speeds
-                m_drivetrain::getWheelSpeeds, //method reference to the method that returns wheel speeds
-                new PIDController(Constants.ApolloTerms.KP_DRIVE_VEL, 0, 0), //left side pid controller
-                new PIDController(Constants.ApolloTerms.KP_DRIVE_VEL, 0, 0), //right side pid controller
+        RamseteCommand submissionAutoRamseteCommand = new RamseteCommand(
+                submissionAuto, //giving the trajectory itself
+                driveTrain::getPose, //method reference to the method that returns pose
+                new RamseteController(Constants.ArtemisTerms.K_RAMSETE_B, Constants.ArtemisTerms.K_RAMSETE_ZETA), //the ramsete controller object
+                new SimpleMotorFeedforward(Constants.ArtemisTerms.KS_VOLTS, //drive feedforward
+                        Constants.ArtemisTerms.KV_VOLT_SECONDS_PER_METER,
+                        Constants.ArtemisTerms.KA_VOLT_SECONDS_SQUARED_PER_METER),
+                Constants.ArtemisTerms.K_DRIVE_KINEMATICS, //drive kinematics used to convert chassis speeds to wheel speeds
+                driveTrain::getWheelSpeeds, //method reference to the method that returns wheel speeds
+                new PIDController(Constants.ArtemisTerms.KP_DRIVE_VEL, 0, 0), //left side pid controller
+                new PIDController(Constants.ArtemisTerms.KP_DRIVE_VEL, 0, 0), //right side pid controller
                 //Ramsete command passes volts to the callback
-                m_drivetrain::driveVolts, //method reference to the method that passed voltage outputs to the motors
-                m_drivetrain //passing the robot drive itself
+                driveTrain::driveVolts, //method reference to the method that passed voltage outputs to the motors
+                driveTrain //passing the robot drive itself
         );
 
-        return rightTrenchPath;
+        return submissionAutoRamseteCommand;
     }
+
 }

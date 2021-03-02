@@ -514,7 +514,7 @@ public class RobotContainer {
         //auto choices follow -- uncomment to run
 
         // // *** simplest auto -- literally just a path
-        // return new LineToRightTrenchPath(m_drivetrain, m_turret.getLimelight());
+        return new LineToRightTrenchPath(m_drivetrain, m_turret.getLimelight());
 
         // // *** next simplest auto -- shoot three balls then follow path
 
@@ -526,18 +526,18 @@ public class RobotContainer {
         // *** McNugget auto - shoot 3 (preloaded) balls, run path and INTAKE on path, then shoot three from the back of the trench
         //this would be incredible if we could pull it off
 
-        return new SequentialCommandGroup(
-            shootAtLine,
-            new ParallelCommandGroup(
-                new LineToRightTrenchPath(m_drivetrain, m_turret.getLimelight()),
-                new ParallelCommandGroup(
-                    runIntake,
-                    highIntake
-                ).withInterrupt(() -> {return m_flywheels.getBalls() >= 3;})
-            ),
-            primeMagazine,
-            shootAtTrench
-        );
+//        return new SequentialCommandGroup(
+//            shootAtLine,
+//            new ParallelCommandGroup(
+//                new LineToRightTrenchPath(m_drivetrain, m_turret.getLimelight()),
+//                new ParallelCommandGroup(
+//                    runIntake,
+//                    highIntake
+//                ).withInterrupt(() -> {return m_flywheels.getBalls() >= 3;})
+//            ),
+//            primeMagazine,
+//            shootAtTrench
+//        );
     }
 
 
