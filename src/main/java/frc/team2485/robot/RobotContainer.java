@@ -153,8 +153,18 @@ public class RobotContainer {
 
         // Increment high magazine
         m_jack.getJoystickButton(XboxController.Button.kA).whileHeld(
-                new IncrementHighMag(m_highMagazine)
-        ).whenReleased(
+            new ConditionalCommand(
+                new IncrementHighMagazine(m_highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS),//.withInterrupt(() -> !m_ballCounter.transferIRHasBall()),
+                new InstantCommand(() -> {
+                    m_highMagazine.setPWM(0);
+                }, m_highMagazine),
+                () -> {
+                    return
+                            // !m_ballCounter.entranceIRHasBall() && m_ballCounter.getEntranceLastVal()
+                            m_ballCounter.transferIRHasBall();
+//                                            (m_ballCounter.getNumBallsHigh() <= Constants.Magazine.HIGH_MAGAZINE_BALL_CAPACITY);
+                }
+         )).whenReleased(
                 new InstantCommand(() -> {
                     m_highMagazine.setPWM(0);
                 }, m_highMagazine)
@@ -162,7 +172,9 @@ public class RobotContainer {
 
         // Run low magazine
         m_jack.getJoystickButton(XboxController.Button.kA).whileHeld(
-                new RunLowMag(m_lowMagazine)
+            new RunCommand(() -> {
+              m_lowMagazine.runVelocityPID(Constants.Magazine.LOW_INTAKE_VELOCITY);
+                })
         ).whenReleased(
                 new InstantCommand(
                         () ->
@@ -256,8 +268,10 @@ public class RobotContainer {
 
         // Increment/feed ball into shooter
         m_suraj.getJoystickButton(XboxController.Button.kBumperRight).whileHeld(
-                new FeedBallToShooter(m_highMagazine, m_lowMagazine, m_flywheels, m_feeder, m_ballCounter)
-        ).whenReleased(
+            new ConditionalCommand(new FeedBallToShooter( m_flywheels,  m_lowMagazine,  m_feeder,  m_highMagazine),
+                                  new InstantCommand(),
+                                 () -> m_flywheels.atVelocitySetpoint()                     
+           )).whenReleased(
                 new InstantCommand(() -> {
                     m_lowMagazine.setPWM(0);
                     m_highMagazine.setPWM(0);
@@ -471,8 +485,21 @@ public class RobotContainer {
 
     public void configureFlywheelsCommands() {
 
-        m_flywheels.setDefaultCommand(new FlywheelsCommands(m_suraj, m_flywheels));
+        m_flywheels.setDefaultCommand(
+            new RunCommand(() -> {
+                double output = 0;
+                double pwm = Deadband.linearScaledDeadband(m_suraj.getTriggerAxis(GenericHID.Hand.kRight), Constants.OI.XBOX_DEADBAND);
 
+                if (pwm != 0) {
+                    output = -4000 - pwm * 1000;
+
+                    m_flywheels.setVelocity(output);
+                } else {
+                    m_flywheels.setPWM(0);
+                }
+
+            }, m_flywheels)
+    );
 //        m_suraj.getJoystickButton(XboxController.Button.kB).whileHeld(
 //                new RunCommand(() -> {
 //                    m_flywheels.setVelocity(SmartDashboard.getNumber("RPM Setpoint", 0));

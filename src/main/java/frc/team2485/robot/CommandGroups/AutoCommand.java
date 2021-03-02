@@ -4,67 +4,55 @@
 
 package frc.team2485.robot.CommandGroups;
 
-import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.team2485.robot.subsystems.Drivetrain;
 import frc.team2485.robot.subsystems.Flywheels;
 import frc.team2485.robot.subsystems.HighMagazine;
+import frc.team2485.robot.subsystems.Hood;
 import frc.team2485.robot.subsystems.LowMagazine;
 
-public class AutoCommand extends CommandGroup {
-  /** Add your docs here. */
+// NOTE:  Consider using this command inline, rather than writing a subclass.  For more
+// information, see:
+// https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
+public class AutoCommand extends ParallelCommandGroup {
+  /** Creates a new AutoCommand. */
   public AutoCommand(Flywheels m_flywheels, Turret m_turret, Feeder m_feeder, HighMagazine m_highMagazine, LowMagazine m_lowMagazine, Drivetrain m_drivetrain, Hood m_hood) {
-   
-    new SequentialCommandGroup(
-//                                new WaitUntilCommand(() -> m_flywheels.getLeftEncoderVelocity() < -2000),
-//                new ParallelDeadlineGroup(
-//                        new WaitCommand(2),
-//                        new SetFlywheels(m_flywheels, () -> Constants.Setpoints.INITIATION_LINE.RPM) //edit
-////                        new TurretSetAngle(m_turret, () -> {
-////                            return m_turret.getEncoderPosition()
-////                                    + m_turret.getLimelight().getTargetHorizontalOffset(0);
-////                        })
-//                ),
-                new WaitCommand(3),
-                new InstantCommand(() -> {
-//                    m_lowMagazine.setPWM(-0.5);
-                    m_feeder.setPWM(-0.9);
-                }),
-                //new WaitCommand(Constants.Magazine.NORMAL_BALL_INCREMENT_TIMEOUT),
-                new IncrementHighMagazine(m_highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS),
-                new WaitCommand(Constants.Magazine.NORMAL_BALL_INCREMENT_TIMEOUT),
-                new IncrementHighMagazine(m_highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS),
-                new WaitCommand(Constants.Magazine.NORMAL_BALL_INCREMENT_TIMEOUT),
-                new IncrementHighMagazine(m_highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS),
-                new WaitCommand(Constants.Magazine.NORMAL_BALL_INCREMENT_TIMEOUT),
-                new IncrementHighMagazine(m_highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS),
-                new InstantCommand(() -> {
-                    m_lowMagazine.setPWM(0);
-                    m_highMagazine.setPWM(0);
-                    m_feeder.setPWM(0);
-                    m_flywheels.setPWM(0);
-                }),
-                new RunCommand(
-                        () -> {
-                            m_drivetrain.curvatureDrive(-0.3, 0, false);
-                        }
-                )
-                        .withTimeout(2)
-                        .andThen(
-                                new InstantCommand(() -> {
-                                    m_drivetrain.curvatureDrive(0, 0, false);
-                                })
-                        ))
-                .alongWith(
-                        new SetHood(m_hood, () -> Constants.Setpoints.INITIATION_LINE.ANGLE, true)
-                )
-                .alongWith(
-                        new SetFlywheels(m_flywheels, () -> Constants.Setpoints.INITIATION_LINE.RPM)
-                )
-                .alongWith(
-                        new RunCommand(() -> {
-                            m_turret.setPWM(0);
-                        }, m_turret)
-                );
+    
+    addCommands(
 
+        new SequentialCommandGroup(               
+                                new WaitCommand(3),
+                                new InstantCommand(() -> {
+                                    m_feeder.setPWM(-0.9);
+                                }),
+                                new IncrementHighMagazine(m_highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS),
+                                new WaitCommand(Constants.Magazine.NORMAL_BALL_INCREMENT_TIMEOUT),
+                                new IncrementHighMagazine(m_highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS),
+                                new WaitCommand(Constants.Magazine.NORMAL_BALL_INCREMENT_TIMEOUT),
+                                new IncrementHighMagazine(m_highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS),
+                                new WaitCommand(Constants.Magazine.NORMAL_BALL_INCREMENT_TIMEOUT),
+                                new IncrementHighMagazine(m_highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS),
+                                new InstantCommand(() -> {
+                                    m_lowMagazine.setPWM(0);
+                                    m_highMagazine.setPWM(0);
+                                    m_feeder.setPWM(0);
+                                    m_flywheels.setPWM(0);
+                                }),
+                                new RunCommand(
+                                        () -> {
+                                            m_drivetrain.curvatureDrive(-0.3, 0, false);
+                                        }
+                                )
+                                        .withTimeout(2)
+                                        .andThen(
+                                                new InstantCommand(() -> {
+                                                    m_drivetrain.curvatureDrive(0, 0, false);
+                                                })
+                                        )),
+        new SetHood(m_hood, () -> Constants.Setpoints.INITIATION_LINE.ANGLE, true),
+        new SetFlywheels(m_flywheels, () -> Constants.Setpoints.INITIATION_LINE.RPM),
+        new RunCommand(() -> {
+                        m_turret.setPWM(0);
+                }, m_turret));
   }
 }

@@ -4,27 +4,31 @@
 
 package frc.team2485.robot.CommandGroups;
 
-import edu.wpi.first.wpilibj.command.CommandGroup;
-import frc.team2485.robot.subsystems.Climber;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 
-public class ClimberCommands extends CommandGroup {
-  /** Add your docs here. */
+// NOTE:  Consider using this command inline, rather than writing a subclass.  For more
+// information, see:
+// https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
+public class ClimberCommands extends ParallelCommandGroup {
+  /** Creates a new ClimberCommands. */
   public ClimberCommands(Climber m_climber, Turret m_turret) {
    
-    new ParallelCommandGroup(
-      new ConditionalCommand(
-              new TurretSetAngle(m_turret, 90, false),
-              new TurretSetAngle(m_turret, -90, false),
-              () -> m_turret.getEncoderPosition() > 0
-      ),
-      new SequentialCommandGroup(
-              new WaitUntilCommand(
-                      () -> Math.abs(m_turret.getEncoderPosition()) >= 45
-              ),
-              new InstantCommand(() -> m_climber.setPWM(Constants.Climber.DEFAULT_PWM)
-              )
-      )
-  ); 
+    addCommands(
+
+        new ConditionalCommand(
+                new TurretSetAngle(m_turret, 90, false),
+                new TurretSetAngle(m_turret, -90, false),
+                () -> m_turret.getEncoderPosition() > 0
+        ),
+        new SequentialCommandGroup(
+                new WaitUntilCommand(
+                        () -> Math.abs(m_turret.getEncoderPosition()) >= 45
+                ),
+                new InstantCommand(() -> m_climber.setPWM(Constants.Climber.DEFAULT_PWM)
+                )
+        )
+    ); 
+
 
   }
 }

@@ -4,57 +4,31 @@
 
 package frc.team2485.robot.CommandGroups;
 
-import edu.wpi.first.wpilibj.command.CommandGroup;
-import frc.team2485.robot.subsystems.BallCounter;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team2485.robot.subsystems.Flywheels;
 import frc.team2485.robot.subsystems.HighMagazine;
 import frc.team2485.robot.subsystems.LowMagazine;
+import jdk.internal.jline.internal.Log;
 
-public class FeedBallToShooter extends CommandGroup {
-  /** Add your docs here. */
-  public FeedBallToShooter(HighMagazine m_HighMagazine, LowMagazine m_LowMagazine, Flywheels m_Flywheels, Feeder m_feeder, BallCounter m_BallCounter) {
+// NOTE:  Consider using this command inline, rather than writing a subclass.  For more
+// information, see:
+// https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
+public class FeedBallToShooterTest extends SequentialCommandGroup {
+  /** Creates a new FeedBallToShooterTest. */
+  public FeedBallToShooterTest(Flywheels m_flywheels, LowMagazine m_lowMagazine, Feeder m_feeder, HighMagazine m_highMagazine) {
+    // Add your commands in the addCommands() call, e.g.
+    // addCommands(new FooCommand(), new BarCommand());
+    addCommands(
 
-    new ConditionalCommand(
-      new SequentialCommandGroup(
               new WaitUntilCommand(() -> m_flywheels.atVelocitySetpoint()),
               new InstantCommand(
-                      () -> {
-                          m_lowMagazine.setPWM(-0.5);
-                          m_feeder.setPWM(-0.9); //change
-                      }, m_lowMagazine, m_feeder
-              ),
-//                                new WaitCommand(Constants.Magazine.NORMAL_BALL_INCREMENT_TIMEOUT),
-              new IncrementHighMagazine(m_highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS)
-      ),
-      new InstantCommand(),
-      () -> m_flywheels.atVelocitySetpoint());
-
-//                new SequentialCommandGroup(
-//                        new RunCommand(
-//                                () -> {
-//                                    m_highMagazine.runVelocityPID(-40);
-//                                }
-//                        ).withInterrupt(
-//                                () -> m_ballCounter.exitIRHasBall()
-//                        ).andThen(
-//                                new InstantCommand(
-//                                        () -> {
-//                                            m_highMagazine.setPWM(0);
-//                                        }
-//                                )
-//                        ),
-//                        new ConditionalCommand(
-//                                new SequentialCommandGroup(
-//                                        new InstantCommand(() -> {
-//                                            m_lowMagazine.setPWM(-0.5);
-//                                            m_feeder.setPWM(-0.8);
-//                                        }).alongWith(
-//                                                new IncrementHighMagazine(m_highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS),
-//                                                new WaitCommand(Constants.Magazine.NORMAL_BALL_INCREMENT_TIMEOUT),
-//                                        )),
-//                                new InstantCommand(),
-//                                () -> m_flywheels.getLeftEncoderVelocity() < -1000 && m_flywheels.getRightEncoderVelocity() < -1000
-//                        )
-//                ),
+                        () -> {
+                            m_lowMagazine.setPWM(-0.5);
+                            m_feeder.setPWM(-0.9); //change
+                        }, m_lowMagazine, m_feeder
+                ),
+                new IncrementHighMagazine(m_highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS)
+        );
+       
   }
 }
