@@ -102,9 +102,14 @@ public class RobotContainer {
         }));
 
         //reset ball count
-        m_jack.getJoystickButton(XboxController.Button.kStart).whenPressed(new InstantCommand(() -> {
+        m_suraj.getJoystickButton(XboxController.Button.kStart).whenPressed(new InstantCommand(() -> {
             m_flywheels.fullCount();
         }));
+
+        m_suraj.getJoystickAxisButton(Axis.kLeftTrigger, 0.2).whenPressed(new InstantCommand(()->
+        {m_flywheels.zeroCount();}));
+
+
 
         this.configureTuning();
     }
