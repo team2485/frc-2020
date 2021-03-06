@@ -48,6 +48,8 @@ public class RobotContainer {
 
     private boolean intakeDown;
 
+    private boolean turretToggle;
+
     private SendableChooser<Tunable> m_tuneChooser;
 
     public RobotContainer() {
@@ -64,6 +66,7 @@ public class RobotContainer {
         m_turret = new Turret();
         m_climber = new Climber();
         m_intake = new Intake();
+        m_turretToggle = false; 
 
         m_tuneChooser = new SendableChooser<Tunable>();
 
@@ -100,7 +103,7 @@ public class RobotContainer {
 
         //reset ball count
         m_jack.getJoystickButton(XboxController.Button.kStart).whenPressed(new InstantCommand(() -> {
-            m_flywheels.zeroCount();
+            m_flywheels.fullCount();
         }));
 
         this.configureTuning();
@@ -221,17 +224,6 @@ public class RobotContainer {
                 })
         );
 
-        m_suraj.getJoystickButton(XboxController.Button.kX).whileHeld(
-                new TurretSetAngle(m_turret, () -> {
-                    return m_turret.getEncoderPosition()
-                            + m_turret.getLimelight().getTargetHorizontalOffset(0)
-                            + Deadband.cubicScaledDeadband(
-                            m_suraj.getX(GenericHID.Hand.kRight),
-                            Constants.OI.XBOX_DEADBAND);
-                })
-        ).whenReleased(
-                new InstantCommand(() -> m_turret.setPWM(0))
-        );
 
         m_suraj.getJoystickButton(XboxController.Button.kStart).whileHeld(
                 new RunCommand(() -> {
@@ -378,15 +370,31 @@ public class RobotContainer {
     }
 
     public void configureTurretCommands() {
-
         m_turret.setDefaultCommand(
+            new ConditionalCommand(
+                new TurretSetAngle(m_turret, () -> {
+                    return m_turret.getEncoderPosition()
+                            + m_turret.getLimelight().getTargetHorizontalOffset(0)
+                            + Deadband.cubicScaledDeadband(
+                            m_charles.getX(GenericHID.Hand.kRight),
+                            Constants.OI.XBOX_DEADBAND);
+                }),
                 new RunCommand(() -> {
                     m_turret.runVelocityPID(
                             getAxis(m_suraj, Axis.kLeftX) * Constants.Turret.MAX_VELOCITY
                     );
-                }, m_turret)
+                }, m_turret),
+                ()-> {return m_turretToggle;}
+            )
         );
+        
 
+        m_suraj.getJoystickButton(XboxController.Button.kX).toggleWhenPressed(
+            new StartEndCommand(
+                () -> {m_turretToggle = true;},
+                () -> {m_turretToggle = false;}
+            ));
+    
     }
 
     public void configureHoodCommands() {
@@ -514,7 +522,7 @@ public class RobotContainer {
 //        //auto choices follow -- uncomment to run
 
         // // *** simplest auto -- literally just a path
-        return new LineToRightTrenchPath(m_drivetrain, m_turret.getLimelight());
+        // return new LineToRightTrenchPath(m_drivetrain, m_turret.getLimelight());
 
         // // *** next simplest auto -- shoot three balls then follow path
 

@@ -177,6 +177,10 @@ public class Flywheels extends SubsystemBase implements Tunable, Configurable {
         m_numBalls = 0;
     }
 
+    public void fullCount() {
+        m_numBalls = 3;
+    }
+
     public void incrementBalls(boolean pos) {
         m_numBalls = pos ? m_numBalls + 1 : m_numBalls - 1;
     }
