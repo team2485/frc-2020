@@ -388,11 +388,7 @@ public class RobotContainer {
                             m_suraj.getX(GenericHID.Hand.kRight),
                             Constants.OI.XBOX_DEADBAND);
                 }),
-                new RunCommand(() -> {
-                    m_turret.runVelocityPID(
-                            getAxis(m_suraj, Axis.kLeftX) * Constants.Turret.MAX_VELOCITY
-                    );
-                }, m_turret),
+                new TurretWithController(m_turret, m_suraj),
                 ()-> {return m_turretToggle;}
             )
         );
