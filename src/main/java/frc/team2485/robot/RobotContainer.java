@@ -48,7 +48,7 @@ public class RobotContainer {
 
     private boolean intakeDown;
 
-    private boolean turretToggle;
+    private boolean m_turretToggle;
 
     private SendableChooser<Tunable> m_tuneChooser;
 
@@ -385,7 +385,7 @@ public class RobotContainer {
                     return m_turret.getEncoderPosition()
                             + m_turret.getLimelight().getTargetHorizontalOffset(0)
                             + Deadband.cubicScaledDeadband(
-                            m_charles.getX(GenericHID.Hand.kRight),
+                            m_suraj.getX(GenericHID.Hand.kRight),
                             Constants.OI.XBOX_DEADBAND);
                 }),
                 new RunCommand(() -> {
@@ -555,6 +555,7 @@ public class RobotContainer {
 //            primeMagazine,
 //            shootAtTrench
 //        );
+        return null;
     }
 
 
