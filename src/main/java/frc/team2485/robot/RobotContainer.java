@@ -315,56 +315,60 @@ public class RobotContainer {
                 )
         );
 
-        DoubleSupplier flywheelsSetpoint = () -> {
-            if (m_suraj.getYButton()) {
-                return Constants.Setpoints.INITIATION_LINE.RPM; // close
-            } else if (m_suraj.getBButton()) {
-                return Constants.Setpoints.CLOSE_TRENCH.RPM;
-            } else if (m_suraj.getAButton()) {
-                return  Constants.Setpoints.FAR.RPM; // far
+        // DoubleSupplier flywheelsSetpoint = () -> {
+        //     if (m_suraj.getYButton()) {
+        //         return Constants.Setpoints.INITIATION_LINE.RPM; // close
+        //     } else if (m_suraj.getBButton()) {
+        //         return Constants.Setpoints.CLOSE_TRENCH.RPM;
+        //     } else if (m_suraj.getAButton()) {
+        //         return  Constants.Setpoints.FAR.RPM; // far
 
-            } else {
-                return Math.copySign(SmartDashboard.getNumber("Velocity RPM", -3000), -1);
-            }
+        //     } else {
+        //         return Math.copySign(SmartDashboard.getNumber("Velocity RPM", -3000), -1);
+        //     }
 
-        };
+        // };
 
-        // shoot left trigger
-        m_suraj.getJoystickAxisButton(Axis.kLeftTrigger, 0.2).whileHeld(
-                new SetFlywheels(m_flywheels, () -> {return -3000;})
-        ).whenReleased(
-                new InstantCommand(
-                        () -> {
-                            m_flywheels.setPWM(0);
-                        }
-                )
-        );
-
+        // // shoot left trigger
+        // m_suraj.getJoystickAxisButton(Axis.kLeftTrigger, 0.2).whileHeld(
+        //         new SetFlywheels(m_flywheels, () -> {return -3000;})
+        // ).whenReleased(
+        //         new InstantCommand(
+        //                 () -> {
+        //                     m_flywheels.setPWM(0);
+        //                 }
+        //         )
+        // );
+        
         //zone 1 (green) shot - close shot
-        m_suraj.getJoystickButton(XboxController.Button.kY).whileHeld(
+        m_suraj.getJoystickButton(XboxController.Button.kY).whenPressed(
                 new ParallelCommandGroup(
-                        new SetHood(m_hood, () -> Constants.Setpoints.GREEN_ZONE.ANGLE, false)
+                        new SetHood(m_hood, () -> Constants.Setpoints.GREEN_ZONE.ANGLE),
+                        new SetFlywheels(m_flywheels, () -> Constants.Setpoints.GREEN_ZONE.RPM)
                 )
         );
 
         //zone 2 (yellow) shot
-        m_suraj.getJoystickButton(XboxController.Button.kB).whileHeld(
+        m_suraj.getJoystickButton(XboxController.Button.kB).whenPressed(
                 new ParallelCommandGroup(
-                        new SetHood(m_hood, () -> Constants.Setpoints.YELLOW_ZONE.ANGLE, false)
+                        new SetHood(m_hood, () -> Constants.Setpoints.YELLOW_ZONE.ANGLE),
+                        new SetFlywheels(m_flywheels, () -> Constants.Setpoints.YELLOW_ZONE.RPM)
                 )
         );
 
         //zone 3 (blue) shot
-        m_suraj.getJoystickButton(XboxController.Button.kA).whileHeld(
+        m_suraj.getJoystickButton(XboxController.Button.kA).whenPressed(
                 new ParallelCommandGroup(
-                        new SetHood(m_hood, () -> Constants.Setpoints.BLUE_ZONE.ANGLE, false)
+                        new SetHood(m_hood, () -> Constants.Setpoints.BLUE_ZONE.ANGLE),
+                        new SetFlywheels(m_flywheels, () -> Constants.Setpoints.BLUE_ZONE.RPM)
                 )
         );
 
         //zone 4 (red) shot
-        m_suraj.getJoystickButton(XboxController.Button.kBumperLeft).whileHeld(
+        m_suraj.getJoystickButton(XboxController.Button.kBumperLeft).whenPressed(
                 new ParallelCommandGroup(
-                        new SetHood(m_hood, () -> Constants.Setpoints.RED_ZONE.ANGLE, false)
+                        new SetHood(m_hood, () -> Constants.Setpoints.RED_ZONE.ANGLE),
+                        new SetFlywheels(m_flywheels, () -> Constants.Setpoints.RED_ZONE.RPM)
                 )
         );
     }
