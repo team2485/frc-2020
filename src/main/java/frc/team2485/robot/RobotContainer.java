@@ -141,10 +141,11 @@ public class RobotContainer {
 
         //holding command to lower intake
         m_jack.getJoystickButton(XboxController.Button.kY).whileHeld(
-                new InstantCommand(() ->
-                        m_lowMagazine.setPWM(Constants.Intake.LOWERING_PWM)))
+                new InstantCommand(() ->    
+                    m_lowMagazine.setPWM(Constants.Intake.LOWERING_PWM)))
                         .whenReleased(
-                                new InstantCommand(() -> m_lowMagazine.setPWM(0))
+                                new InstantCommand(() -> m_lowMagazine.setPWM(0
+                                ))
                         );
         
         // Increment high magazine
@@ -269,6 +270,7 @@ public class RobotContainer {
                                 m_flywheels.incrementBalls(false);
                             }, m_lowMagazine, m_feeder
                     ),
+                    new WaitCommand(0.5),
                     new IncrementHighMagazine(m_highMagazine, Constants.Magazine.PUSH_IN_INCREMENT)
                     )
             ));
