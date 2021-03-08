@@ -1,5 +1,6 @@
 package frc.team2485.robot.subsystems;
 
+import com.revrobotics.CANSparkMax;
 import com.revrobotics.ControlType;
 import edu.wpi.first.wpilibj.Counter;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -31,6 +32,8 @@ public class LowMagazine extends SubsystemBase implements VelocityPIDSubsystem {
         m_spark.enableVoltageCompensation(Constants.NOMINAL_VOLTAGE);
         m_spark.setEncoderPosition(0);
         m_spark.setSmartCurrentLimit(Constants.Magazine.SPARK_LOW_MAX_CURRENT);
+
+        m_spark.setIdleMode(CANSparkMax.IdleMode.kBrake);
 
         RobotConfigs.getInstance().addConfigurable(Constants.Magazine.LOW_MAGAZINE_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL, m_spark);
 
