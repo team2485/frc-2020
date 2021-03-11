@@ -18,6 +18,7 @@ public class TurretWithController extends CommandBase {
     public TurretWithController(Turret turret, WL_XboxController controller) {
         this.m_turret = turret;
         this.m_controller = controller;
+        addRequirements(turret);
         }
         public void execute() {
             m_turret.runVelocityPID(

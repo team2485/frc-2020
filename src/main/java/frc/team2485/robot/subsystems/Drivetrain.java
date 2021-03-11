@@ -71,19 +71,20 @@ public class Drivetrain extends SubsystemBase  {
         this.m_encoderRight.setPositionConversionFactor(Constants.Drivetrain.DISTANCE_PER_REVOLUTION);
 
         this.m_throttleRamp = new RampRate();
+        this.m_throttleRamp.setRampRates(0.4, 0.1);
 
         SendableRegistry.add(this.m_drive, "DifferentialDrive");
 
-        RobotConfigs.getInstance().addConfigurable("drivetrainThrottleRamp", m_throttleRamp);
+        //RobotConfigs.getInstance().addConfigurable("drivetrainThrottleRamp", m_throttleRamp);
 
         this.addToShuffleboard();
 
-        m_sparkLeft1Master.setIdleMode(CANSparkMax.IdleMode.kBrake);
-        m_sparkLeft2.setIdleMode(CANSparkMax.IdleMode.kBrake);
-        m_sparkLeft3.setIdleMode(CANSparkMax.IdleMode.kBrake);
-        m_sparkRight1Master.setIdleMode(CANSparkMax.IdleMode.kBrake);
-        m_sparkRight2.setIdleMode(CANSparkMax.IdleMode.kBrake);
-        m_sparkRight3.setIdleMode(CANSparkMax.IdleMode.kBrake);
+        // m_sparkLeft1Master.setIdleMode(CANSparkMax.IdleMode.kBrake);
+        // m_sparkLeft2.setIdleMode(CANSparkMax.IdleMode.kBrake);
+        // m_sparkLeft3.setIdleMode(CANSparkMax.IdleMode.kBrake);
+        // m_sparkRight1Master.setIdleMode(CANSparkMax.IdleMode.kBrake);
+        // m_sparkRight2.setIdleMode(CANSparkMax.IdleMode.kBrake);
+        // m_sparkRight3.setIdleMode(CANSparkMax.IdleMode.kBrake);
 
 
     }
@@ -95,7 +96,7 @@ public class Drivetrain extends SubsystemBase  {
 
         tab.addNumber("Left PWM", m_sparkLeft1Master::getAppliedOutput);
         tab.addNumber("Right PWM", m_sparkRight1Master::getAppliedOutput);
-        tab.add("throttle ramp", this.m_throttleRamp);
+       // tab.add("throttle ramp", this.m_throttleRamp);
         tab.addNumber("Left Encoder Position", this::getLeftEncoderPosition);
         tab.addNumber("Left Encoder Velocity", this::getLeftEncoderVelocity);
         tab.addNumber("Right Encoder Position", this::getRightEncoderPosition);
