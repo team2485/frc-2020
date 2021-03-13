@@ -26,15 +26,14 @@ public class ABluePath extends SequentialCommandGroup {
     }
 
     private RamseteCommand getRamseteCommand(Drivetrain drivetrain, double startX, double startY) {
-        var autoVolageConstraint = Constants.Autonomous.AUTO_VOLTAGE_CONSTRAINT;
         TrajectoryConfig config = Constants.Autonomous.TRAJECTORY_CONFIG;
         
-        Pose2d A_BlueStart = new Pose2d(Units.feetToMeters(startX), Units.feetToMeters(startY), new Rotation2d(0));
+        Pose2d A_BlueStart = new Pose2d(Units.feetToMeters(2.5), Units.feetToMeters(-7.5), new Rotation2d(0));
         //End coordinates: X = middle of endzone, Y = y coordinate of last inner waypoint
-        Pose2d A_BlueEnd = new Pose2d(Units.feetToMeters(28.75), Units.feetToMeters(7.5), new Rotation2d(0));
-        Translation2d A_Blue1 = new Translation2d(Units.feetToMeters(15), Units.feetToMeters(2.5));
-        Translation2d A_Blue2 = new Translation2d(Units.feetToMeters(17.5), Units.feetToMeters(10));
-        Translation2d A_Blue3 = new Translation2d(Units.feetToMeters(22.5), Units.feetToMeters(7.5));
+        Pose2d A_BlueEnd = new Pose2d(Units.feetToMeters(27.5), Units.feetToMeters(-7.5), new Rotation2d(0));
+        Translation2d A_Blue1 = new Translation2d(Units.feetToMeters(15), Units.feetToMeters(-12.5));
+        Translation2d A_Blue2 = new Translation2d(Units.feetToMeters(17.5), Units.feetToMeters(-5));
+        Translation2d A_Blue3 = new Translation2d(Units.feetToMeters(22.5), Units.feetToMeters(-7.5));
         ArrayList <Translation2d> A_BlueWaypoints = new ArrayList<Translation2d>();
         A_BlueWaypoints.add(A_Blue1);
         A_BlueWaypoints.add(A_Blue2);
@@ -42,6 +41,7 @@ public class ABluePath extends SequentialCommandGroup {
 
         Trajectory A_BlueTrajectory = TrajectoryGenerator.generateTrajectory(A_BlueStart, A_BlueWaypoints, A_BlueEnd, config);
 
+        drivetrain.resetOdometry(A_BlueTrajectory.getInitialPose());
         RamseteCommand A_BlueRamsete = new RamseteCommand(
             A_BlueTrajectory, drivetrain::getPose,
             new RamseteController(Constants.ArtemisTerms.K_RAMSETE_B, Constants.ArtemisTerms.K_RAMSETE_ZETA),

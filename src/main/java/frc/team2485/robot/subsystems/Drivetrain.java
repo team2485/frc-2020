@@ -1,6 +1,7 @@
 package frc.team2485.robot.subsystems;
 
 import com.ctre.phoenix.sensors.PigeonIMU;
+import com.revrobotics.AlternateEncoderType;
 import com.revrobotics.CANEncoder;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
@@ -33,12 +34,13 @@ public class Drivetrain extends SubsystemBase  {
     private WL_SparkMax m_sparkRight2;
     private WL_SparkMax m_sparkRight3;
 
-    private SparkMaxAlternateEncoder m_encoderLeft;
-    private SparkMaxAlternateEncoder m_encoderRight;
+    private CANEncoder m_encoderLeft;
+    private CANEncoder m_encoderRight;
 
     private RampRate m_throttleRamp;
 
     private PigeonIMU m_pigeon;
+    private CANSparkMax.IdleMode m_idleMode;
 
 
     public Drivetrain() {
@@ -61,10 +63,11 @@ public class Drivetrain extends SubsystemBase  {
         this.m_drive = new DifferentialDrive(m_sparkLeft1Master, m_sparkRight1Master);
         this.m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(m_pigeon.getFusedHeading()));
 
-        this.m_encoderLeft = new SparkMaxAlternateEncoder(Constants.Drivetrain.LEFT_ENCODER_SPARK, Constants.Drivetrain.ENCODER_CPR);
-        this.m_encoderRight = new SparkMaxAlternateEncoder(Constants.Drivetrain.RIGHT_ENCODER_SPARK, Constants.Drivetrain.ENCODER_CPR);
+        this.m_encoderLeft = m_sparkLeft1Master.getAlternateEncoder(AlternateEncoderType.kQuadrature, 500);
 
+        this.m_encoderRight = m_sparkRight1Master.getAlternateEncoder(AlternateEncoderType.kQuadrature, 500);
         this.m_encoderRight.setInverted(true);
+
 
 
         this.m_encoderLeft.setPositionConversionFactor(Constants.Drivetrain.DISTANCE_PER_REVOLUTION);
@@ -74,18 +77,13 @@ public class Drivetrain extends SubsystemBase  {
         this.m_throttleRamp.setRampRates(0.4, 0.1);
 
         SendableRegistry.add(this.m_drive, "DifferentialDrive");
+        m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
 
         //RobotConfigs.getInstance().addConfigurable("drivetrainThrottleRamp", m_throttleRamp);
 
         this.addToShuffleboard();
-
-        // m_sparkLeft1Master.setIdleMode(CANSparkMax.IdleMode.kBrake);
-        // m_sparkLeft2.setIdleMode(CANSparkMax.IdleMode.kBrake);
-        // m_sparkLeft3.setIdleMode(CANSparkMax.IdleMode.kBrake);
-        // m_sparkRight1Master.setIdleMode(CANSparkMax.IdleMode.kBrake);
-        // m_sparkRight2.setIdleMode(CANSparkMax.IdleMode.kBrake);
-        // m_sparkRight3.setIdleMode(CANSparkMax.IdleMode.kBrake);
-
+        m_idleMode = CANSparkMax.IdleMode.kBrake;
+        this.setIdleMode(m_idleMode);
 
     }
 
@@ -106,6 +104,25 @@ public class Drivetrain extends SubsystemBase  {
 
     }
 
+    public void setIdleMode(CANSparkMax.IdleMode mode) {
+        System.out.println(mode);
+        this.m_idleMode = mode;
+        m_sparkLeft1Master.setIdleMode(mode);
+        m_sparkLeft2.setIdleMode(mode);
+        m_sparkLeft3.setIdleMode(mode);
+        m_sparkRight1Master.setIdleMode(mode);
+        m_sparkRight2.setIdleMode(mode);
+        m_sparkRight3.setIdleMode(mode);
+    }
+
+    public void toggleIdleMode() {
+        if(this.m_idleMode == CANSparkMax.IdleMode.kBrake) {
+            this.setIdleMode(CANSparkMax.IdleMode.kCoast);
+        } else {
+            this.setIdleMode(CANSparkMax.IdleMode.kBrake);
+        }
+    }
+
     public void curvatureDrive(double throttle, double steering, boolean isQuickTurn) {
         double throttleNextValue = m_throttleRamp.getNextValue(throttle);
         m_drive.curvatureDrive(throttleNextValue, steering, isQuickTurn);
@@ -120,6 +137,11 @@ public class Drivetrain extends SubsystemBase  {
     public void resetEncoders(double posLeft, double posRight) {
         m_encoderRight.setPosition(posLeft);
         m_encoderLeft.setPosition(posRight);
+    }
+
+    public void resetEncoders() {
+        m_encoderRight.setPosition(0);
+        m_encoderLeft.setPosition(0);
     }
 
     public double getLeftEncoderPosition() {
@@ -147,7 +169,7 @@ public class Drivetrain extends SubsystemBase  {
     }
 
     public double getHeading() {
-        return -m_pigeon.getFusedHeading();
+        return m_pigeon.getFusedHeading();
     }
 
     public void driveVolts(double leftVolts, double rightVolts) {
@@ -164,12 +186,19 @@ public class Drivetrain extends SubsystemBase  {
         return m_odometry.getPoseMeters();
     }
 
+    public void resetOdometry(Pose2d pose) {
+        resetEncoders();
+        m_odometry.resetPosition(pose, Rotation2d.fromDegrees(getHeading()));
+      }
+
     public DifferentialDriveWheelSpeeds getWheelSpeeds() {
         return new DifferentialDriveWheelSpeeds(m_encoderLeft.getVelocity(), m_encoderRight.getVelocity());
     }
 
     @Override
     public void periodic() {
+       m_odometry.update(Rotation2d.fromDegrees(getHeading()), m_encoderLeft.getPosition(), m_encoderRight.getPosition());
+       
     }
 
 

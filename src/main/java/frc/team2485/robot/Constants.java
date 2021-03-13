@@ -94,16 +94,16 @@ public final class Constants {
 
     public static final class Drivetrain {
 
-        public static final int SPARK_LEFT_PORT_MASTER = 10;
-        public static final int SPARK_LEFT_PORT_SLAVE_2 = 11;
-        public static final int SPARK_LEFT_PORT_SLAVE_3 = 12;
+        public static final int SPARK_LEFT_PORT_MASTER = 14;
+        public static final int SPARK_LEFT_PORT_SLAVE_2 = 15;
+        public static final int SPARK_LEFT_PORT_SLAVE_3 = 16;
 
-        public static final int SPARK_RIGHT_PORT_MASTER = 14;
-        public static final int SPARK_RIGHT_PORT_SLAVE_2 = 15;
-        public static final int SPARK_RIGHT_PORT_SLAVE_3 = 16;
+        public static final int SPARK_RIGHT_PORT_MASTER = 10;
+        public static final int SPARK_RIGHT_PORT_SLAVE_2 = 11;
+        public static final int SPARK_RIGHT_PORT_SLAVE_3 = 12;
 
-        public static final int LEFT_ENCODER_SPARK = 10;
-        public static final int RIGHT_ENCODER_SPARK = 14;
+        public static final int LEFT_ENCODER_SPARK = 14;
+        public static final int RIGHT_ENCODER_SPARK = 10;
 
         public static final int PIGEON_IMU_PORT = 1;
 
@@ -359,10 +359,10 @@ public final class Constants {
 
         //create config for trajectory
 
-        public static final TrajectoryConfig TRAJECTORY_CONFIG = new TrajectoryConfig(0.5, 0.5)
+        public static final TrajectoryConfig TRAJECTORY_CONFIG = new TrajectoryConfig(0.6, 0.5)
                 //kinematics to ensure max speed is obeyed + applying voltage constraint
                 .setKinematics(ArtemisTerms.K_DRIVE_KINEMATICS).addConstraint(AUTO_VOLTAGE_CONSTRAINT)
-                .setReversed(true);
+                ;
 
         public static final TrajectoryConfig COMPLEX_TRAJECTORY_CONFIG = new TrajectoryConfig(1, 2)
                 //kinematics to ensure max speed is obeyed + applying voltage constraint
@@ -387,7 +387,7 @@ public final class Constants {
 
         //public static final double kEncoderDistancePerPulse = (3 * 2 * Math.PI/250);
 
-        public static final double K_ENCODER_DISTANCE_PER_ROTATIO = 2 * Math.PI * 0.0762;
+        public static final double K_ENCODER_DISTANCE_PER_ROTATION = 2 * Math.PI * 0.0762;
 
         public static final double K_RAMSETE_B = 2;
         public static final double K_RAMSETE_ZETA = 0.7;

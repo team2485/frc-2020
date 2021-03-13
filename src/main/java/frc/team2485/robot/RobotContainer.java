@@ -466,7 +466,7 @@ public class RobotContainer {
         double startPointY = -1 * (Constants.Autonomous.POWER_PORT_X_POS + (Constants.Autonomous.INITIATION_LINE_X * Math.tan( Math.toRadians(tx)))); //check sign of tx
         double startPointX = Constants.Autonomous.INITIATION_LINE_X;
 
-        return new ABluePath(startPointX, startPointY, m_drivetrain);
+        return new ABluePath(2.5, 7.5, m_drivetrain);
         //utility commands 
 
         // increment into feeder for shooting
@@ -616,9 +616,12 @@ public class RobotContainer {
         SmartDashboard.putNumber(Constants.TUNE_LAYER_LABEL, 0);
         SmartDashboard.putBoolean(Constants.PID_ENABLE_LABEL, false);
         SmartDashboard.putBoolean(Constants.TUNE_ENABLE_LABEL, false);
+        m_jack.getJoystickButton(XboxController.Button.kA).whenPressed(
+            new InstantCommand(m_drivetrain::toggleIdleMode));
     }
 
     public void testPeriodic() {
+
         if (SmartDashboard.getBoolean(Constants.RESET_PID_LABEL, false)) {
             m_tuneChooser.getSelected().resetPIDs();
             SmartDashboard.putBoolean(Constants.RESET_PID_LABEL, false);
@@ -672,6 +675,8 @@ public class RobotContainer {
                 m_turret.setPWM(0);
             }
         }
+
+       
     }
 
     /**
