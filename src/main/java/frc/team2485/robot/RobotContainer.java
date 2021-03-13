@@ -616,8 +616,6 @@ public class RobotContainer {
         SmartDashboard.putNumber(Constants.TUNE_LAYER_LABEL, 0);
         SmartDashboard.putBoolean(Constants.PID_ENABLE_LABEL, false);
         SmartDashboard.putBoolean(Constants.TUNE_ENABLE_LABEL, false);
-        m_jack.getJoystickButton(XboxController.Button.kA).whenPressed(
-            new InstantCommand(m_drivetrain::toggleIdleMode));
     }
 
     public void testPeriodic() {

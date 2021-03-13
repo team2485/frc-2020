@@ -31,15 +31,20 @@ public class ABluePath extends SequentialCommandGroup {
         Pose2d A_BlueStart = new Pose2d(Units.feetToMeters(2.5), Units.feetToMeters(-7.5), new Rotation2d(0));
         //End coordinates: X = middle of endzone, Y = y coordinate of last inner waypoint
         Pose2d A_BlueEnd = new Pose2d(Units.feetToMeters(27.5), Units.feetToMeters(-7.5), new Rotation2d(0));
-        Translation2d A_Blue1 = new Translation2d(Units.feetToMeters(15), Units.feetToMeters(-12.5));
-        Translation2d A_Blue2 = new Translation2d(Units.feetToMeters(17.5), Units.feetToMeters(-5));
-        Translation2d A_Blue3 = new Translation2d(Units.feetToMeters(22.5), Units.feetToMeters(-7.5));
-        ArrayList <Translation2d> A_BlueWaypoints = new ArrayList<Translation2d>();
+        Pose2d A_Blue1 = new Pose2d(Units.feetToMeters(15-0.5*Math.sin(0.3217)), Units.feetToMeters(-12.5-0.5*Math.cos(0.3217)), new Rotation2d(Math.PI/2 -  0.3217));
+        Pose2d A_Blue2 = new Pose2d(Units.feetToMeters(17.5 - 0.5*Math.sin(0.3217)), Units.feetToMeters(-5 - 0.5*Math.cos(0.3217)), new Rotation2d(Math.PI/2 - 0.3217));
+        Pose2d A_Blue3 = new Pose2d(Units.feetToMeters(22.5-1), Units.feetToMeters(-7.5), new Rotation2d(0));
+        // Translation2d A_Blue1 = new Translation2d(Units.feetToMeters(15), Units.feetToMeters(-12.5));
+        // Translation2d A_Blue2 = new Translation2d(Units.feetToMeters(17.5), Units.feetToMeters(-5));
+        // Translation2d A_Blue3 = new Translation2d(Units.feetToMeters(22.5), Units.feetToMeters(-7.5));
+        ArrayList <Pose2d> A_BlueWaypoints = new ArrayList<Pose2d>();
+        A_BlueWaypoints.add(A_BlueStart);
         A_BlueWaypoints.add(A_Blue1);
         A_BlueWaypoints.add(A_Blue2);
         A_BlueWaypoints.add(A_Blue3);
+        A_BlueWaypoints.add(A_BlueEnd);
 
-        Trajectory A_BlueTrajectory = TrajectoryGenerator.generateTrajectory(A_BlueStart, A_BlueWaypoints, A_BlueEnd, config);
+        Trajectory A_BlueTrajectory = TrajectoryGenerator.generateTrajectory(A_BlueWaypoints, config);
 
         drivetrain.resetOdometry(A_BlueTrajectory.getInitialPose());
         RamseteCommand A_BlueRamsete = new RamseteCommand(

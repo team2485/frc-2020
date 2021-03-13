@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team2485.WarlordsLib.RampRate;
@@ -40,8 +41,8 @@ public class Drivetrain extends SubsystemBase  {
     private RampRate m_throttleRamp;
 
     private PigeonIMU m_pigeon;
-    private CANSparkMax.IdleMode m_idleMode;
 
+    private SendableChooser<CANSparkMax.IdleMode> m_dashboardChooser;
 
     public Drivetrain() {
         this.m_sparkLeft1Master = new WL_SparkMax(Constants.Drivetrain.SPARK_LEFT_PORT_MASTER);
@@ -76,14 +77,22 @@ public class Drivetrain extends SubsystemBase  {
         this.m_throttleRamp = new RampRate();
         this.m_throttleRamp.setRampRates(0.4, 0.1);
 
+
+        
+       
+        
+        m_dashboardChooser = new SendableChooser<CANSparkMax.IdleMode> ();
+        m_dashboardChooser.addOption("Brake", CANSparkMax.IdleMode.kBrake);
+        m_dashboardChooser.addOption("Coast", CANSparkMax.IdleMode.kCoast);
+        m_dashboardChooser.setDefaultOption("Coast", CANSparkMax.IdleMode.kCoast);
+        setIdleMode(m_dashboardChooser.getSelected());
+
         SendableRegistry.add(this.m_drive, "DifferentialDrive");
+        
         m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
 
         //RobotConfigs.getInstance().addConfigurable("drivetrainThrottleRamp", m_throttleRamp);
-
         this.addToShuffleboard();
-        m_idleMode = CANSparkMax.IdleMode.kBrake;
-        this.setIdleMode(m_idleMode);
 
     }
 
@@ -91,7 +100,7 @@ public class Drivetrain extends SubsystemBase  {
         ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
         tab.add(this);
         tab.add(this.m_drive);
-
+        tab.add(m_dashboardChooser);
         tab.addNumber("Left PWM", m_sparkLeft1Master::getAppliedOutput);
         tab.addNumber("Right PWM", m_sparkRight1Master::getAppliedOutput);
        // tab.add("throttle ramp", this.m_throttleRamp);
@@ -106,21 +115,12 @@ public class Drivetrain extends SubsystemBase  {
 
     public void setIdleMode(CANSparkMax.IdleMode mode) {
         System.out.println(mode);
-        this.m_idleMode = mode;
         m_sparkLeft1Master.setIdleMode(mode);
         m_sparkLeft2.setIdleMode(mode);
         m_sparkLeft3.setIdleMode(mode);
         m_sparkRight1Master.setIdleMode(mode);
         m_sparkRight2.setIdleMode(mode);
         m_sparkRight3.setIdleMode(mode);
-    }
-
-    public void toggleIdleMode() {
-        if(this.m_idleMode == CANSparkMax.IdleMode.kBrake) {
-            this.setIdleMode(CANSparkMax.IdleMode.kCoast);
-        } else {
-            this.setIdleMode(CANSparkMax.IdleMode.kBrake);
-        }
     }
 
     public void curvatureDrive(double throttle, double steering, boolean isQuickTurn) {
@@ -198,7 +198,7 @@ public class Drivetrain extends SubsystemBase  {
     @Override
     public void periodic() {
        m_odometry.update(Rotation2d.fromDegrees(getHeading()), m_encoderLeft.getPosition(), m_encoderRight.getPosition());
-       
+       setIdleMode(m_dashboardChooser.getSelected());
     }
 
 
