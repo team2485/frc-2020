@@ -462,11 +462,11 @@ public class RobotContainer {
 
     public Command getAutonomousCommand() {
 
-        double tx = m_turret.getLimelight().getTargetHorizontalOffset(0);
-        double startPointY = -1 * (Constants.Autonomous.POWER_PORT_X_POS + (Constants.Autonomous.INITIATION_LINE_X * Math.tan( Math.toRadians(tx)))); //check sign of tx
-        double startPointX = Constants.Autonomous.INITIATION_LINE_X;
+        // double tx = m_turret.getLimelight().getTargetHorizontalOffset(0);
+        // double startPointY = -1 * (Constants.Autonomous.POWER_PORT_X_POS + (Constants.Autonomous.INITIATION_LINE_X * Math.tan( Math.toRadians(tx)))); //check sign of tx
+        // double startPointX = Constants.Autonomous.INITIATION_LINE_X;
 
-        return new ABluePath(2.5, 7.5, m_drivetrain);
+        return new ABluePath(m_drivetrain);
         //utility commands 
 
         // increment into feeder for shooting

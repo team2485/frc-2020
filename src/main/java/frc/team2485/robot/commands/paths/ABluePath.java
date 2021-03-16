@@ -17,38 +17,32 @@ import frc.team2485.robot.Constants;
 import frc.team2485.robot.subsystems.Drivetrain;
 import edu.wpi.first.wpilibj.util.Units;
 import java.util.ArrayList;
+import java.nio.file.Path;
+import edu.wpi.first.wpilibj.Filesystem;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryUtil;
+import java.io.IOException;
 
 public class ABluePath extends SequentialCommandGroup {
 
-    public ABluePath (double startX, double startY, Drivetrain drivetrain) {
+    public ABluePath (Drivetrain drivetrain) {
         super();
-        this.addCommands(this.getRamseteCommand(drivetrain, startX, startY), new RunCommand(()-> drivetrain.driveVolts(0,0)));
+        this.addCommands(this.getRamseteCommand(drivetrain), new RunCommand(()-> drivetrain.driveVolts(0,0)));
     }
 
-    private RamseteCommand getRamseteCommand(Drivetrain drivetrain, double startX, double startY) {
-        TrajectoryConfig config = Constants.Autonomous.TRAJECTORY_CONFIG;
-        
-        Pose2d A_BlueStart = new Pose2d(Units.feetToMeters(2.5), Units.feetToMeters(-7.5), new Rotation2d(0));
-        //End coordinates: X = middle of endzone, Y = y coordinate of last inner waypoint
-        Pose2d A_BlueEnd = new Pose2d(Units.feetToMeters(27.5), Units.feetToMeters(-7.5), new Rotation2d(0));
-        Pose2d A_Blue1 = new Pose2d(Units.feetToMeters(15-0.5*Math.sin(0.3217)), Units.feetToMeters(-12.5-0.5*Math.cos(0.3217)), new Rotation2d(Math.PI/2 -  0.3217));
-        Pose2d A_Blue2 = new Pose2d(Units.feetToMeters(17.5 - 0.5*Math.sin(0.3217)), Units.feetToMeters(-5 - 0.5*Math.cos(0.3217)), new Rotation2d(Math.PI/2 - 0.3217));
-        Pose2d A_Blue3 = new Pose2d(Units.feetToMeters(22.5-1), Units.feetToMeters(-7.5), new Rotation2d(0));
-        // Translation2d A_Blue1 = new Translation2d(Units.feetToMeters(15), Units.feetToMeters(-12.5));
-        // Translation2d A_Blue2 = new Translation2d(Units.feetToMeters(17.5), Units.feetToMeters(-5));
-        // Translation2d A_Blue3 = new Translation2d(Units.feetToMeters(22.5), Units.feetToMeters(-7.5));
-        ArrayList <Pose2d> A_BlueWaypoints = new ArrayList<Pose2d>();
-        A_BlueWaypoints.add(A_BlueStart);
-        A_BlueWaypoints.add(A_Blue1);
-        A_BlueWaypoints.add(A_Blue2);
-        A_BlueWaypoints.add(A_Blue3);
-        A_BlueWaypoints.add(A_BlueEnd);
+    private RamseteCommand getRamseteCommand(Drivetrain drivetrain) {
+        String trajectoryJSON = "output/ablue.wpilib.json";
+        Trajectory trajectory = null;
+        try {
+            Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
+            trajectory = TrajectoryUtil.fromPathweaverJson(trajectoryPath);
+        } catch (IOException ex) {
+            DriverStation.reportError("Unable to open trajectory: " + trajectoryJSON, ex.getStackTrace());
+        }
 
-        Trajectory A_BlueTrajectory = TrajectoryGenerator.generateTrajectory(A_BlueWaypoints, config);
-
-        drivetrain.resetOdometry(A_BlueTrajectory.getInitialPose());
-        RamseteCommand A_BlueRamsete = new RamseteCommand(
-            A_BlueTrajectory, drivetrain::getPose,
+        drivetrain.resetOdometry(trajectory.getInitialPose());
+        RamseteCommand ramsete = new RamseteCommand(
+            trajectory, drivetrain::getPose,
             new RamseteController(Constants.ArtemisTerms.K_RAMSETE_B, Constants.ArtemisTerms.K_RAMSETE_ZETA),
             new SimpleMotorFeedforward(Constants.ArtemisTerms.KS_VOLTS,
                                     Constants.ArtemisTerms.KV_VOLT_SECONDS_PER_METER,
@@ -62,6 +56,6 @@ public class ABluePath extends SequentialCommandGroup {
             drivetrain
         );
 
-        return A_BlueRamsete;
+        return ramsete;
     }
 }
