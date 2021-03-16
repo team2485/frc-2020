@@ -483,7 +483,7 @@ public class RobotContainer {
                         });
 
         //return new ParallelRaceGroup(new ABluePath(m_drivetrain), new ParallelCommandGroup(runIntake, highIntake)));
-        return new ABluePath(m_drivetrain);
+        return new ARedPath(m_drivetrain);
 
     }
 
