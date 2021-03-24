@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.team2485.WarlordsLib.Limelight;
 import frc.team2485.robot.Constants;
@@ -27,7 +27,7 @@ public class ARedPath extends SequentialCommandGroup {
 
     public ARedPath (Drivetrain drivetrain) {
         super();
-        this.addCommands(this.getRamseteCommand(drivetrain), new RunCommand(()-> drivetrain.driveVolts(0,0)));
+        this.addCommands(this.getRamseteCommand(drivetrain), new InstantCommand(()-> drivetrain.driveVolts(0,0)));
     }
 
     private RamseteCommand getRamseteCommand(Drivetrain drivetrain) {

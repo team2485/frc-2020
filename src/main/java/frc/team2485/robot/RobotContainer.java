@@ -474,16 +474,10 @@ public class RobotContainer {
         });
 
         // // increment high magazine to inake
-        Command highIntake = new ConditionalCommand(
-                        new IncrementHighMagazine(m_highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS),
-                        new InstantCommand(() -> {
-                                m_highMagazine.setPWM(0);
-                        }, m_highMagazine), () -> {
-                                return m_flywheels.transferIRHasBall();
-                        });
+        Command highIntake = new RunCommand(()-> {m_highMagazine.setPWM(-0.1);});
 
-        //return new ParallelRaceGroup(new ABluePath(m_drivetrain), new ParallelCommandGroup(runIntake, highIntake)));
-        return new ARedPath(m_drivetrain);
+        return new ParallelRaceGroup(new ARedPath(m_drivetrain), new ParallelCommandGroup(runIntake, highIntake));
+        //return new ARedPath(m_drivetrain);
 
     }
 
