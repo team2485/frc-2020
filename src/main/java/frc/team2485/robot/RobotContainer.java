@@ -483,8 +483,8 @@ public class RobotContainer {
         // // increment high magazine to inake
         Command highIntake = new RunCommand(()-> {m_highMagazine.setPWM(-0.1);});
 
-        return new ParallelRaceGroup(new ARedPath(m_drivetrain), new ParallelCommandGroup(runIntake, highIntake));
-        //return new ParallelRaceGroup(m_GSPathChooser.getPath(), new ParallelCommandGroup(runIntake, highIntake)); 
+        //return new ParallelRaceGroup(new ARedPath(m_drivetrain), new ParallelCommandGroup(runIntake, highIntake));
+        return new ParallelRaceGroup(m_GSPathChooser.getPath(), new ParallelCommandGroup(runIntake, highIntake)); 
         //return new ARedPath(m_drivetrain);
         //return new InstantCommand(m_GSPathChooser::evaluate);
     }

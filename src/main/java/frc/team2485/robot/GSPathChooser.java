@@ -13,7 +13,7 @@ import frc.team2485.WarlordsLib.robotConfigs.RobotConfigs;
 import frc.team2485.WarlordsLib.robotConfigs.Configurable;
 import frc.team2485.robot.commands.paths.*;
 
-public class GSPathChooser {// implements Configurable{
+public class GSPathChooser implements Configurable{
 
     private Drivetrain m_drivetrain;
     private Limelight m_limelight;
@@ -31,7 +31,7 @@ public class GSPathChooser {// implements Configurable{
         m_pathChooser.addOption("B", Boolean.valueOf(false));
         m_pathChooser.setDefaultOption("A", Boolean.valueOf(true));
         m_isA = ((Boolean) m_pathChooser.getSelected()).booleanValue();
-        //RobotConfigs.getInstance().addConfigurable("GSPathChooser", this);
+        RobotConfigs.getInstance().addConfigurable("GSPathChooser", this);
 
         this.addToShuffleboard();
     }
@@ -84,14 +84,14 @@ public class GSPathChooser {// implements Configurable{
         return m_isRed;
     }
 
-    // public void loadConfigs(LoadableConfigs configs) {
-    //     this.setEval(configs.getBoolean("isRed", this.getEval()));
-    // }
+    public void loadConfigs(LoadableConfigs configs) {
+        this.setEval(configs.getBoolean("isRed", this.getEval()));
+    }
 
-    // public void saveConfigs(SavableConfigs configs) {
-    //     configs.put("isRed", this.getEval());
-    //     m_isA = ((Boolean) m_pathChooser.getSelected()).booleanValue();
-    // }
+    public void saveConfigs(SavableConfigs configs) {
+        configs.put("isRed", this.getEval());
+        m_isA = ((Boolean) m_pathChooser.getSelected()).booleanValue();
+    }
 
     
 }
