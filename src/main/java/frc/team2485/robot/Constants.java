@@ -107,7 +107,7 @@ public final class Constants {
 
         public static final int PIGEON_IMU_PORT = 1;
 
-        public static final int MAX_CURRENT = 18;
+        public static final int MAX_CURRENT = 20;
 
         public static final int ENCODER_CPR = 250 * 4; // 4x encoding
 
