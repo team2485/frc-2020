@@ -24,8 +24,7 @@ public class GSPathChooser implements Configurable{
     public GSPathChooser(Drivetrain drivetrain, Limelight limelight){
         m_drivetrain = drivetrain;
         m_limelight = limelight;
-        this.evaluate();
-        
+                
         m_pathChooser = new SendableChooser<Boolean> ();
         m_pathChooser.addOption("A", Boolean.valueOf(true));
         m_pathChooser.addOption("B", Boolean.valueOf(false));
@@ -43,7 +42,7 @@ public class GSPathChooser implements Configurable{
         tab.addNumber("Limelight angle", ()->m_limelight.getTargetHorizontalOffset(0));
     }
 
-    public void evaluate() {
+    private void evaluate() {
         if(m_limelight.getTargetHorizontalOffset(0) > Constants.Autonomous.COLOR_CUTOFF_LL_ANGLE) {
             m_isRed = false;
             System.out.println("not red");
@@ -55,7 +54,10 @@ public class GSPathChooser implements Configurable{
     }
 
     public Command getPath() {
-        this.evaluate();
+        if (m_isA) {
+            evaluate();
+        }
+        
         Command path;
 
         if(m_isA) {
