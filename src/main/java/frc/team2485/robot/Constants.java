@@ -350,6 +350,8 @@ public final class Constants {
 
         public static final double SHOOTING_WARMUP_DELAY = 1;
 
+        public static final double COLOR_CUTOFF_LL_ANGLE = 19.5;
+
 
         public static final DifferentialDriveVoltageConstraint AUTO_VOLTAGE_CONSTRAINT = new DifferentialDriveVoltageConstraint(
                 new SimpleMotorFeedforward(ArtemisTerms.KS_VOLTS,

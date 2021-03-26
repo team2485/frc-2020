@@ -100,7 +100,7 @@ public class Drivetrain extends SubsystemBase  {
         ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
         tab.add(this);
         tab.add(this.m_drive);
-        tab.add(m_dashboardChooser);
+        tab.add("Brake or Coast?", m_dashboardChooser);
         tab.addNumber("Left PWM", m_sparkLeft1Master::getAppliedOutput);
         tab.addNumber("Right PWM", m_sparkRight1Master::getAppliedOutput);
        // tab.add("throttle ramp", this.m_throttleRamp);
@@ -114,7 +114,7 @@ public class Drivetrain extends SubsystemBase  {
     }
 
     public void setIdleMode(CANSparkMax.IdleMode mode) {
-        System.out.println(mode);
+        //System.out.println(mode);
         m_sparkLeft1Master.setIdleMode(mode);
         m_sparkLeft2.setIdleMode(mode);
         m_sparkLeft3.setIdleMode(mode);

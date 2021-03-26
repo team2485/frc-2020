@@ -42,6 +42,8 @@ public class RobotContainer {
     private Turret m_turret;
     private Intake m_intake;
 
+    private GSPathChooser m_GSPathChooser;
+
     private Command m_autoCommand;
 
     private boolean intakeDown;
@@ -64,6 +66,8 @@ public class RobotContainer {
         m_turret = new Turret();
         m_climber = new Climber();
         m_intake = new Intake();
+        m_GSPathChooser = new GSPathChooser(m_drivetrain, m_turret.getLimelight());
+
         m_turretToggle = false; 
 
         m_tuneChooser = new SendableChooser<Tunable>();
@@ -79,6 +83,7 @@ public class RobotContainer {
         m_lowMagazine.resetPIDs();
         m_feeder.resetPIDs();
         m_intake.resetPIDs();
+
     }
 
     private void configureCommands() {
@@ -466,6 +471,8 @@ public class RobotContainer {
         // double startPointY = -1 * (Constants.Autonomous.POWER_PORT_X_POS + (Constants.Autonomous.INITIATION_LINE_X * Math.tan( Math.toRadians(tx)))); //check sign of tx
         // double startPointX = Constants.Autonomous.INITIATION_LINE_X;
 
+        //lower intake 
+        
         // run intake rollers and magazine
             Command runIntake = new RunCommand(() -> {
                 m_lowMagazine.setPWM(Constants.Magazine.LOW_BELT_INTAKE_PWM);
@@ -477,8 +484,9 @@ public class RobotContainer {
         Command highIntake = new RunCommand(()-> {m_highMagazine.setPWM(-0.1);});
 
         return new ParallelRaceGroup(new ARedPath(m_drivetrain), new ParallelCommandGroup(runIntake, highIntake));
+        //return new ParallelRaceGroup(m_GSPathChooser.getPath(), new ParallelCommandGroup(runIntake, highIntake)); 
         //return new ARedPath(m_drivetrain);
-
+        //return new InstantCommand(m_GSPathChooser::evaluate);
     }
 
 

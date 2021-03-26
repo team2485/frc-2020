@@ -52,11 +52,12 @@ public class Robot extends TimedRobot {
     }
 
     m_robotContainer.gameInit();
+
+    
   }
 
   @Override
   public void autonomousPeriodic() {
-
 
   }
 
