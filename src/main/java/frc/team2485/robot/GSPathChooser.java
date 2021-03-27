@@ -19,23 +19,37 @@ public class GSPathChooser implements Configurable{
     private Drivetrain m_drivetrain;
     private Limelight m_limelight;
     private LowMagazine m_lowMagazine;
-    private boolean m_isRed; //if false, is blue
-    private boolean m_isA; //if false, is B path
-    private SendableChooser<Boolean> m_pathChooser; //A or B
     private MedianFilter m_llFilter;
-    private LoadableConfigs m_configsLoaded;
+
+    private static enum PATH_OPTIONS {
+        ARED, ABLUE, BRED, BBLUE;
+
+         Command getPath(Drivetrain drivetrain) {
+            switch(this) {
+                case ARED:
+                    return new ARedPath(drivetrain);
+                case ABLUE:
+                    return new ABluePath(drivetrain);
+                case BRED:
+                    return new BRedPath(drivetrain);
+                case BBLUE:
+                    return new BBluePath(drivetrain);
+                default:
+                    return null;
+            }
+        } 
+
+    }
+
+    private PATH_OPTIONS m_layout;
 
     public GSPathChooser(Drivetrain drivetrain, LowMagazine lowMagazine, Limelight limelight){
         m_drivetrain = drivetrain;
         m_limelight = limelight;
         m_lowMagazine = lowMagazine;
-        m_llFilter = new MedianFilter(20);
+        m_llFilter = new MedianFilter(10);
                 
-        m_pathChooser = new SendableChooser<Boolean> ();
-        m_pathChooser.addOption("A", Boolean.valueOf(true));
-        m_pathChooser.addOption("B", Boolean.valueOf(false));
-        m_pathChooser.setDefaultOption("A", Boolean.valueOf(true));
-        m_isA = ((Boolean) m_pathChooser.getSelected()).booleanValue();
+        
         RobotConfigs.getInstance().addConfigurable("GSPathChooser", this);
 
         this.addToShuffleboard();
@@ -43,59 +57,45 @@ public class GSPathChooser implements Configurable{
 
     public void addToShuffleboard() {
         ShuffleboardTab tab = Shuffleboard.getTab("Autonomous");
-        tab.add("Path A or B?", m_pathChooser);
-        tab.addBoolean("Color Evaluation", this::getEval);
-        tab.addBoolean("Recieved color evaluation from configs", ()->m_configsLoaded.getBoolean("isRed", this.getEval()));
+        tab.addString("Color Evaluation", ()-> {return getEval().toString();});
+        //tab.addBoolean("Recieved color evaluation from configs", ()->m_configsLoaded.getBoolean("isRed", this.getEval()));
         tab.addNumber("Limelight angle", ()->{return m_llFilter.calculate(m_limelight.getTargetHorizontalOffset(0));});
     }
 
     private void evaluate() {
-        if(m_llFilter.calculate(m_limelight.getTargetHorizontalOffset(0)) > Constants.Autonomous.COLOR_CUTOFF_LL_ANGLE) {
-            m_isRed = false;
-            System.out.println("not red");
-        } else {
-            m_isRed = true;
-            System.out.println("red");
-        }
+        double area = m_llFilter.calculate(m_limelight.getTargetHorizontalOffset(0));
 
+        if(area < 1.7) {
+            m_layout = PATH_OPTIONS.BBLUE;
+        } else if (area < 2.5) {
+            m_layout = PATH_OPTIONS.ABLUE;
+        } else if (area < 4) {
+            m_layout = PATH_OPTIONS.BRED;
+        } else {
+            m_layout = PATH_OPTIONS.ARED;
+        }
     }
 
     public Command getPath() {
         Command path;
-
-        if(m_isA) {
-            evaluate();
-            if(m_isRed) {
-                path = new LowerIntake(m_lowMagazine).andThen(new ARedPath(m_drivetrain));
-            } else {
-                path = new ABluePath(m_drivetrain).alongWith(new LowerIntake(m_lowMagazine));
-            }
-        } else {
-            if (m_isRed) {
-                path = new LowerIntake(m_lowMagazine).andThen(new BRedPath(m_drivetrain));
-            } else {
-                path = new BBluePath(m_drivetrain).alongWith(new LowerIntake(m_lowMagazine));
-            }
-        }
-
-        return path;
+        this.evaluate();
+        return m_layout.getPath(m_drivetrain);
     }
 
-    public void setEval(boolean isRed) {
-        m_isRed = isRed;
+    public void setEval(PATH_OPTIONS layout) {
+        m_layout = layout;
     }
 
-    public boolean getEval() {
-        return m_isRed;
+    public PATH_OPTIONS getEval() {
+        return m_layout;
     }
 
     public void loadConfigs(LoadableConfigs configs) {
-        m_configsLoaded = configs;
-        this.setEval(configs.getBoolean("isRed", this.getEval()));
+        this.setEval(PATH_OPTIONS.valueOf(configs.getString("layout", this.getEval().toString())));
     }
 
     public void saveConfigs(SavableConfigs configs) {
-        configs.put("isRed", this.getEval());
+        configs.put("layout", this.getEval().toString());
     }
 
     
