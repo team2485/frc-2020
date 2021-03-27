@@ -438,7 +438,7 @@ public final class Constants {
         public static final double Z_VELOCITY = -2500;
 
         public static final double LOWERING_PWM = 0.07;
-        public static final double LOWERING_TIME = 10; //seconds
+        public static final double LOWERING_TIME = 0.4; //seconds
 
         public static final double OUTTAKE_PWM = 0.7;
       }

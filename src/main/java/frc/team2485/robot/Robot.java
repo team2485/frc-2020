@@ -52,6 +52,7 @@ public class Robot extends TimedRobot {
     }
 
     m_robotContainer.gameInit();
+    m_robotContainer.autonomousInit();
 
     
   }

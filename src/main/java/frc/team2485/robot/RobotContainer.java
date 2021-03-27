@@ -23,6 +23,7 @@ import frc.team2485.robot.subsystems.*;
 import edu.wpi.first.wpiutil.math.MathUtil;
 
 import frc.team2485.robot.subsystems.Drivetrain;
+import com.revrobotics.CANSparkMax;
 
 import java.util.function.DoubleSupplier;
 
@@ -465,6 +466,10 @@ public class RobotContainer {
         );
     }
 
+    public void autonomousInit() {
+        m_drivetrain.setIdleMode(CANSparkMax.IdleMode.kBrake);
+    }
+
     public Command getAutonomousCommand() {
 
         // double tx = m_turret.getLimelight().getTargetHorizontalOffset(0);
@@ -484,7 +489,7 @@ public class RobotContainer {
         Command highIntake = new RunCommand(()-> {m_highMagazine.setPWM(-0.1);});
 
         //return new ParallelRaceGroup(new ARedPath(m_drivetrain), new ParallelCommandGroup(runIntake, highIntake));
-        return new ParallelRaceGroup(m_GSPathChooser.getPath(), new ParallelCommandGroup(runIntake, highIntake)); 
+        return new LowerIntake(m_lowMagazine).andThen(new ParallelRaceGroup(m_GSPathChooser.getPath(), new ParallelCommandGroup(runIntake, highIntake))); 
         //return new ARedPath(m_drivetrain);
         //return new InstantCommand(m_GSPathChooser::evaluate);
     }

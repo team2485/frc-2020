@@ -14,7 +14,7 @@ import frc.team2485.WarlordsLib.robotConfigs.Configurable;
 import frc.team2485.robot.commands.*;
 import frc.team2485.robot.commands.paths.*;
 
-public class GSPathChooser implements Configurable{
+public class GSPathChooser{
 
     private Drivetrain m_drivetrain;
     private Limelight m_limelight;
@@ -22,7 +22,7 @@ public class GSPathChooser implements Configurable{
     private MedianFilter m_llFilter;
 
     private static enum PATH_OPTIONS {
-        ARED, ABLUE, BRED, BBLUE;
+        ARED, ABLUE, BRED, BBLUE, NONE;
 
          Command getPath(Drivetrain drivetrain) {
             switch(this) {
@@ -48,26 +48,26 @@ public class GSPathChooser implements Configurable{
         m_limelight = limelight;
         m_lowMagazine = lowMagazine;
         m_llFilter = new MedianFilter(10);
+        m_layout = PATH_OPTIONS.NONE;
                 
-        
-        RobotConfigs.getInstance().addConfigurable("GSPathChooser", this);
-
         this.addToShuffleboard();
     }
 
     public void addToShuffleboard() {
         ShuffleboardTab tab = Shuffleboard.getTab("Autonomous");
         tab.addString("Color Evaluation", ()-> {return getEval().toString();});
+        tab.addNumber("LL area", ()->{return m_llFilter.calculate(m_limelight.getTargetArea(0));});
         //tab.addBoolean("Recieved color evaluation from configs", ()->m_configsLoaded.getBoolean("isRed", this.getEval()));
-        tab.addNumber("Limelight angle", ()->{return m_llFilter.calculate(m_limelight.getTargetHorizontalOffset(0));});
+        tab.addNumber("Limelight angle", ()->{return m_limelight.getTargetHorizontalOffset(0);});
     }
 
     private void evaluate() {
-        double area = m_llFilter.calculate(m_limelight.getTargetHorizontalOffset(0));
-
-        if(area < 1.7) {
+        double area = m_llFilter.calculate(m_limelight.getTargetArea(0));
+        if (area < 1) {
+            m_layout = PATH_OPTIONS.NONE;
+        } else if(area < 2) {
             m_layout = PATH_OPTIONS.BBLUE;
-        } else if (area < 2.5) {
+        } else if (area < 3) {
             m_layout = PATH_OPTIONS.ABLUE;
         } else if (area < 4) {
             m_layout = PATH_OPTIONS.BRED;
@@ -90,13 +90,6 @@ public class GSPathChooser implements Configurable{
         return m_layout;
     }
 
-    public void loadConfigs(LoadableConfigs configs) {
-        this.setEval(PATH_OPTIONS.valueOf(configs.getString("layout", this.getEval().toString())));
-    }
-
-    public void saveConfigs(SavableConfigs configs) {
-        configs.put("layout", this.getEval().toString());
-    }
 
     
 }
