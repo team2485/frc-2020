@@ -175,10 +175,11 @@ public class RobotContainer {
         m_jack.getJoystickButton(XboxController.Button.kA).whileHeld(
             new RunCommand(() -> {
                 m_lowMagazine.setPWM(Constants.Magazine.LOW_BELT_INTAKE_PWM);
-                //m_lowMagazine.runVelocityPID(Constants.Magazine.LOW_INTAKE_VELOCITY);
-                //m_lowMagazine.setPWM(-0.4);
+                //m_highMagazine.setPWM(-0.2);
+                m_lowMagazine.runVelocityPID(Constants.Magazine.LOW_INTAKE_VELOCITY);
+                m_lowMagazine.setPWM(-0.4);
                 m_intake.runVelocityPID(Constants.Intake.X_VELOCITY, Constants.Intake.Z_VELOCITY);
-                //m_intake.setPWM(-0.5, -0.5);
+                m_intake.setPWM(-0.5, -0.5);
 
             })
         ).whenReleased(
