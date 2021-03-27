@@ -66,7 +66,7 @@ public class RobotContainer {
         m_turret = new Turret();
         m_climber = new Climber();
         m_intake = new Intake();
-        m_GSPathChooser = new GSPathChooser(m_drivetrain, m_turret.getLimelight());
+        m_GSPathChooser = new GSPathChooser(m_drivetrain, m_lowMagazine, m_turret.getLimelight());
 
         m_turretToggle = false; 
 

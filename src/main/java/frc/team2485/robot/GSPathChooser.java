@@ -1,29 +1,35 @@
 package frc.team2485.robot;
 
 import frc.team2485.robot.subsystems.*;
+import edu.wpi.first.wpilibj.MedianFilter;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.team2485.WarlordsLib.Limelight;
 import frc.team2485.WarlordsLib.robotConfigs.SavableConfigs;
 import frc.team2485.WarlordsLib.robotConfigs.LoadableConfigs;
 import frc.team2485.WarlordsLib.robotConfigs.RobotConfigs;
 import frc.team2485.WarlordsLib.robotConfigs.Configurable;
+import frc.team2485.robot.commands.*;
 import frc.team2485.robot.commands.paths.*;
 
 public class GSPathChooser implements Configurable{
 
     private Drivetrain m_drivetrain;
     private Limelight m_limelight;
+    private LowMagazine m_lowMagazine;
     private boolean m_isRed; //if false, is blue
     private boolean m_isA; //if false, is B path
     private SendableChooser<Boolean> m_pathChooser; //A or B
+    private MedianFilter m_llFilter;
+    private LoadableConfigs m_configsLoaded;
 
-    public GSPathChooser(Drivetrain drivetrain, Limelight limelight){
+    public GSPathChooser(Drivetrain drivetrain, LowMagazine lowMagazine, Limelight limelight){
         m_drivetrain = drivetrain;
         m_limelight = limelight;
+        m_lowMagazine = lowMagazine;
+        m_llFilter = new MedianFilter(20);
                 
         m_pathChooser = new SendableChooser<Boolean> ();
         m_pathChooser.addOption("A", Boolean.valueOf(true));
@@ -39,11 +45,12 @@ public class GSPathChooser implements Configurable{
         ShuffleboardTab tab = Shuffleboard.getTab("Autonomous");
         tab.add("Path A or B?", m_pathChooser);
         tab.addBoolean("Color Evaluation", this::getEval);
-        tab.addNumber("Limelight angle", ()->m_limelight.getTargetHorizontalOffset(0));
+        tab.addBoolean("Recieved color evaluation from configs", ()->m_configsLoaded.getBoolean("isRed", this.getEval()));
+        tab.addNumber("Limelight angle", ()->{return m_llFilter.calculate(m_limelight.getTargetHorizontalOffset(0));});
     }
 
     private void evaluate() {
-        if(m_limelight.getTargetHorizontalOffset(0) > Constants.Autonomous.COLOR_CUTOFF_LL_ANGLE) {
+        if(m_llFilter.calculate(m_limelight.getTargetHorizontalOffset(0)) > Constants.Autonomous.COLOR_CUTOFF_LL_ANGLE) {
             m_isRed = false;
             System.out.println("not red");
         } else {
@@ -54,24 +61,20 @@ public class GSPathChooser implements Configurable{
     }
 
     public Command getPath() {
-        if (m_isA) {
-            evaluate();
-        }
-        
         Command path;
 
         if(m_isA) {
+            evaluate();
             if(m_isRed) {
-                path = new ARedPath(m_drivetrain);
+                path = new LowerIntake(m_lowMagazine).andThen(new ARedPath(m_drivetrain));
             } else {
-                path = new ABluePath(m_drivetrain);
+                path = new ABluePath(m_drivetrain).alongWith(new LowerIntake(m_lowMagazine));
             }
-
         } else {
             if (m_isRed) {
-                path = new BRedPath(m_drivetrain);
+                path = new LowerIntake(m_lowMagazine).andThen(new BRedPath(m_drivetrain));
             } else {
-                path = new BBluePath(m_drivetrain);
+                path = new BBluePath(m_drivetrain).alongWith(new LowerIntake(m_lowMagazine));
             }
         }
 
@@ -87,12 +90,12 @@ public class GSPathChooser implements Configurable{
     }
 
     public void loadConfigs(LoadableConfigs configs) {
+        m_configsLoaded = configs;
         this.setEval(configs.getBoolean("isRed", this.getEval()));
     }
 
     public void saveConfigs(SavableConfigs configs) {
         configs.put("isRed", this.getEval());
-        m_isA = ((Boolean) m_pathChooser.getSelected()).booleanValue();
     }
 
     
