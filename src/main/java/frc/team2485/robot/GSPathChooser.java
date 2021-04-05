@@ -65,9 +65,9 @@ public class GSPathChooser{
         double area = m_llFilter.calculate(m_limelight.getTargetArea(0));
         if (area < 1) {
             m_layout = PATH_OPTIONS.NONE;
-        } else if(area < 2) {
+        } else if(area < 2.3) {
             m_layout = PATH_OPTIONS.BBLUE;
-        } else if (area < 3) {
+        } else if (area < 3.2) {
             m_layout = PATH_OPTIONS.ABLUE;
         } else if (area < 4) {
             m_layout = PATH_OPTIONS.BRED;

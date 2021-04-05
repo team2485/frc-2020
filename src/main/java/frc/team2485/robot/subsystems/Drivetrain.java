@@ -100,7 +100,7 @@ public class Drivetrain extends SubsystemBase  {
         ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
         tab.add(this);
         tab.add(this.m_drive);
-        tab.add("Brake or Coast?", m_dashboardChooser);
+        
         tab.addNumber("Left PWM", m_sparkLeft1Master::getAppliedOutput);
         tab.addNumber("Right PWM", m_sparkRight1Master::getAppliedOutput);
        // tab.add("throttle ramp", this.m_throttleRamp);
@@ -110,6 +110,8 @@ public class Drivetrain extends SubsystemBase  {
         tab.addNumber("Right Encoder Velocity", this::getRightEncoderVelocity);
         tab.addNumber("Left Spark Master Current", m_sparkLeft1Master::getOutputCurrent);
         tab.addNumber("Right Spark Master Current", m_sparkRight1Master::getOutputCurrent);
+        tab = Shuffleboard.getTab("Autonomous");
+        tab.add("Brake or Coast?", m_dashboardChooser);
 
     }
 

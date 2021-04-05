@@ -435,10 +435,10 @@ public final class Constants {
         public static final String Z_VELOCITY_CONTROLLER_CONFIGURABLE_LABEL = "intakeZVelocityController"; 
 
         public static final double X_VELOCITY = -2500;
-        public static final double Z_VELOCITY = -2500;
+        public static final double Z_VELOCITY = -2000;
 
-        public static final double LOWERING_PWM = 0.07;
-        public static final double LOWERING_TIME = 0.4; //seconds
+        public static final double LOWERING_PWM = 0.5;
+        public static final double LOWERING_TIME = 0.1; //seconds
 
         public static final double OUTTAKE_PWM = 0.7;
       }
