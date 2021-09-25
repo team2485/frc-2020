@@ -22,7 +22,7 @@ import frc.team2485.WarlordsLib.robotConfigs.LoadableConfigs;
 import frc.team2485.WarlordsLib.robotConfigs.RobotConfigs;
 import frc.team2485.WarlordsLib.robotConfigs.SavableConfigs;
 import frc.team2485.WarlordsLib.Debounce;
-import frc.team2485.WarlordsLib.ArmAndTrigger;
+
 import frc.team2485.robot.Constants;
 import frc.team2485.WarlordsLib.motorcontrol.PIDSparkMax;
 
@@ -41,7 +41,7 @@ import frc.team2485.WarlordsLib.robotConfigs.LoadableConfigs;
 import frc.team2485.WarlordsLib.robotConfigs.RobotConfigs;
 import frc.team2485.WarlordsLib.robotConfigs.SavableConfigs;
 import frc.team2485.WarlordsLib.Debounce;
-import frc.team2485.WarlordsLib.ArmAndTrigger;
+
 import frc.team2485.robot.Constants;
 
 

@@ -84,64 +84,64 @@ public final class Constants {
         public static final Setpoint CLOSE_TRENCH = new Setpoint(-4750, 10);
         public static final Setpoint FAR = new Setpoint(-5000, 8);
 
-        public static final Setpoint GREEN_ZONE = new Setpoint(-5000, 27);
-        public static final Setpoint YELLOW_ZONE = new Setpoint(-5000, 16.9);
-        public static final Setpoint BLUE_ZONE = new Setpoint(-5000, 11.25);
-        public static final Setpoint RED_ZONE = new Setpoint(-5000, 10);
+        // public static final Setpoint GREEN_ZONE = new Setpoint(-5000, 27);
+        // public static final Setpoint YELLOW_ZONE = new Setpoint(-5000, 16.9);
+        // public static final Setpoint BLUE_ZONE = new Setpoint(-5000, 11.25);
+        // public static final Setpoint RED_ZONE = new Setpoint(-5000, 10);
 
-        public static final double FARRPM = -5000;
+        // public static final double FARRPM = -5000;
     }
 
     public static final class Drivetrain {
-
-        public static final int SPARK_LEFT_PORT_MASTER = 10;
-        public static final int SPARK_LEFT_PORT_SLAVE_2 = 11;
-        public static final int SPARK_LEFT_PORT_SLAVE_3 = 12;
-
-        public static final int SPARK_RIGHT_PORT_MASTER = 14;
-        public static final int SPARK_RIGHT_PORT_SLAVE_2 = 15;
-        public static final int SPARK_RIGHT_PORT_SLAVE_3 = 16;
-
-        public static final int LEFT_ENCODER_SPARK = 10;
-        public static final int RIGHT_ENCODER_SPARK = 14;
-
-        public static final int PIGEON_IMU_PORT = 1;
-
-        public static final int MAX_CURRENT = 20;
-
+        public static final int TALON_LEFT_PORT_LEADER = 12;
+        public static final int TALON_LEFT_PORT_FOLLOWER_2 = 13;
+        // public static final int TALON_LEFT_PORT_FOLLOWER_3 = 100;
+    
+        public static final int TALON_RIGHT_PORT_LEADER = 2;
+        public static final int TALON_RIGHT_PORT_FOLLOWER_2 = 1;
+        // public static final int TALON_RIGHT_PORT_FOLLOWER_3 = 100;
+    
+        public static final int LEFT_ENCODER_TALON = 2;
+        public static final int RIGHT_ENCODER_TALON = 12;
+    
+        public static final int PIGEON_IMU_PORT = 0;
+    
+        public static final int MAX_CURRENT = 18;
+    
         public static final int ENCODER_CPR = 250 * 4; // 4x encoding
-
-        public static final double WHEEL_RADIUS = 3; // inches
-
-        public static final double DISTANCE_PER_REVOLUTION = 2 * Math.PI * 0.0762;
-
-        public static final double UP_RAMP_RATE = 0.4;
-        public static final double DOWN_RAMP_RATE = 0.1; //pwm deltas
-
+    
+        public static final double WHEEL_RADIUS = 0; // inches
+    
+        public static final double DISTANCE_PER_REVOLUTION = 2 * Math.PI * WHEEL_RADIUS;
+    
         public static final double STEERING_SCALE = 0.8;
         public static final double THROTTLE_SCALE = 0.8;
-
+    
         public static final String RESET_GYRO_LABEL = "Zero Gyro";
+    
+        public static final int CONTROLLER_PORT = 0;
+    
+    
+      }
+    
+    public static final class IntakeArm {
+
+        public static final int MAX_CURRENT = 2; //amps
+
+        public static final int TALON_PORT = 20;
+
+        public static final int ENCODER_DIO_PORT = 0;
+
+        public static final double ENCODER_PULSES_PER_REVOLUTION = 174.9;
+
+        public static final double TOP_POSITION_DEGREES = 0;
+
+        public static final double BOTTOM_POSITION_DEGREES = 90; //temp
+
+        public static final double SPEED = 0.7;
+
+
     }
-
-    // public static final class IntakeArm {
-
-    //     public static final int MAX_CURRENT = 2; //amps
-
-    //     public static final int TALON_PORT = 20;
-
-    //     public static final int ENCODER_DIO_PORT = 0;
-
-    //     public static final double ENCODER_PULSES_PER_REVOLUTION = 174.9;
-
-    //     public static final double TOP_POSITION_DEGREES = 0;
-
-    //     public static final double BOTTOM_POSITION_DEGREES = 90; //temp
-
-    //     public static final double SPEED = 0.7;
-
-
-    // }
 
     public static final class Magazine {
 
@@ -151,16 +151,17 @@ public final class Constants {
         public static final int SPARK_LOW_PORT = 22;
         public static final int SPARK_HIGH_PORT = 23;
 
-        // public static final int ENTRANCE_IR_PORT = 2;
-        //public static final int TRANSFER_IR_PORT = 3;
-        //public static final int EXIT_IR_PORT = 4;
+        public static final int ENTRANCE_IR_PORT = 2;
+        public static final int TRANSFER_IR_PORT = 3;
+        public static final int EXIT_IR_PORT = 4;
 
         public static final int HIGH_MAGAZINE_BALL_CAPACITY = 3;
 
         public static final double ROLLER_RADIUS = 1.3 / 2;
 
-//        public static final double HIGH_GEAR_RATIO = 1;
-        public static final double HIGH_GEAR_RATIO = 18.0/24;
+       public static final double HIGH_GEAR_RATIO = 1;
+
+
         public static final double LOW_GEAR_RATIO = 12.0/30;
 
         public static final double HIGH_DISTANCE_PER_REVOLUTION = HIGH_GEAR_RATIO * 2 * Math.PI * ROLLER_RADIUS;
@@ -334,7 +335,7 @@ public final class Constants {
     }
 
     public static final class Climber {
-        public static final int TALON_PORT = 18;
+        public static final int TALON_PORT = 19;
 
         public static final double DEFAULT_PWM = -0.7;
     }

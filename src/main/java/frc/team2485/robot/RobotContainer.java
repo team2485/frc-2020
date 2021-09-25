@@ -27,7 +27,6 @@ import frc.team2485.robot.subsystems.Drivetrain;
 import java.util.function.DoubleSupplier;
 
 public class RobotContainer {
-
     private WL_XboxController m_jack;
     private WL_XboxController m_suraj;
 
@@ -89,6 +88,7 @@ public class RobotContainer {
         this.configureFlywheelsCommands();
         this.configureShootingCommands();
         this.configureIntakingCommands();
+        this.configureClimberCommands();
 
         // Toggle Limelight LED
         m_suraj.getJoystickButton(XboxController.Button.kBack).whenPressed(new InstantCommand(() -> {
@@ -357,49 +357,33 @@ public class RobotContainer {
         //         )
         // );
         
-        //zone 1 (green) shot - close shot
+        //initiation
         m_suraj.getJoystickButton(XboxController.Button.kY).whenPressed(
-                // new ParallelCommandGroup(
-                //         new SetHood(m_hood, () -> Constants.Setpoints.GREEN_ZONE.ANGLE),
-                //         new SetFlywheels(m_flywheels, () -> Constants.Setpoints.GREEN_ZONE.RPM)
-                // )
+                new ParallelCommandGroup(
+                        new SetHood(m_hood, () -> Constants.Setpoints.INITIATION_LINE.ANGLE),
+                        new SetFlywheels(m_flywheels, () -> Constants.Setpoints.INITIATION_LINE.RPM)
+                )
                 //new InstantCommand(() -> {
-                    new SetHood(m_hood, () -> Constants.Setpoints.GREEN_ZONE.ANGLE)
-                //})
+                //     new SetHood(m_hood, () -> Constants.Setpoints.GREEN_ZONE.ANGLE)
+                // //})
         );
 
         //zone 2 (yellow) shot
         m_suraj.getJoystickButton(XboxController.Button.kB).whenPressed(
-                // new ParallelCommandGroup(
-                //         new SetHood(m_hood, () -> Constants.Setpoints.YELLOW_ZONE.ANGLE),
-                //         new SetFlywheels(m_flywheels, () -> Constants.Setpoints.YELLOW_ZONE.RPM)
-                // )
-                //new InstantCommand(() -> {
-                    new SetHood(m_hood, () -> Constants.Setpoints.YELLOW_ZONE.ANGLE)
-                //})
+            new ParallelCommandGroup(
+                new SetHood(m_hood, () -> Constants.Setpoints.CLOSE_TRENCH.ANGLE),
+                new SetFlywheels(m_flywheels, () -> Constants.Setpoints.CLOSE_TRENCH.RPM)
+        )
         );
 
         //zone 3 (blue) shot
         m_suraj.getJoystickButton(XboxController.Button.kA).whenPressed(
-                // new ParallelCommandGroup(
-                //         new SetHood(m_hood, () -> Constants.Setpoints.BLUE_ZONE.ANGLE),
-                //         new SetFlywheels(m_flywheels, () -> Constants.Setpoints.BLUE_ZONE.RPM)
-                // )
-                //new InstantCommand(() -> {
-                    new SetHood(m_hood, () -> Constants.Setpoints.BLUE_ZONE.ANGLE)
-                //})
+            new ParallelCommandGroup(
+                new SetHood(m_hood, () -> Constants.Setpoints.FAR.ANGLE),
+                new SetFlywheels(m_flywheels, () -> Constants.Setpoints.FAR.RPM)
+        )
         );
 
-        //zone 4 (red) shot
-        m_suraj.getJoystickButton(XboxController.Button.kBumperLeft).whenPressed(
-                // new ParallelCommandGroup(
-                //         new SetHood(m_hood, () -> Constants.Setpoints.RED_ZONE.ANGLE),
-                //         new SetFlywheels(m_flywheels, () -> Constants.Setpoints.RED_ZONE.RPM)
-                // )
-                //new InstantCommand(() -> {
-                    new SetHood(m_hood, () -> Constants.Setpoints.RED_ZONE.ANGLE)
-                //})
-        );
     }
 
     public void configureTurretCommands() {
@@ -420,11 +404,11 @@ public class RobotContainer {
     
         
 
-      //  m_suraj.getJoystickButton(XboxController.Button.kX).toggleWhenPressed(
-      //      new StartEndCommand(
-      //          () -> {m_turretToggle = true;},
-      //          () -> {m_turretToggle = false;}
-      //      ));
+    //    m_suraj.getJoystickButton(XboxController.Button.kX).toggleWhenPressed(
+    //        new StartEndCommand(
+    //            () -> {m_turretToggle = true;},
+    //            () -> {m_turretToggle = false;}
+    //        ));
     
     }
 
@@ -461,6 +445,26 @@ public class RobotContainer {
         );
     }
 
+    public void configureClimberCommands() {
+
+        m_jack.getJoystickButton(XboxController.Button.kY).whileHeld(
+                new ParallelCommandGroup(
+                        new ConditionalCommand(
+                                new TurretSetAngle(m_turret, 90, false),
+                                new TurretSetAngle(m_turret, -90, false),
+                                () -> m_turret.getEncoderPosition() > 0
+                        ),
+                        new SequentialCommandGroup(
+                                new WaitUntilCommand(
+                                        () -> Math.abs(m_turret.getEncoderPosition()) >= 45
+                                ),
+                                new InstantCommand(() -> m_climber.setPWM(Constants.Climber.DEFAULT_PWM)
+                                )
+                        )
+                )).whenReleased(
+                new InstantCommand(() -> m_climber.setPWM(0))
+        );
+    }
     public Command getAutonomousCommand() {
         //utility commands 
 
@@ -614,6 +618,10 @@ public class RobotContainer {
     }
 
     public void testPeriodic() {
+
+        if(m_jack.getYButton()) {
+            m_climber.setPWM(-0.2);
+        }
         if (SmartDashboard.getBoolean(Constants.RESET_PID_LABEL, false)) {
             m_tuneChooser.getSelected().resetPIDs();
             SmartDashboard.putBoolean(Constants.RESET_PID_LABEL, false);
@@ -672,6 +680,7 @@ public class RobotContainer {
     /**
      * Convenience function for getting a deadbanded axis
      *
+     * \
      * @param controller which controller to poll from
      * @param axis       which axis to use
      * @return the value of the specified controller axis

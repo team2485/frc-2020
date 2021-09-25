@@ -14,7 +14,6 @@ import frc.team2485.WarlordsLib.robotConfigs.LoadableConfigs;
 import frc.team2485.WarlordsLib.robotConfigs.RobotConfigs;
 import frc.team2485.WarlordsLib.robotConfigs.SavableConfigs;
 import frc.team2485.WarlordsLib.Debounce;
-import frc.team2485.WarlordsLib.ArmAndTrigger;
 import frc.team2485.robot.Constants;
 
 //Flywheels handles IR ball sensing
@@ -35,7 +34,6 @@ public class Flywheels extends SubsystemBase implements Tunable, Configurable {
     private Debounce m_entranceDebounce, m_transferDebounce;
     private boolean m_entranceVal, m_transferVal, m_entranceLastVal;
     private boolean m_isShooting;
-    private ArmAndTrigger m_exitAT;
 
     public Flywheels() {
         this.m_sparkLeft = new PIDSparkMax(Constants.Flywheels.SPARK_FLYWHEEL_LEFT_PORT, ControlType.kVelocity);
@@ -162,10 +160,6 @@ public class Flywheels extends SubsystemBase implements Tunable, Configurable {
      * True if ball is in IR
      */
     public boolean transferIRHasBall() {
-        if (m_transferVal) {
-            this.incrementBalls(true);
-            this.updateBallPosition(false);
-        } 
         return m_transferVal;
     }
 
@@ -196,7 +190,7 @@ public class Flywheels extends SubsystemBase implements Tunable, Configurable {
     @Override
     public void periodic() {
         // m_entranceVal = !m_entranceDebounce.getNextValue(m_entranceIR.get());
-        m_transferVal = !m_transferDebounce.getNextValue(m_transferIR.get());
+        m_transferVal = m_transferIR.get();
 
         // if (!m_entranceVal && m_entranceLastVal) { //if ball passes entrance IR 
         //     m_numBalls++;
