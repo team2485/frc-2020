@@ -43,11 +43,12 @@ public class SetFlywheels extends CommandBase {
 
     //if something's broken, this is it
     public boolean isFinished() {
-        if(m_finishWhenAtTarget) {
-            return m_flywheels.atVelocitySetpoint();
-        } else {
-            return false;
-        }
+        return false; 
+        // if(m_finishWhenAtTarget) {
+        //     return m_flywheels.atVelocitySetpoint();
+        // } else {
+        //     return false;
+        // }
         
     }
 

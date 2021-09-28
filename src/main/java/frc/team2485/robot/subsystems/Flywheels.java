@@ -30,10 +30,12 @@ public class Flywheels extends SubsystemBase implements Tunable, Configurable {
     */ 
     private int m_numBalls; 
     private boolean m_ballsAtTop;
-    private DigitalInput m_entranceIR, m_transferIR;
-    private Debounce m_entranceDebounce, m_transferDebounce;
-    private boolean m_entranceVal, m_transferVal, m_entranceLastVal;
+    private DigitalInput m_entranceIR, m_transferIR, m_exitIR;
+    private Debounce m_entranceDebounce, m_transferDebounce, m_exitDebounce;
+    private boolean m_entranceVal, m_transferVal, m_exitVal, m_entranceLastVal;
     private boolean m_isShooting;
+
+    private double m_setpoint;
 
     public Flywheels() {
         this.m_sparkLeft = new PIDSparkMax(Constants.Flywheels.SPARK_FLYWHEEL_LEFT_PORT, ControlType.kVelocity);
@@ -63,6 +65,7 @@ public class Flywheels extends SubsystemBase implements Tunable, Configurable {
         //BALL HANDLING
         m_entranceIR = new DigitalInput(Constants.Flywheels.ENTRANCE_IR_PORT);
         m_transferIR = new DigitalInput(Constants.Flywheels.TRANSFER_IR_PORT);
+        m_exitIR = new DigitalInput(Constants.Flywheels.EXIT_IR_PORT);
         m_entranceDebounce = new Debounce(m_entranceIR.get(), Constants.Flywheels.MAX_DEBOUNCE_TIME);
         m_transferDebounce = new Debounce(m_transferIR.get(), Constants.Flywheels.MAX_DEBOUNCE_TIME);
         m_isShooting = false;
@@ -70,6 +73,7 @@ public class Flywheels extends SubsystemBase implements Tunable, Configurable {
         m_ballsAtTop = false;
         //m_exitAT = new ArmAndTrigger(Constants.Flywheels.VELOCITY_ARM, Constants.Flywheels.VELOCITY_TRIGGER, 0, false);
 
+        m_setpoint = 0;
 
         this.addToShuffleboard();
     }
@@ -87,8 +91,10 @@ public class Flywheels extends SubsystemBase implements Tunable, Configurable {
         indexing.addNumber("Ball Count", this::getBalls);
         indexing.addBoolean("Entrance IR Has Ball?", this::entranceIRHasBall);
         indexing.addBoolean("Transfer IR Has Ball?", this::transferIRHasBall);
+        indexing.addBoolean("Exit IR Has Ball?", this::exitIRHasBall);
         indexing.addBoolean("Entrance IR Value", m_entranceIR::get);
         indexing.addBoolean("Transfer IR Value", m_transferIR::get);
+        indexing.addBoolean("Exit IR Value", m_exitIR::get);
 
 
 
@@ -163,6 +169,10 @@ public class Flywheels extends SubsystemBase implements Tunable, Configurable {
         return m_transferVal;
     }
 
+    public boolean exitIRHasBall() {
+        return m_exitVal;
+    }
+
     public int getBalls() {
         return m_numBalls/5;
     }
@@ -187,10 +197,18 @@ public class Flywheels extends SubsystemBase implements Tunable, Configurable {
         return m_ballsAtTop;
     }
 
+    public void setSetpoint(double setpoint) {
+        m_setpoint = setpoint;
+    }
+
+    public double getSetpoint() {
+        return m_setpoint;
+    }
     @Override
     public void periodic() {
         // m_entranceVal = !m_entranceDebounce.getNextValue(m_entranceIR.get());
-        m_transferVal = m_transferIR.get();
+        m_transferVal = !m_transferIR.get();
+        m_exitVal = !m_exitIR.get();
 
         // if (!m_entranceVal && m_entranceLastVal) { //if ball passes entrance IR 
         //     m_numBalls++;

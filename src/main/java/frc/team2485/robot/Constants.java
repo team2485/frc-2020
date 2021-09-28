@@ -167,7 +167,7 @@ public final class Constants {
         public static final double HIGH_DISTANCE_PER_REVOLUTION = HIGH_GEAR_RATIO * 2 * Math.PI * ROLLER_RADIUS;
 
         public static final double LOW_INTAKE_BY_ONE_POS = -7;
-        public static final double HIGH_INDEX_BY_ONE_POS = -6.5;
+        public static final double HIGH_INDEX_BY_ONE_POS = -7;
         public static final double HIGH_INCREMENT_TOP = -2;
         public static final double PUSH_IN_INCREMENT = -3;
 
@@ -291,7 +291,8 @@ public final class Constants {
 
         //IR
         public static final int ENTRANCE_IR_PORT = 2;
-        public static final int TRANSFER_IR_PORT = 3;
+        public static final int TRANSFER_IR_PORT = 0;
+        public static final int EXIT_IR_PORT = 1;
         public static final int MAX_DEBOUNCE_TIME = 3;
 
     }
@@ -337,7 +338,7 @@ public final class Constants {
     public static final class Climber {
         public static final int TALON_PORT = 19;
 
-        public static final double DEFAULT_PWM = -0.7;
+        public static final double DEFAULT_PWM = 0.7;
     }
 
     public static final class Autonomous {

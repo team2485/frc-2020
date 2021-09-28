@@ -119,7 +119,7 @@ public class RobotContainer {
                             -Deadband.cubicScaledDeadband(
                                     Constants.Drivetrain.THROTTLE_SCALE * (m_jack.getTriggerAxis(GenericHID.Hand.kRight) - m_jack.getTriggerAxis(GenericHID.Hand.kLeft)),
                                     Constants.OI.XBOX_DEADBAND),
-                            Deadband.cubicScaledDeadband(
+                            -Deadband.cubicScaledDeadband(
                                     ((m_jack.getX(GenericHID.Hand.kLeft) * Math.abs(m_jack.getX(GenericHID.Hand.kLeft)))),
                                     Constants.OI.XBOX_DEADBAND)
                                     * Constants.Drivetrain.STEERING_SCALE,
@@ -162,7 +162,7 @@ public class RobotContainer {
                             m_highMagazine.setPWM(0);
                         }, m_highMagazine),
                         () -> {
-                            return m_flywheels.transferIRHasBall();
+                            return (!m_flywheels.exitIRHasBall() && m_flywheels.transferIRHasBall());
                         }
                 )
         ).whenReleased(
@@ -173,15 +173,20 @@ public class RobotContainer {
 
         // Run low magazine and intake
         m_jack.getJoystickButton(XboxController.Button.kA).whileHeld(
-            new RunCommand(() -> {
-                m_lowMagazine.setPWM(Constants.Magazine.LOW_BELT_INTAKE_PWM);
-                //m_highMagazine.setPWM(-0.2);
-                m_lowMagazine.runVelocityPID(Constants.Magazine.LOW_INTAKE_VELOCITY);
-                m_lowMagazine.setPWM(-0.4);
-                m_intake.runVelocityPID(Constants.Intake.X_VELOCITY, Constants.Intake.Z_VELOCITY);
-                m_intake.setPWM(-0.5, -0.5);
-
-            })
+            new ConditionalCommand(
+                new RunCommand(() -> {
+                    m_lowMagazine.setPWM(Constants.Magazine.LOW_BELT_INTAKE_PWM);
+                    //m_highMagazine.setPWM(-0.2);
+                    m_lowMagazine.runVelocityPID(Constants.Magazine.LOW_INTAKE_VELOCITY);
+                    m_lowMagazine.setPWM(-0.4);
+                    m_intake.runVelocityPID(Constants.Intake.X_VELOCITY, Constants.Intake.Z_VELOCITY);
+                    m_intake.setPWM(-0.5, -0.5);
+    
+                }),
+                new InstantCommand(),
+                ()-> {return !(m_flywheels.transferIRHasBall() && m_flywheels.exitIRHasBall());}
+            )
+            
         ).whenReleased(
                 new InstantCommand(
                         () -> {
@@ -252,35 +257,36 @@ public class RobotContainer {
             new InstantCommand(() -> m_turret.setPWM(0))
         );    
 
-        //Index and increment into shooter once
-        m_suraj.getJoystickButton(XboxController.Button.kStickRight).whenPressed(
-            new SequentialCommandGroup( 
-                new ConditionalCommand(
-                    new InstantCommand(()->{System.out.println("apple");}),
-                    new SequentialCommandGroup(
-                        //This is where the indexing is applied 
-                        //Supposed to move the magaine up by enough to put every ball at the top
-                        //May need fiddling to get the numbers right (new constant)
-                        new IncrementHighMagazine(m_highMagazine, MathUtil.clamp(Constants.Magazine.HIGH_MAGAZINE_BALL_CAPACITY - m_flywheels.getBalls(), 0, Constants.Magazine.HIGH_MAGAZINE_BALL_CAPACITY) * Constants.Magazine.HIGH_INCREMENT_TOP),
-                        new InstantCommand(()->{m_flywheels.updateBallPosition(true);
-                        System.out.println("Banana: " + String.valueOf(Constants.Magazine.HIGH_MAGAZINE_BALL_CAPACITY - m_flywheels.getBalls()));})
+        // //Index and increment into shooter once
+        // m_suraj.getJoystickButton(XboxController.Button.kStickRight).whenPressed(
+        //     new SequentialCommandGroup( 
+        //         new ConditionalCommand(
+        //            // new InstantCommand(()->{//System.out.println("apple");}),
+        //             new SequentialCommandGroup(
+        //                 //This is where the indexing is applied 
+        //                 //Supposed to move the magaine up by enough to put every ball at the top
+        //                 //May need fiddling to get the numbers right (new constant)
+        //                 new IncrementHighMagazine(m_highMagazine, MathUtil.clamp(Constants.Magazine.HIGH_MAGAZINE_BALL_CAPACITY - m_flywheels.getBalls(), 0, Constants.Magazine.HIGH_MAGAZINE_BALL_CAPACITY) * Constants.Magazine.HIGH_INCREMENT_TOP),
+        //                 new InstantCommand(()->{m_flywheels.updateBallPosition(true);})
+        //                 //System.out.println("Banana: " + String.valueOf(Constants.Magazine.HIGH_MAGAZINE_BALL_CAPACITY - m_flywheels.getBalls())
                         
-                    ),
-                    ()->{return m_flywheels.getBallPosition();}
-                ), 
-                new SequentialCommandGroup(
-                    new WaitUntilCommand(() -> m_flywheels.atVelocitySetpoint()),
-                    new InstantCommand(
-                            () -> {
-                                m_lowMagazine.setPWM(-0.5);
-                                m_feeder.setPWM(-0.9); //change
-                                m_flywheels.incrementBalls(false);
-                            }, m_lowMagazine, m_feeder
-                    ),
-                    new WaitCommand(0.5),
-                    new IncrementHighMagazine(m_highMagazine, Constants.Magazine.PUSH_IN_INCREMENT)
-                    )
-            ));
+                        
+        //             ),
+        //             ()->{return m_flywheels.getBallPosition();}
+        //         ), 
+        //         new SequentialCommandGroup(
+        //             new WaitUntilCommand(() -> m_flywheels.atVelocitySetpoint()),
+        //             new InstantCommand(
+        //                     () -> {
+        //                         m_lowMagazine.setPWM(-0.5);
+        //                         m_feeder.setPWM(-0.9); //change
+        //                         m_flywheels.incrementBalls(false);
+        //                     }, m_lowMagazine, m_feeder
+        //             ),
+        //             new WaitCommand(0.5),
+        //             new IncrementHighMagazine(m_highMagazine, Constants.Magazine.PUSH_IN_INCREMENT)
+                    
+        // );
 
             m_suraj.getJoystickButton(XboxController.Button.kStickLeft).whenPressed(
                 new InstantCommand(() -> {
@@ -332,36 +338,37 @@ public class RobotContainer {
                 )
         );
 
-        // DoubleSupplier flywheelsSetpoint = () -> {
-        //     if (m_suraj.getYButton()) {
-        //         return Constants.Setpoints.INITIATION_LINE.RPM; // close
-        //     } else if (m_suraj.getBButton()) {
-        //         return Constants.Setpoints.CLOSE_TRENCH.RPM;
-        //     } else if (m_suraj.getAButton()) {
-        //         return  Constants.Setpoints.FAR.RPM; // far
+        // DoubleSupplier flywheelsSetpoint = () -> { return m_flywheels.getSetpoint() }
+            // if (m_suraj.getYButton()) {
+            //     return Constants.Setpoints.INITIATION_LINE.RPM; // close
+            // } else if (m_suraj.getBButton()) {
+            //     return Constants.Setpoints.CLOSE_TRENCH.RPM;
+            // } else if (m_suraj.getAButton()) {
+            //     return  Constants.Setpoints.FAR.RPM; // far
 
-        //     } else {
-        //         return Math.copySign(SmartDashboard.getNumber("Velocity RPM", -3000), -1);
-        //     }
+            // } else {
+            //     return Math.copySign(SmartDashboard.getNumber("Velocity RPM", -3000), -1);
+            // }
 
         // };
 
-        // // shoot left trigger
-        // m_suraj.getJoystickAxisButton(Axis.kLeftTrigger, 0.2).whileHeld(
-        //         new SetFlywheels(m_flywheels, () -> {return -3000;})
-        // ).whenReleased(
-        //         new InstantCommand(
-        //                 () -> {
-        //                     m_flywheels.setPWM(0);
-        //                 }
-        //         )
-        // );
+        // shoot left trigger
+        m_suraj.getJoystickAxisButton(Axis.kLeftTrigger, 0.2).whileHeld(
+                new SetFlywheels(m_flywheels, m_flywheels::getSetpoint)
+        ).whenReleased(
+                new InstantCommand(
+                        () -> {
+                            m_flywheels.setPWM(0);
+                        }
+                )
+        );
         
         //initiation
         m_suraj.getJoystickButton(XboxController.Button.kY).whenPressed(
                 new ParallelCommandGroup(
                         new SetHood(m_hood, () -> Constants.Setpoints.INITIATION_LINE.ANGLE),
-                        new SetFlywheels(m_flywheels, () -> Constants.Setpoints.INITIATION_LINE.RPM)
+                        new InstantCommand(()-> m_flywheels.setSetpoint(Constants.Setpoints.INITIATION_LINE.RPM))
+                        //new SetFlywheels(m_flywheels, () -> Constants.Setpoints.INITIATION_LINE.RPM)
                 )
                 //new InstantCommand(() -> {
                 //     new SetHood(m_hood, () -> Constants.Setpoints.GREEN_ZONE.ANGLE)
@@ -372,7 +379,8 @@ public class RobotContainer {
         m_suraj.getJoystickButton(XboxController.Button.kB).whenPressed(
             new ParallelCommandGroup(
                 new SetHood(m_hood, () -> Constants.Setpoints.CLOSE_TRENCH.ANGLE),
-                new SetFlywheels(m_flywheels, () -> Constants.Setpoints.CLOSE_TRENCH.RPM)
+                new InstantCommand(()-> m_flywheels.setSetpoint(Constants.Setpoints.CLOSE_TRENCH.RPM))
+               // new SetFlywheels(m_flywheels, () -> Constants.Setpoints.CLOSE_TRENCH.RPM)
         )
         );
 
@@ -380,7 +388,8 @@ public class RobotContainer {
         m_suraj.getJoystickButton(XboxController.Button.kA).whenPressed(
             new ParallelCommandGroup(
                 new SetHood(m_hood, () -> Constants.Setpoints.FAR.ANGLE),
-                new SetFlywheels(m_flywheels, () -> Constants.Setpoints.FAR.RPM)
+                new InstantCommand(()-> m_flywheels.setSetpoint(Constants.Setpoints.FAR.RPM))
+               // new SetFlywheels(m_flywheels, () -> Constants.Setpoints.FAR.RPM)
         )
         );
 
@@ -619,6 +628,9 @@ public class RobotContainer {
 
     public void testPeriodic() {
 
+        if(m_suraj.getAButton()){
+            m_flywheels.setVelocity(-5000);
+        };
         if(m_jack.getYButton()) {
             m_climber.setPWM(-0.2);
         }
