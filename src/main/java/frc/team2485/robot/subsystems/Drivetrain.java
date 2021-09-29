@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.kinematics.DifferentialDriveOdometry;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.team2485.WarlordsLib.RampRate;
@@ -16,6 +17,7 @@ import frc.team2485.WarlordsLib.motorcontrol.WL_SparkMax;
 import frc.team2485.WarlordsLib.motorcontrol.WL_TalonFX;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.team2485.WarlordsLib.robotConfigs.RobotConfigs;
@@ -49,8 +51,8 @@ public class Drivetrain extends SubsystemBase  {
 	private TalonEncoder m_encoderRight;
 
 	private RampRate m_throttleRamp;
-
 	private PigeonIMU m_pigeon;
+	private SendableChooser<NeutralMode> m_dashboardChooser;
 
 
 	public Drivetrain() {
@@ -96,22 +98,33 @@ public class Drivetrain extends SubsystemBase  {
 		this.m_encoderRight.setDistancePerRevolution(Constants.Drivetrain.DISTANCE_PER_REVOLUTION);
 
 		this.m_throttleRamp = new RampRate();
+        this.m_throttleRamp.setRampRates(Constants.Drivetrain.UP_RAMP_RATE, Constants.Drivetrain.DOWN_RAMP_RATE);
+
 
 		SendableRegistry.add(this.m_drive, "DifferentialDrive");
 
-		RobotConfigs.getInstance().addConfigurable("drivetrainThrottleRamp", m_throttleRamp);
+		m_dashboardChooser = new SendableChooser<NeutralMode> ();
+        m_dashboardChooser.addOption("Brake", NeutralMode.Brake);
+        m_dashboardChooser.addOption("Coast", NeutralMode.Coast);
+        m_dashboardChooser.setDefaultOption("Coast", NeutralMode.Coast);
+		setIdleMode(m_dashboardChooser.getSelected());
+		
+		SendableRegistry.add(this.m_drive, "DifferentialDrive");
 
-			this.addToShuffleboard();
+		m_odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(getHeading()));
+
+		//RobotConfigs.getInstance().addConfigurable("drivetrainThrottleRamp", m_throttleRamp);
+		this.addToShuffleboard();
 	}
 
 	public void addToShuffleboard() {
-		ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
+		//ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
 		// tab.add(this);
 		// tab.add(this.m_drive);
 
 		// tab.addNumber("Left PWM", m_talonLeft1Leader::getAppliedOutput);
 		// tab.addNumber("Right PWM", m_talonRight1Leader::getAppliedOutput);
-		tab.add("throttle ramp", this.m_throttleRamp);
+		//tab.add("throttle ramp", this.m_throttleRamp);
 		// tab.addNumber("Left Encoder Position", this::getLeftEncoderPosition);
 		// tab.addNumber("Left Encoder Velocity", this::getLeftEncoderVelocity);
 		// tab.addNumber("Right Encoder Position", this::getRightEncoderPosition);
@@ -182,6 +195,14 @@ public class Drivetrain extends SubsystemBase  {
 	public DifferentialDriveWheelSpeeds getWheelSpeeds() {
 		return new DifferentialDriveWheelSpeeds(m_encoderLeft.getVelocity(), m_encoderRight.getVelocity());
 	}
+
+	public void setIdleMode(NeutralMode mode) {
+		m_talonLeft1Leader.setNeutralMode(mode);
+		m_talonLeft2.setNeutralMode(mode);
+		m_talonRight1Leader.setNeutralMode(mode);
+		m_talonRight2.setNeutralMode(mode);
+    }
+
 
 
 	@Override

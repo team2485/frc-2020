@@ -116,6 +116,9 @@ public final class Constants {
     
         public static final double STEERING_SCALE = 0.8;
         public static final double THROTTLE_SCALE = 0.8;
+
+        public static final double UP_RAMP_RATE = 0.4;
+        public static final double DOWN_RAMP_RATE = 0.1;
     
         public static final String RESET_GYRO_LABEL = "Zero Gyro";
     
