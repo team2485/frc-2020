@@ -33,6 +33,7 @@ public class RobotContainer {
     private Drivetrain m_drivetrain;
     private LowMagazine m_lowMagazine;
     private HighMagazine m_highMagazine;
+    private IntakeArm m_intakeArm;
 
     private Feeder m_feeder;
     private Flywheels m_flywheels;
@@ -63,6 +64,7 @@ public class RobotContainer {
         m_turret = new Turret();
         m_climber = new Climber();
         m_intake = new Intake();
+        m_intakeArm = new IntakeArm();
         m_turretToggle = false; 
 
         m_tuneChooser = new SendableChooser<Tunable>();
@@ -132,28 +134,13 @@ public class RobotContainer {
     public void configureIntakingCommands() {
 
         //Intake lowering (CONFIGURE CONSTANTS)
-//        m_jack.getJoystickButton(XboxController.Button.kY).whenPressed(
-//            new ConditionalCommand(
-//                new SequentialCommandGroup(
-//                    new InstantCommand(()-> m_lowMagazine.setPWM(Constants.Intake.LOWERING_PWM)),
-//                    new WaitCommand(Constants.Intake.LOWERING_TIME),
-//                    new InstantCommand(()-> m_lowMagazine.setPWM(0)),
-//                    new InstantCommand(()->{intakeDown = true;})
-//                ),
-//                new InstantCommand(()->{}),
-//                ()-> {return intakeDown = false;}
-//            )
-//        );
+        m_jack.getJoystickButton(XboxController.Button.kBumperRight)
+                .toggleWhenPressed(new IntakeArmMove(m_intakeArm, IntakeArmMove.IntakeArmPosition.TOP, Constants.IntakeArm.UP_SPEED)
+                );
 
-        //holding command to lower intake
-        m_jack.getJoystickButton(XboxController.Button.kY).whileHeld(
-                new InstantCommand(() ->    
-                    m_lowMagazine.setPWM(Constants.Intake.LOWERING_PWM)))
-                        .whenReleased(
-                                new InstantCommand(() -> m_lowMagazine.setPWM(0
-                                ))
-                        );
-        
+        m_jack.getJoystickButton(XboxController.Button.kBumperLeft)
+                .toggleWhenPressed(new IntakeArmMove(m_intakeArm, IntakeArmMove.IntakeArmPosition.BOTTOM, Constants.IntakeArm.DOWN_SPEED));
+
         // Increment high magazine
         m_jack.getJoystickButton(XboxController.Button.kA).whileHeld(
                 new ConditionalCommand(

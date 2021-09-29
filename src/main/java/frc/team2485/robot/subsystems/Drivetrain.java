@@ -101,30 +101,30 @@ public class Drivetrain extends SubsystemBase  {
 
 		RobotConfigs.getInstance().addConfigurable("drivetrainThrottleRamp", m_throttleRamp);
 
-//		this.addToShuffleboard();
+			this.addToShuffleboard();
 	}
 
-//	public void addToShuffleboard() {
-//		ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
-//		tab.add(this);
-//		tab.add(this.m_drive);
-//
-//		tab.addNumber("Left PWM", m_talonLeft1Leader::getAppliedOutput);
-//		tab.addNumber("Right PWM", m_talonRight1Leader::getAppliedOutput);
-//		tab.add("throttle ramp", this.m_throttleRamp);
-//		tab.addNumber("Left Encoder Position", this::getLeftEncoderPosition);
-//		tab.addNumber("Left Encoder Velocity", this::getLeftEncoderVelocity);
-//		tab.addNumber("Right Encoder Position", this::getRightEncoderPosition);
-//		tab.addNumber("Right Encoder Velocity", this::getRightEncoderVelocity);
-//		tab.addNumber("Left Spark Master Current", m_sparkLeft1Master::getOutputCurrent);
-//		tab.addNumber("Right Spark Master Current", m_sparkRight1Master::getOutputCurrent);
-//	}
+	public void addToShuffleboard() {
+		ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
+		// tab.add(this);
+		// tab.add(this.m_drive);
+
+		// tab.addNumber("Left PWM", m_talonLeft1Leader::getAppliedOutput);
+		// tab.addNumber("Right PWM", m_talonRight1Leader::getAppliedOutput);
+		tab.add("throttle ramp", this.m_throttleRamp);
+		// tab.addNumber("Left Encoder Position", this::getLeftEncoderPosition);
+		// tab.addNumber("Left Encoder Velocity", this::getLeftEncoderVelocity);
+		// tab.addNumber("Right Encoder Position", this::getRightEncoderPosition);
+		// tab.addNumber("Right Encoder Velocity", this::getRightEncoderVelocity);
+		// tab.addNumber("Left Spark Master Current", m_sparkLeft1Master::getOutputCurrent);
+		// tab.addNumber("Right Spark Master Current", m_sparkRight1Master::getOutputCurrent);
+	}
 
 	public void curvatureDrive(double throttle, double steering, boolean isQuickTurn) {
-		// double throttleNextValue = m_throttleRamp.getNextValue(throttle);
+		double throttleNextValue = m_throttleRamp.getNextValue(throttle);
 		m_drive.curvatureDrive(throttle, steering, isQuickTurn);
 		m_drive2.curvatureDrive(throttle, steering, isQuickTurn);
-		// m_throttleRamp.setLastValue(throttleNextValue);
+		m_throttleRamp.setLastValue(throttleNextValue);
 	}
 
 	/**
@@ -182,6 +182,7 @@ public class Drivetrain extends SubsystemBase  {
 	public DifferentialDriveWheelSpeeds getWheelSpeeds() {
 		return new DifferentialDriveWheelSpeeds(m_encoderLeft.getVelocity(), m_encoderRight.getVelocity());
 	}
+
 
 	@Override
 	public void periodic() {

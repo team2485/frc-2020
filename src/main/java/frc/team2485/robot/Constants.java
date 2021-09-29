@@ -138,7 +138,8 @@ public final class Constants {
 
         public static final double BOTTOM_POSITION_DEGREES = 90; //temp
 
-        public static final double SPEED = 0.7;
+        public static final double UP_SPEED = 0.7;
+        public static final double DOWN_SPEED = 0.2;
 
 
     }

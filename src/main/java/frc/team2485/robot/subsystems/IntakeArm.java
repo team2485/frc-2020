@@ -19,7 +19,7 @@ import frc.team2485.WarlordsLib.motorcontrol.PIDTalonSRX;
 import frc.team2485.WarlordsLib.motorcontrol.WL_TalonSRX;
 import frc.team2485.robot.Constants;
 
-public class IntakeArm extends SubsystemBase implements PositionPIDSubsystem, VelocityPIDSubsystem {
+public class IntakeArm extends SubsystemBase{
 
     private WL_TalonSRX m_talon;
 
@@ -34,7 +34,7 @@ public class IntakeArm extends SubsystemBase implements PositionPIDSubsystem, Ve
     private WL_PIDController m_velocityController;
     private WL_PIDController m_positionController;
 
-    public IntakeArm(CANEncoder encoder) {
+    public IntakeArm() {
         super();
 
         this.m_talon = new WL_TalonSRX(Constants.IntakeArm.TALON_PORT);
@@ -44,7 +44,6 @@ public class IntakeArm extends SubsystemBase implements PositionPIDSubsystem, Ve
 
         this.m_talon.configContinuousCurrentLimit(Constants.IntakeArm.MAX_CURRENT);
 
-        this.m_encoder = encoder;
 
         this.m_velocityController = new WL_PIDController();
         this.m_positionController = new WL_PIDController();
@@ -70,9 +69,7 @@ public class IntakeArm extends SubsystemBase implements PositionPIDSubsystem, Ve
         m_lastPWM = pwm;
     }
 
-    @Override
-    public void resetPIDs() {
-    }
+
 //
 //    public double getEncoderCounts() {
 //        return this.m_encoderCounts;
@@ -102,35 +99,35 @@ public class IntakeArm extends SubsystemBase implements PositionPIDSubsystem, Ve
         return !m_talon.getSensorCollection().isRevLimitSwitchClosed(); //normally closed switch
     }
 
-    @Override
-    public void runVelocityPID(double velocity) {
-        this.setPWM(m_velocityController.calculate(this.getEncoderVelocity(), MathUtil.clamp(velocity, Constants.Hood.HOOD_MIN_VELOCITY, Constants.Hood.HOOD_MAX_VELOCITY)));
-    }
+    // @Override
+    // public void runVelocityPID(double velocity) {
+    //     this.setPWM(m_velocityController.calculate(this.getEncoderVelocity(), MathUtil.clamp(velocity, Constants.Hood.HOOD_MIN_VELOCITY, Constants.Hood.HOOD_MAX_VELOCITY)));
+    // }
 
-    @Override
-    public void runPositionPID(double position) {
-        runVelocityPID(m_positionController.calculate(this.getEncoderPosition(), MathUtil.clamp(position, Constants.Hood.HOOD_TOP_POSITION_DEG, Constants.Hood.HOOD_BOTTOM_POSITION_DEG)));
-    }
+    // @Override
+    // public void runPositionPID(double position) {
+    //     runVelocityPID(m_positionController.calculate(this.getEncoderPosition(), MathUtil.clamp(position, Constants.Hood.HOOD_TOP_POSITION_DEG, Constants.Hood.HOOD_BOTTOM_POSITION_DEG)));
+    // }
 
-    @Override
-    public boolean atVelocitySetpoint() {
-        return m_velocityController.atSetpoint();
-    }
+    // @Override
+    // public boolean atVelocitySetpoint() {
+    //     return m_velocityController.atSetpoint();
+    // }
 
-    @Override
-    public boolean atPositionSetpoint() {
-        return m_positionController.atSetpoint();
-    }
+    // @Override
+    // public boolean atPositionSetpoint() {
+    //     return m_positionController.atSetpoint();
+    // }
 
-    @Override
-    public double getEncoderVelocity() {
-        return m_encoder.getVelocity();
-    }
+    // @Override
+    // public double getEncoderVelocity() {
+    //     return m_encoder.getVelocity();
+    // }
 
-    @Override
-    public double getEncoderPosition() {
-        return m_encoder.getPosition();
-    }
+    // @Override
+    // public double getEncoderPosition() {
+    //     return m_encoder.getPosition();
+    // }
 
 
     public double getTopPosition() {
@@ -164,15 +161,15 @@ public class IntakeArm extends SubsystemBase implements PositionPIDSubsystem, Ve
 //        }
     }
 
-    /**
-     * Should run periodically and run the motor to tune
-     */
-    @Override
-    public void tunePeriodic(int layer) {
-        if (layer == 0) {
-            m_talon.set(m_velocityController.calculate(this.getEncoderVelocity()));
-        } else if (layer == 1) {
-            runVelocityPID(m_positionController.calculate(this.getEncoderPosition()));
-        }
-    }
+    // /**
+    //  * Should run periodically and run the motor to tune
+    //  */
+    // @Override
+    // public void tunePeriodic(int layer) {
+    //     if (layer == 0) {
+    //         m_talon.set(m_velocityController.calculate(this.getEncoderVelocity()));
+    //     } else if (layer == 1) {
+    //         runVelocityPID(m_positionController.calculate(this.getEncoderPosition()));
+    //     }
+    // }
 }
