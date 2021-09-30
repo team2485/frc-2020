@@ -82,7 +82,7 @@ public final class Constants {
     public static final class Setpoints {
         public static final Setpoint INITIATION_LINE = new Setpoint(-4750, 23.5);
         public static final Setpoint CLOSE_TRENCH = new Setpoint(-4750, 10);
-        public static final Setpoint FAR = new Setpoint(-5000, 8);
+        public static final Setpoint FAR = new Setpoint(-2000, 8);
 
         // public static final Setpoint GREEN_ZONE = new Setpoint(-5000, 27);
         // public static final Setpoint YELLOW_ZONE = new Setpoint(-5000, 16.9);
@@ -131,7 +131,7 @@ public final class Constants {
 
         public static final int MAX_CURRENT = 2; //amps
 
-        public static final int TALON_PORT = 20;
+        public static final int TALON_PORT = 18;
 
         public static final int ENCODER_DIO_PORT = 0;
 
@@ -142,7 +142,7 @@ public final class Constants {
         public static final double BOTTOM_POSITION_DEGREES = 90; //temp
 
         public static final double UP_SPEED = 0.7;
-        public static final double DOWN_SPEED = 0.2;
+        public static final double DOWN_SPEED = 0.7;
 
 
     }
@@ -171,13 +171,13 @@ public final class Constants {
         public static final double HIGH_DISTANCE_PER_REVOLUTION = HIGH_GEAR_RATIO * 2 * Math.PI * ROLLER_RADIUS;
 
         public static final double LOW_INTAKE_BY_ONE_POS = -7;
-        public static final double HIGH_INDEX_BY_ONE_POS = -7;
+        public static final double HIGH_INDEX_BY_ONE_POS = -9;
         public static final double HIGH_INCREMENT_TOP = -2;
         public static final double PUSH_IN_INCREMENT = -3;
 
         //replace below with actual number
         public static final double LOW_BELT_INTAKE_PWM = -0.4;
-        public static final double OUTTAKE_PWM = 0.5;
+        public static final double OUTTAKE_PWM = 0.2;
         public static final double NORMAL_BALL_INCREMENT_TIMEOUT = 2; //seconds
 
         public static final double HIGH_MAGAZINE_POSITION_CONTROLLER_THRESHOLD = 0.5;
@@ -216,7 +216,7 @@ public final class Constants {
         public static final String VELOCITY_CONTROLLER_CONFIGURABLE_LABEL = "feederSpark";
 
         public static final double OUTTAKE_PWM = 0.5;
-        public static final double INTAKE_PWM = -0.8;
+        public static final double INTAKE_PWM = -1;
 
         public static final double FEEDER_MAX_VELOCITY = 1000;
         public static final double FEEDER_MIN_VELOCITY = -1000;

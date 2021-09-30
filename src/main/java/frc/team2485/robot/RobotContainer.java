@@ -164,10 +164,10 @@ public class RobotContainer {
                 new RunCommand(() -> {
                     m_lowMagazine.setPWM(Constants.Magazine.LOW_BELT_INTAKE_PWM);
                     //m_highMagazine.setPWM(-0.2);
-                    m_lowMagazine.runVelocityPID(Constants.Magazine.LOW_INTAKE_VELOCITY);
-                    m_lowMagazine.setPWM(-0.4);
-                    m_intake.runVelocityPID(Constants.Intake.X_VELOCITY, Constants.Intake.Z_VELOCITY);
-                    m_intake.setPWM(-0.5, -0.5);
+                    //m_lowMagazine.runVelocityPID(Constants.Magazine.LOW_INTAKE_VELOCITY);
+                    // m_lowMagazine.setPWM(-0.4);
+                   // m_intake.runVelocityPID(Constants.Intake.X_VELOCITY, Constants.Intake.Z_VELOCITY);
+                     m_intake.setPWM(-0.5, -0.5);
     
                 }),
                 new InstantCommand(),
@@ -306,7 +306,7 @@ public class RobotContainer {
                                 new InstantCommand(
                                         () -> {
                                             m_lowMagazine.setPWM(-0.5);
-                                            m_feeder.setPWM(-0.9); //change
+                                            m_feeder.setPWM(Constants.Feeder.INTAKE_PWM); //change
                                             m_flywheels.incrementBalls(false);
                                         }, m_lowMagazine, m_feeder
                                 ),

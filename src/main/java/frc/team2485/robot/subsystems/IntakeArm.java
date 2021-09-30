@@ -60,6 +60,8 @@ public class IntakeArm extends SubsystemBase{
         tab.add(this);
         tab.add(m_talon);
 
+        tab.addBoolean("Bottom Limit Switch", this::getBottomLimitSwitch);
+        tab.addBoolean("Top Limit Switch", this::getTopLimitSwitch);
 
         tab.addNumber("Output Current", m_talon::getStatorCurrent);
     }
