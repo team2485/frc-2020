@@ -288,34 +288,27 @@ public class RobotContainer {
 
         // Increment/feed ball into shooter (this is for shooting all the balls one after another, generally,)
         m_suraj.getJoystickButton(XboxController.Button.kBumperRight).whileHeld(
-                new SequentialCommandGroup(
-                    new ConditionalCommand(
-                        new InstantCommand(()->{}),
-                        new SequentialCommandGroup(
-                            //This is where the indexing is applied 
-                            //Supposed to move the magaine up by enough to put every ball at the top
-                            //May need fiddling to get the numbers right (new constant)
-                            new IncrementHighMagazine(m_highMagazine, (Constants.Magazine.HIGH_MAGAZINE_BALL_CAPACITY - m_flywheels.getBalls()) * Constants.Magazine.HIGH_INCREMENT_TOP),
-                            new InstantCommand(()->{m_flywheels.updateBallPosition(true);})
-                        ),
-                        ()->{return m_flywheels.getBallPosition();}
-                    ),
-                    new ConditionalCommand(
-                        new SequentialCommandGroup(
-                                new WaitUntilCommand(() -> m_flywheels.atVelocitySetpoint()),
+                     new ConditionalCommand(
                                 new InstantCommand(
                                         () -> {
-                                            m_lowMagazine.setPWM(-0.5);
+                                            m_lowMagazine.setPWM(-0.2);
                                             m_feeder.setPWM(Constants.Feeder.INTAKE_PWM); //change
-                                            m_flywheels.incrementBalls(false);
+
                                         }, m_lowMagazine, m_feeder
-                                ),
-                                new IncrementHighMagazine(m_highMagazine, Constants.Magazine.HIGH_INCREMENT_TOP)
-                        ),
-                        new InstantCommand(),
-                        () -> m_flywheels.atVelocitySetpoint()
-                    )
-                )
+                                ).alongWith(
+                                new IncrementHighMagazine(m_highMagazine, Constants.Magazine.HIGH_INCREMENT_TOP))
+                        ,
+                        new InstantCommand(
+                            () -> {
+                                m_lowMagazine.setPWM(0);
+                                m_highMagazine.setPWM(0);
+                                m_feeder.setPWM(0);
+                            }, m_lowMagazine, m_highMagazine, m_feeder
+                            
+                        ),                       
+                        m_flywheels::atVelocitySetpoint
+        )
+                
         ).whenReleased(
                 new InstantCommand(() -> {
                     m_lowMagazine.setPWM(0);
@@ -653,7 +646,7 @@ public class RobotContainer {
              */
             if (m_jack.getXButton()) {
                 if (!m_hood.getForwardLimitSwitch()) {
-                    m_hood.runUnclampedVelocityPID(100);
+                    m_hood.runUnclampedVelocityPID(200);
                 } else {
                     m_hood.forceZero();
                 }

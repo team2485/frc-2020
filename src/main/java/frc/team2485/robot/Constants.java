@@ -80,9 +80,9 @@ public final class Constants {
     }
 
     public static final class Setpoints {
-        public static final Setpoint INITIATION_LINE = new Setpoint(-4750, 23.5);
-        public static final Setpoint CLOSE_TRENCH = new Setpoint(-4750, 10);
-        public static final Setpoint FAR = new Setpoint(-2000, 8);
+        public static final Setpoint INITIATION_LINE = new Setpoint(-4500, 22);
+        public static final Setpoint CLOSE_TRENCH = new Setpoint(-4500, 10);
+        public static final Setpoint FAR = new Setpoint(-5000, 10);
 
         // public static final Setpoint GREEN_ZONE = new Setpoint(-5000, 27);
         // public static final Setpoint YELLOW_ZONE = new Setpoint(-5000, 16.9);
@@ -171,8 +171,8 @@ public final class Constants {
         public static final double HIGH_DISTANCE_PER_REVOLUTION = HIGH_GEAR_RATIO * 2 * Math.PI * ROLLER_RADIUS;
 
         public static final double LOW_INTAKE_BY_ONE_POS = -7;
-        public static final double HIGH_INDEX_BY_ONE_POS = -9;
-        public static final double HIGH_INCREMENT_TOP = -2;
+        public static final double HIGH_INDEX_BY_ONE_POS = -7.56;
+        public static final double HIGH_INCREMENT_TOP = -3;
         public static final double PUSH_IN_INCREMENT = -3;
 
         //replace below with actual number
@@ -279,7 +279,7 @@ public final class Constants {
 
         public static final double GEAR_RATIO = 2/1;
 
-        public static final double RPM_THRESHOLD = 100;
+        public static final double RPM_THRESHOLD = 75;
 
         public static final String FLYWHEELS_TAB_NAME = "Shooter";
         public static final String INDEXING_TAB_NAME = "Indexing";

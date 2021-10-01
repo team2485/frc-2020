@@ -86,6 +86,7 @@ public class Flywheels extends SubsystemBase implements Tunable, Configurable {
         flywheels.addNumber("Right Flywheel Velocity", this::getRightEncoderVelocity);
         flywheels.addNumber("Left Flywheel Current", m_sparkLeft::getOutputCurrent);
         flywheels.addNumber("Right Flywheel Current", m_sparkRight::getOutputCurrent);
+        flywheels.addBoolean("At target?", this::atVelocitySetpoint);
         
         ShuffleboardTab indexing = Shuffleboard.getTab(Constants.Flywheels.INDEXING_TAB_NAME);
         indexing.addNumber("Ball Count", this::getBalls);
