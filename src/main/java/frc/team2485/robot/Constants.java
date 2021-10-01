@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.constraint.DifferentialDriveVoltageConstraint;
+import frc.team2485.WarlordsLib.Point;
 
 public final class Constants {
 
@@ -69,20 +70,46 @@ public final class Constants {
         public static final double POWER_CELL_RADIUS = 0.0508; //meters
     }
 
-    protected static final class Setpoint {
+    public static final class Setpoint {
+        public final double LL_OFFSET_Y;
         public final double RPM;
         public final double ANGLE;
 
-        public Setpoint(double rpm, double angle) {
+        public Setpoint(double offsetY, double rpm, double angle) {
+            LL_OFFSET_Y = offsetY; 
             RPM = rpm;
             ANGLE = angle;
+        }
+
+        public Point toPointRPM () {
+            return new Point(LL_OFFSET_Y, RPM);
+        }
+
+        public Point toPointAngle () {
+            return new Point(LL_OFFSET_Y, ANGLE);
         }
     }
 
     public static final class Setpoints {
-        public static final Setpoint INITIATION_LINE = new Setpoint(-4500, 22);
-        public static final Setpoint CLOSE_TRENCH = new Setpoint(-4500, 10);
-        public static final Setpoint FAR = new Setpoint(-4500, 10);
+        public static final Setpoint INITIATION_LINE = new Setpoint(20, -4500, 22);
+        public static final Setpoint CLOSE_TRENCH = new Setpoint(10, -4500, 10);
+        public static final Setpoint FAR = new Setpoint(0, -2000, 10);
+
+        public static Point[] getPointsRPM() {
+            Point[] points = new Point[3];
+            points[0] = INITIATION_LINE.toPointRPM();
+            points[1] = CLOSE_TRENCH.toPointRPM();
+            points[2] = FAR.toPointRPM();
+            return points;
+        }
+
+        public static Point[] getPointsAngle() {
+            Point[] points = new Point[3];
+            points[0] = INITIATION_LINE.toPointAngle();
+            points[1] = CLOSE_TRENCH.toPointAngle();
+            points[2] = FAR.toPointAngle();
+            return points;
+        }
 
         // public static final Setpoint GREEN_ZONE = new Setpoint(-5000, 27);
         // public static final Setpoint YELLOW_ZONE = new Setpoint(-5000, 16.9);
@@ -171,7 +198,7 @@ public final class Constants {
         public static final double HIGH_DISTANCE_PER_REVOLUTION = HIGH_GEAR_RATIO * 2 * Math.PI * ROLLER_RADIUS;
 
         public static final double LOW_INTAKE_BY_ONE_POS = -7;
-        public static final double HIGH_INDEX_BY_ONE_POS = -7.6;
+        public static final double HIGH_INDEX_BY_ONE_POS = -8.25;
         public static final double HIGH_INCREMENT_TOP = -3;
         public static final double PUSH_IN_INCREMENT = -3;
 
@@ -337,6 +364,8 @@ public final class Constants {
         public static final String ZERO_TURRET_LABEL = "Zero Turret";
 
         public static final double MANUAL_ANGLE_SCALE = 150;
+
+		public static final int CURRENT_PIPELINE = 6;
     }
 
     public static final class Climber {

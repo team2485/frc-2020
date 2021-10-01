@@ -56,6 +56,7 @@ public class Turret extends SubsystemBase implements VelocityPIDSubsystem, Posit
         m_positionController = new WL_PIDController();
 
         m_limelight = new Limelight();
+        m_limelight.setPipeline(Constants.Turret.CURRENT_PIPELINE);
 
         MIN_ANGLE = Constants.Turret.MIN_POSITION;
         MAX_ANGLE = Constants.Turret.MAX_POSITION;
@@ -85,6 +86,7 @@ public class Turret extends SubsystemBase implements VelocityPIDSubsystem, Posit
         tab.addNumber("Distance to Power Port", this::distToPort);
         tab.addBoolean("Forward Limit Switch", this::getForwardLimitSwitch);
         tab.addBoolean("Reverse Limit Switch", this::getReverseLimitSwitch);
+        tab.addNumber("Limelight vertical offset", ()-> m_limelight.getTargetVerticalOffset(20));
     }
 
     /**

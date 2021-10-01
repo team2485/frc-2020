@@ -72,6 +72,7 @@ public class Hood extends SubsystemBase implements PositionPIDSubsystem, Velocit
         tab.addNumber("Hood Encoder Position", this::getEncoderPosition);
         tab.addNumber("Hood Neo Encoder Velocity", this::getNeoEncoderVelocity);
         tab.addNumber("Hood Current", m_spark::getOutputCurrent);
+        
     }
 
     public void setPWM(double pwm) {

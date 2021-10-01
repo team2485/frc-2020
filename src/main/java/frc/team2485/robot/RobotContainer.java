@@ -160,19 +160,24 @@ public class RobotContainer {
 
         // Run low magazine and intake
         m_jack.getJoystickButton(XboxController.Button.kA).whileHeld(
+            new InstantCommand(()-> {
+                m_intake.setPWM(-0.5, -0.5);
+            }).alongWith(
             new ConditionalCommand(
-                new RunCommand(() -> {
+                new InstantCommand(() -> {
                     m_lowMagazine.setPWM(Constants.Magazine.LOW_BELT_INTAKE_PWM);
                     //m_highMagazine.setPWM(-0.2);
                     //m_lowMagazine.runVelocityPID(Constants.Magazine.LOW_INTAKE_VELOCITY);
                     // m_lowMagazine.setPWM(-0.4);
                    // m_intake.runVelocityPID(Constants.Intake.X_VELOCITY, Constants.Intake.Z_VELOCITY);
-                     m_intake.setPWM(-0.5, -0.5);
+                    // m_intake.setPWM(-0.5, -0.5);
     
                 }),
-                new InstantCommand(),
+                new InstantCommand(
+                    ()-> {m_lowMagazine.setPWM(0);}
+                ),
                 ()-> {return !(m_flywheels.transferIRHasBall() && m_flywheels.exitIRHasBall());}
-            )
+            ))
             
         ).whenReleased(
                 new InstantCommand(
@@ -243,6 +248,7 @@ public class RobotContainer {
          ).whenReleased(
             new InstantCommand(() -> m_turret.setPWM(0))
         );    
+        
 
         // //Index and increment into shooter once
         // m_suraj.getJoystickButton(XboxController.Button.kStickRight).whenPressed(
@@ -343,7 +349,7 @@ public class RobotContainer {
                 )
         );
         
-        //initiation
+        //initiation line shot
         m_suraj.getJoystickButton(XboxController.Button.kY).whenPressed(
                 new ParallelCommandGroup(
                         new SetHood(m_hood, () -> Constants.Setpoints.INITIATION_LINE.ANGLE),
@@ -355,7 +361,7 @@ public class RobotContainer {
                 // //})
         );
 
-        //zone 2 (yellow) shot
+        //mid shot
         m_suraj.getJoystickButton(XboxController.Button.kB).whenPressed(
             new ParallelCommandGroup(
                 new SetHood(m_hood, () -> Constants.Setpoints.CLOSE_TRENCH.ANGLE),
@@ -364,13 +370,18 @@ public class RobotContainer {
         )
         );
 
-        //zone 3 (blue) shot
+        //far shot
         m_suraj.getJoystickButton(XboxController.Button.kA).whenPressed(
             new ParallelCommandGroup(
                 new SetHood(m_hood, () -> Constants.Setpoints.FAR.ANGLE),
                 new InstantCommand(()-> m_flywheels.setSetpoint(Constants.Setpoints.FAR.RPM))
                // new SetFlywheels(m_flywheels, () -> Constants.Setpoints.FAR.RPM)
         )
+        );
+
+        //autoset hood+flywheels
+        m_suraj.getJoystickButton(XboxController.Button.kBumperLeft).whenPressed(
+            new Autoset(m_hood, m_flywheels, m_turret.getLimelight(), Constants.Setpoints.getPointsRPM(), Constants.Setpoints.getPointsAngle())
         );
 
     }
@@ -646,7 +657,7 @@ public class RobotContainer {
              */
             if (m_jack.getXButton()) {
                 if (!m_hood.getForwardLimitSwitch()) {
-                    m_hood.runUnclampedVelocityPID(200);
+                    m_hood.runUnclampedVelocityPID(300);
                 } else {
                     m_hood.forceZero();
                 }
