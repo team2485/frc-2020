@@ -213,6 +213,8 @@ public class Turret extends SubsystemBase implements VelocityPIDSubsystem, Posit
         } else if (getForwardLimitSwitch()) {
             resetEncoderPosition(MAX_ANGLE);
         }
+
+        m_limelight.setPipeline(Constants.Turret.CURRENT_PIPELINE);
     }
 
     private void setEncoderOffset(double offset) {

@@ -72,6 +72,7 @@ public class Hood extends SubsystemBase implements PositionPIDSubsystem, Velocit
         tab.addNumber("Hood Encoder Position", this::getEncoderPosition);
         tab.addNumber("Hood Neo Encoder Velocity", this::getNeoEncoderVelocity);
         tab.addNumber("Hood Current", m_spark::getOutputCurrent);
+        tab.addBoolean("Hood zeroed", ()->{return m_isZeroed;});
         
     }
 
@@ -163,6 +164,8 @@ public class Hood extends SubsystemBase implements PositionPIDSubsystem, Velocit
             m_isZeroed = true;
         }
     }
+
+ 
 
     @Override
     public void periodic() {

@@ -21,8 +21,20 @@ public class TurretWithController extends CommandBase {
         addRequirements(turret);
         }
         public void execute() {
+            boolean rightPressed = m_controller.getPOV() > 0 && m_controller.getPOV() < 180;
+            boolean leftPressed = m_controller.getPOV() > 180 && m_controller.getPOV() < 360;
+            
+
+            double adjust = 0;
+            if(rightPressed) {
+                adjust = Constants.Turret.FINE_VELOCITY;
+            } else if (leftPressed) {
+                adjust = -Constants.Turret.FINE_VELOCITY;
+            }
+            
             m_turret.runVelocityPID(
-                getAxis(m_controller, Axis.kLeftX) * Constants.Turret.MAX_VELOCITY);
+                getAxis(m_controller, Axis.kLeftX) * Constants.Turret.MAX_VELOCITY + adjust);
+            
             
         }
 

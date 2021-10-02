@@ -91,9 +91,9 @@ public final class Constants {
     }
 
     public static final class Setpoints {
-        public static final Setpoint INITIATION_LINE = new Setpoint(8, -4500, 22);
-        public static final Setpoint CLOSE_TRENCH = new Setpoint(-2.5, -4500, 10);
-        public static final Setpoint FAR = new Setpoint(-7, -4500, 10);
+        public static final Setpoint INITIATION_LINE = new Setpoint(16, -4000, 27);
+        public static final Setpoint CLOSE_TRENCH = new Setpoint(-0.6, -4500, 10);
+        public static final Setpoint FAR = new Setpoint(-7, -4600, 10);
 
         public static Point[] getPointsRPM() {
             Point[] points = new Point[3];
@@ -127,8 +127,8 @@ public final class Constants {
         public static final int TALON_RIGHT_PORT_FOLLOWER_2 = 1;
         // public static final int TALON_RIGHT_PORT_FOLLOWER_3 = 100;
     
-        public static final int LEFT_ENCODER_TALON = 2;
-        public static final int RIGHT_ENCODER_TALON = 12;
+        public static final int LEFT_ENCODER_TALON = 12;
+        public static final int RIGHT_ENCODER_TALON = 2;
     
         public static final int PIGEON_IMU_PORT = 0;
     
@@ -204,7 +204,7 @@ public final class Constants {
         //replace below with actual number
         public static final double LOW_BELT_INTAKE_PWM = -0.4;
         public static final double OUTTAKE_PWM = 0.2;
-        public static final double NORMAL_BALL_INCREMENT_TIMEOUT = 2; //seconds
+        public static final double NORMAL_BALL_INCREMENT_TIMEOUT = 1; //seconds
 
         public static final double HIGH_MAGAZINE_POSITION_CONTROLLER_THRESHOLD = 0.5;
 
@@ -345,8 +345,8 @@ public final class Constants {
         public static final double MIN_POSITION = -135; // degrees
         public static final double MAX_POSITION = 158; // degrees
 
-        public static final double MAX_VELOCITY = 120; // degrees / second
-        public static final double MIN_VELOCITY = -120; // degrees / second
+        public static final double MAX_VELOCITY = 90; // degrees / second
+        public static final double MIN_VELOCITY = -90; // degrees / second
 
         /**
          * In manual mode the max pwm will linearly clamp starting at the buffer zone size before the min or max positions.
@@ -365,12 +365,14 @@ public final class Constants {
         public static final double MANUAL_ANGLE_SCALE = 150;
 
 		public static final int CURRENT_PIPELINE = 6;
+
+		public static final double FINE_VELOCITY = 20;
     }
 
     public static final class Climber {
         public static final int TALON_PORT = 19;
 
-        public static final double DEFAULT_PWM = 0.7;
+        public static final double DEFAULT_PWM = -0.7;
     }
 
     public static final class Autonomous {
@@ -407,17 +409,17 @@ public final class Constants {
 
     public static final class ArtemisTerms {
         //Constants for Artemis
-        public static final double KS_VOLTS = 0.171;
-        public static final double KV_VOLT_SECONDS_PER_METER = 2.69;
-        public static final double KA_VOLT_SECONDS_SQUARED_PER_METER = 0.561;
-        public static final double KP_DRIVE_VEL = 0.0005;
+        public static final double KS_VOLTS = 0.742;
+        public static final double KV_VOLT_SECONDS_PER_METER = 1.86;
+        public static final double KA_VOLT_SECONDS_SQUARED_PER_METER = 0.235;
+        public static final double KP_DRIVE_VEL = 0.0000166;
 
-        public static final double K_TRACK_WIDTH_METERS = 0.62;
+        public static final double K_TRACK_WIDTH_METERS = 0.7946375975879432;
 
         public static final DifferentialDriveKinematics K_DRIVE_KINEMATICS = new DifferentialDriveKinematics(K_TRACK_WIDTH_METERS);
 
-        public static final double K_MAX_SPEED_METERS_PER_SECOND = 3;
-        public static final double K_MAX_ACCELERATION_METERS_PER_SECOND_SQUARE = 3;
+        public static final double K_MAX_SPEED_METERS_PER_SECOND = 1;
+        public static final double K_MAX_ACCELERATION_METERS_PER_SECOND_SQUARE = 1;
 
         //public static final double kEncoderDistancePerPulse = (3 * 2 * Math.PI/250);
 

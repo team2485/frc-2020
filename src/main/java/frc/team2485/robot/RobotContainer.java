@@ -26,6 +26,8 @@ import frc.team2485.robot.subsystems.Drivetrain;
 
 import java.util.function.DoubleSupplier;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+
 public class RobotContainer {
     private WL_XboxController m_jack;
     private WL_XboxController m_suraj;
@@ -80,6 +82,13 @@ public class RobotContainer {
         m_lowMagazine.resetPIDs();
         m_feeder.resetPIDs();
         m_intake.resetPIDs();
+    }
+
+    public void autoInit() {
+        m_drivetrain.setIdleMode(NeutralMode.Brake);
+    }
+    public void teleopInit() {
+        m_drivetrain.setIdleMode(NeutralMode.Coast);
     }
 
     private void configureCommands() {
@@ -402,6 +411,7 @@ public class RobotContainer {
         // );
         m_turret.setDefaultCommand(new TurretWithController(m_turret, m_suraj));
     
+
         
 
     //    m_suraj.getJoystickButton(XboxController.Button.kX).toggleWhenPressed(
@@ -466,6 +476,51 @@ public class RobotContainer {
         );
     }
     public Command getAutonomousCommand() {
+
+        
+        // m_autoCommand = new SequentialCommandGroup(
+        //         new WaitCommand(3),
+        //         new InstantCommand(() -> {
+        //             m_feeder.setPWM(-0.9);
+        //         }),
+        //         new IncrementHighMagazine(m_highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS),
+        //         new WaitCommand(Constants.Magazine.NORMAL_BALL_INCREMENT_TIMEOUT),
+        //         new IncrementHighMagazine(m_highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS),
+        //         new WaitCommand(Constants.Magazine.NORMAL_BALL_INCREMENT_TIMEOUT),
+        //         new IncrementHighMagazine(m_highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS),
+        //         new WaitCommand(Constants.Magazine.NORMAL_BALL_INCREMENT_TIMEOUT),
+        //         new IncrementHighMagazine(m_highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS),
+        //         new InstantCommand(() -> {
+        //             m_lowMagazine.setPWM(0);
+        //             m_highMagazine.setPWM(0);
+        //             m_feeder.setPWM(0);
+        //             m_flywheels.setPWM(0);
+        //         }),
+        //         new RunCommand(
+        //                 () -> {
+        //                     m_drivetrain.driveVolts(-0.5, -0.5);
+        //                 }
+        //         )
+        //                 .withTimeout(2)
+        //                 .andThen(
+        //                         new InstantCommand(() -> {
+        //                             m_drivetrain.curvatureDrive(0, 0, false);
+        //                         })
+        //                 ))
+        //         .alongWith(
+        //                 new SetHood(m_hood, () -> Constants.Setpoints.INITIATION_LINE.ANGLE, true)
+        //         )
+        //         .alongWith(
+        //                 new SetFlywheels(m_flywheels, () -> Constants.Setpoints.INITIATION_LINE.RPM)
+        //         )
+        //         .alongWith(
+        //                 new RunCommand(() -> {
+        //                     m_turret.setPWM(0);
+        //                 }, m_turret)
+        //         )
+        // ;
+
+        return new LineToRightTrenchPath(m_drivetrain, m_turret.getLimelight());
         //utility commands 
 
         // increment into feeder for shooting
@@ -586,7 +641,7 @@ public class RobotContainer {
 //            primeMagazine,
 //            shootAtTrench
 //        );
-        return null;
+        //return null;
     }
 
 
