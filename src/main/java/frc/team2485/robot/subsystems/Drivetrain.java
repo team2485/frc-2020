@@ -140,6 +140,23 @@ public class Drivetrain extends SubsystemBase  {
 		m_throttleRamp.setLastValue(throttleNextValue);
 	}
 
+	public void resetOdometry(Pose2d pose) {
+        resetEncoders();
+        m_odometry.resetPosition(pose, Rotation2d.fromDegrees(getHeading()));
+      }
+
+	     /**
+     * Reset encoders
+     * @param posLeft left encoder position
+     * @param posRight right encoder position
+     */
+    
+
+    public void resetEncoders() {
+        m_encoderRight.resetPosition(0);
+        m_encoderLeft.resetPosition(0);
+    }
+
 	/**
 	 * Reset encoders
 	 * @param posLeft left encoder position
