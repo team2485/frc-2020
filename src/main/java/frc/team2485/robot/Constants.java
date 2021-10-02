@@ -91,9 +91,9 @@ public final class Constants {
     }
 
     public static final class Setpoints {
-        public static final Setpoint INITIATION_LINE = new Setpoint(20, -4500, 22);
-        public static final Setpoint CLOSE_TRENCH = new Setpoint(10, -4500, 10);
-        public static final Setpoint FAR = new Setpoint(0, -2000, 10);
+        public static final Setpoint INITIATION_LINE = new Setpoint(8, -4500, 22);
+        public static final Setpoint CLOSE_TRENCH = new Setpoint(-2.5, -4500, 10);
+        public static final Setpoint FAR = new Setpoint(-7, -4500, 10);
 
         public static Point[] getPointsRPM() {
             Point[] points = new Point[3];
@@ -116,7 +116,6 @@ public final class Constants {
         // public static final Setpoint BLUE_ZONE = new Setpoint(-5000, 11.25);
         // public static final Setpoint RED_ZONE = new Setpoint(-5000, 10);
 
-        // public static final double FARRPM = -5000;
     }
 
     public static final class Drivetrain {

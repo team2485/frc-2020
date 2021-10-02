@@ -657,7 +657,7 @@ public class RobotContainer {
              */
             if (m_jack.getXButton()) {
                 if (!m_hood.getForwardLimitSwitch()) {
-                    m_hood.runUnclampedVelocityPID(300);
+                    m_hood.runUnclampedVelocityPID(500);
                 } else {
                     m_hood.forceZero();
                 }
@@ -669,10 +669,10 @@ public class RobotContainer {
              * Turret zeroing
              */
             if (m_jack.getAButton()) {
-                if (!m_turret.getReverseLimitSwitch()) {
-                    m_turret.runUnclampedVelocityPID(-10);
+                if (!m_turret.getForwardLimitSwitch()) {
+                    m_turret.runUnclampedVelocityPID(10);
                 } else {
-                    m_turret.resetEncoderPosition(Constants.Turret.MIN_POSITION);
+                    m_turret.resetEncoderPosition(Constants.Turret.MAX_POSITION);
                 }
             } else {
                 m_turret.setPWM(0);

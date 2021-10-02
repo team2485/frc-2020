@@ -14,7 +14,7 @@ public class Autoset extends ParallelCommandGroup {
 
     public Autoset(Hood hood, Flywheels flywheels, Limelight limelight, Point[] rpmPoints, Point[] anglePoints) {
         super();
-        double vOffset = limelight.getTargetVerticalOffset(20);
+        double vOffset = limelight.getTargetVerticalOffset(0);
         Interpolator rpm = new Interpolator(rpmPoints);
         Interpolator angle = new Interpolator(anglePoints);
         addCommands(
