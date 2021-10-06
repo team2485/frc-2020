@@ -198,8 +198,8 @@ public final class Constants {
 
         public static final double LOW_INTAKE_BY_ONE_POS = -7;
         public static final double HIGH_INDEX_BY_ONE_POS = -8.25;
-        public static final double HIGH_INCREMENT_TOP = -3;
-        public static final double PUSH_IN_INCREMENT = -3;
+        public static final double HIGH_INCREMENT_TELEOP = -5;
+        public static final double PUSH_IN_INCREMENT = -6;
 
         //replace below with actual number
         public static final double LOW_BELT_INTAKE_PWM = -0.4;

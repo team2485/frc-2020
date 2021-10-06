@@ -10,6 +10,8 @@ package frc.team2485.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Axis;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
@@ -85,10 +87,11 @@ public class RobotContainer {
     }
 
     public void autoInit() {
-        //m_drivetrain.setIdleMode(NeutralMode.Brake);
+        m_drivetrain.setIdleMode(NeutralMode.Brake);
     }
     public void teleopInit() {
         m_drivetrain.setIdleMode(NeutralMode.Coast);
+      
     }
 
     private void configureCommands() {
@@ -311,7 +314,7 @@ public class RobotContainer {
 
                                         }, m_lowMagazine, m_feeder
                                 ).alongWith(
-                                new IncrementHighMagazine(m_highMagazine, Constants.Magazine.HIGH_INCREMENT_TOP))
+                                new IncrementHighMagazine(m_highMagazine, Constants.Magazine.HIGH_INCREMENT_TELEOP))
                         ,
                         new InstantCommand(
                             () -> {
@@ -397,17 +400,7 @@ public class RobotContainer {
 
     public void configureTurretCommands() {
         // m_turret.setDefaultCommand(
-        //     new ConditionalCommand(
-        //         new TurretSetAngle(m_turret, () -> {
-        //             return m_turret.getEncoderPosition()
-        //                     + m_turret.getLimelight().getTargetHorizontalOffset(0)
-        //                     + Deadband.cubicScaledDeadband(
-        //                     m_suraj.getX(GenericHID.Hand.kRight),
-        //                     Constants.OI.XBOX_DEADBAND);
-        //         }),
-        //         new TurretWithController(m_turret, m_suraj),
-        //         ()-> {return m_turretToggle;}
-        //     )
+        //     new TurretAlignToggle(m_turret, m_suraj, ()-> {return m_turretToggle;})
         // );
         m_turret.setDefaultCommand(new TurretWithController(m_turret, m_suraj));
     
@@ -419,6 +412,8 @@ public class RobotContainer {
     //            () -> {m_turretToggle = true;},
     //            () -> {m_turretToggle = false;}
     //        ));
+
+        
     
     }
 
@@ -476,65 +471,29 @@ public class RobotContainer {
         );
     }
     public Command getAutonomousCommand() {
-
-        
-        Command auto = new SequentialCommandGroup(
-
-                new WaitCommand(3),
-                new InstantCommand(() -> {
-                    m_feeder.setPWM(-0.9);
-                }),
-                new IncrementHighMagazine(m_highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS),
-                new WaitCommand(Constants.Magazine.NORMAL_BALL_INCREMENT_TIMEOUT),
-                new IncrementHighMagazine(m_highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS),
-                new WaitCommand(Constants.Magazine.NORMAL_BALL_INCREMENT_TIMEOUT),
-                new IncrementHighMagazine(m_highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS),
-                new WaitCommand(Constants.Magazine.NORMAL_BALL_INCREMENT_TIMEOUT),
-                new IncrementHighMagazine(m_highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS),
-                new InstantCommand(() -> {
-                    m_lowMagazine.setPWM(0);
-                    m_highMagazine.setPWM(0);
-                    m_feeder.setPWM(0);
-                    m_flywheels.setPWM(0);
-                }),
-                new RunCommand(
-                        () -> {
-                            m_drivetrain.curvatureDrive(0.5, 0, false);
-                        }
-                )
-                        .withTimeout(2)
-                        .andThen(
-                                new InstantCommand(() -> {
-                                    m_drivetrain.curvatureDrive(0, 0, false);
-                                })
-                        ))
-                .alongWith(
-                        new SetHood(m_hood, () -> Constants.Setpoints.INITIATION_LINE.ANGLE, true)
-                )
-                .alongWith(
-                        new SetFlywheels(m_flywheels, () -> Constants.Setpoints.INITIATION_LINE.RPM)
-                )
-                .alongWith(
-                        new RunCommand(() -> {
-                            m_turret.setPWM(0);
-                        }, m_turret)
-                )
-        ;
-
-        m_autoCommand = new ParallelCommandGroup(
-                        new SequentialCommandGroup(
-                            new ParallelCommandGroup(
-                                new InstantCommand(()-> m_feeder.setPWM(-0.9)),
+        m_autoCommand = new SequentialCommandGroup(
+                            new ParallelDeadlineGroup(
                                 new SequentialCommandGroup(
-                                    new WaitCommand(3),
-                                    new IncrementHighMagazine(m_highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS),
-                                    new WaitCommand(Constants.Magazine.NORMAL_BALL_INCREMENT_TIMEOUT),
-                                    new IncrementHighMagazine(m_highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS),
-                                    new WaitCommand(Constants.Magazine.NORMAL_BALL_INCREMENT_TIMEOUT),
-                                    new IncrementHighMagazine(m_highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS),
-                                    new WaitCommand(Constants.Magazine.NORMAL_BALL_INCREMENT_TIMEOUT),
-                                    new IncrementHighMagazine(m_highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS)
-                                )
+                                new WaitCommand(3),
+                                new IncrementHighMagazine(m_highMagazine, Constants.Magazine.PUSH_IN_INCREMENT),
+                                new InstantCommand(
+                                    () -> m_highMagazine.setPWM(0), m_highMagazine
+                                ),
+                                new WaitCommand(2),
+                                new IncrementHighMagazine(m_highMagazine, Constants.Magazine.PUSH_IN_INCREMENT),
+                                new InstantCommand(
+                                    () -> m_highMagazine.setPWM(0), m_highMagazine
+                                ),
+                                new WaitCommand(2),
+                                new IncrementHighMagazine(m_highMagazine, Constants.Magazine.PUSH_IN_INCREMENT),
+                                new InstantCommand(
+                                    () -> m_highMagazine.setPWM(0), m_highMagazine
+                                ),
+                                new WaitCommand(2)
+                                ),
+                                new InstantCommand(()-> m_feeder.setPWM(-0.9)),
+                                new SetFlywheels(m_flywheels, () -> Constants.Setpoints.INITIATION_LINE.RPM),
+                                new SetHood(m_hood, ()-> Constants.Setpoints.INITIATION_LINE.ANGLE, true)
                             ),
                             new InstantCommand(() -> {
                                 m_lowMagazine.setPWM(0);
@@ -542,136 +501,36 @@ public class RobotContainer {
                                 m_feeder.setPWM(0);
                                 m_flywheels.setPWM(0);
                             }), 
-                            new RunCommand(()-> m_drivetrain.curvatureDrive(-0.5, 0, false)).withTimeout(2)
-        ), 
-        new SetFlywheels(m_flywheels, () -> Constants.Setpoints.INITIATION_LINE.RPM),
-                                new SetHood(m_hood, ()-> Constants.Setpoints.INITIATION_LINE.ANGLE, true));
-                        
+                            new RunCommand(()-> m_drivetrain.curvatureDrive(0.3, 0, false), m_drivetrain).withTimeout(1),
+                            new InstantCommand(() ->  m_drivetrain.curvatureDrive(0, 0, false))
+                            );
+                            return m_autoCommand;
 
-        
-        return m_autoCommand;
-        // return new Path1(m_drivetrain);
-        //utility commands 
-
-        // increment into feeder for shooting
-//        Command incrementIntoFeeder = new ConditionalCommand(
-//            new SequentialCommandGroup(
-//                    new WaitUntilCommand(() -> m_flywheels.atVelocitySetpoint()),
-//                    new InstantCommand(
-//                            () -> {
-//                                m_lowMagazine.setPWM(-0.5);
-//                                m_feeder.setPWM(-0.9); //change
-//                            }, m_lowMagazine, m_feeder
-//                    ),
-//                    new IncrementHighMagazine(m_highMagazine, Constants.Magazine.HIGH_INCREMENT_TOP)
-//            ),
-//            new InstantCommand(),
-//            () -> m_flywheels.atVelocitySetpoint()
-//        );
-//
-//        //zero feeder, low and high magazine
-//        Command postShootZero = new InstantCommand(() -> {
-//            m_lowMagazine.setPWM(0);
-//            m_highMagazine.setPWM(0);
-//            m_intake.setPWM(0);
-//            }
-//        );
-//
-//        //spin up flywheels and hood
-//        Command setShooterLine = new ParallelCommandGroup(
-//            new SetFlywheels(m_flywheels, () -> {return Constants.Setpoints.INITIATION_LINE.RPM;}),
-//            new SetHood(m_hood, () -> {return Constants.Setpoints.INITIATION_LINE.ANGLE;})
-//        );
-//
-//        //zero flywheels
-//        Command zeroFlywheels = new InstantCommand(() -> m_flywheels.setPWM(0));
-//
-//        //shoot at initiation line
-//        Command shootAtLine = new SequentialCommandGroup(
-//         setShooterLine,
-//            new ParallelCommandGroup(
-//             setShooterLine,
-//                new SequentialCommandGroup(
-//                    incrementIntoFeeder,
-//                    incrementIntoFeeder,
-//                    incrementIntoFeeder
-//                )
-//            ),
-//            postShootZero,
-//         setShooterLine.withTimeout(2), //constantify
-//            zeroFlywheels
-//        );
-//
-//        //run intake rollers and magazine
-//        Command runIntake = new RunCommand(() -> {
-//            m_lowMagazine.setPWM(Constants.Magazine.LOW_BELT_INTAKE_PWM);
-//            m_intake.runVelocityPID(Constants.Intake.X_VELOCITY, Constants.Intake.Z_VELOCITY);;
-//        });
-//
-//        //increment high magazine to inake
-//        Command highIntake = new ConditionalCommand(
-//            new IncrementHighMagazine(m_highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS),
-//            new InstantCommand(() -> {
-//                m_highMagazine.setPWM(0);
-//            }, m_highMagazine),
-//            () -> {
-//                return m_flywheels.transferIRHasBall();
-//            }
-//        );
-//
-//        //increment magazine up for shooting-- this is similar logic to the teleop indexing code, so needs tuning
-//        Command primeMagazine = new IncrementHighMagazine(m_highMagazine, Constants.Magazine.HIGH_INCREMENT_TOP);
-//
-//        //spin up flywheels and hood -- constants probably need to be tuned!
-//        Command setShooterTrench = new ParallelCommandGroup(
-//            new SetFlywheels(m_flywheels, () -> {return Constants.Setpoints.CLOSE_TRENCH.RPM;}),
-//            new SetHood(m_hood, () -> {return Constants.Setpoints.CLOSE_TRENCH.ANGLE;})
-//        );
-//
-//        //shoot at back of trench
-//        Command shootAtTrench = new SequentialCommandGroup(
-//         setShooterTrench,
-//            new ParallelCommandGroup(
-//             setShooterTrench,
-//                new SequentialCommandGroup(
-//                    incrementIntoFeeder,
-//                    incrementIntoFeeder,
-//                    incrementIntoFeeder
-//                )
-//            ),
-//            postShootZero,
-//         setShooterLine.withTimeout(2), //constantify
-//            zeroFlywheels
-//        );
-//
-//        //auto choices follow -- uncomment to run
-
-        // // *** simplest auto -- literally just a path
-        // return new LineToRightTrenchPath(m_drivetrain, m_turret.getLimelight());
-
-        // // *** next simplest auto -- shoot three balls then follow path
-
-        // return new SequentialCommandGroup(
-        //     shootAtLine,
-        //     new LineToRightTrenchPath(m_drivetrain, m_turret.getLimelight())
-        // );
-
-        // *** McNugget auto - shoot 3 (preloaded) balls, run path and INTAKE on path, then shoot three from the back of the trench
-        //this would be incredible if we could pull it off
-
-//        return new SequentialCommandGroup(
-//            shootAtLine,
-//            new ParallelCommandGroup(
-//                new LineToRightTrenchPath(m_drivetrain, m_turret.getLimelight()),
-//                new ParallelCommandGroup(
-//                    runIntake,
-//                    highIntake
-//                ).withInterrupt(() -> {return m_flywheels.getBalls() >= 3;})
-//            ),
-//            primeMagazine,
-//            shootAtTrench
-//        );
-        //return null;
+        // m_autoCommand = new SequentialCommandGroup(
+        //                     new ParallelCommandGroup(
+        //                         new SequentialCommandGroup(
+        //                             new WaitCommand(2),
+        //                             new InstantCommand(
+        //                                 () -> m_highMagazine.setPWM(-0.1)
+        //                             )
+        //                         ),
+        //                         new InstantCommand(
+        //                             () -> m_feeder.setPWM(-1)
+        //                         ),
+        //                         new SetFlywheels(m_flywheels, () -> Constants.Setpoints.INITIATION_LINE.RPM),
+        //                         new SetHood(m_hood, ()-> Constants.Setpoints.INITIATION_LINE.ANGLE, true)
+        //                     ).withTimeout(10),
+        //                     new InstantCommand(() -> {
+        //                         m_lowMagazine.setPWM(0);
+        //                         m_highMagazine.setPWM(0);
+        //                         m_feeder.setPWM(0);
+        //                         m_flywheels.setPWM(0);
+        //                     }), 
+        //                     new RunCommand(()-> m_drivetrain.curvatureDrive(0.3, 0, false), m_drivetrain).withTimeout(1),
+        //                     new InstantCommand(() ->  m_drivetrain.curvatureDrive(0, 0, false))
+        //                     );
+        //     return m_autoCommand;
+    
     }
 
 
