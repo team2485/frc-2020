@@ -71,6 +71,7 @@ public class Intake extends SubsystemBase implements Tunable{
     tab.add("Z Intake Rollers", m_sparkZ);
     tab.addNumber("X Intake Roller Velocity", this::getEncoderVelocityX);
     tab.addNumber("Z Intake Roller Velocity", this::getEncoderVelocityZ);
+    tab.addNumber("X Intake Current", m_sparkX::getOutputCurrent);
   }
 
   public void setPWM(double pwm) {

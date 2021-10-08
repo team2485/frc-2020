@@ -54,7 +54,7 @@ public final class Constants {
         /**
          * Deadband threshold for all Xbox controllers.
          */
-        public static final double XBOX_DEADBAND = 0.2;
+        public static final double XBOX_DEADBAND = 0.1;
     }
 
     public static final class Robot {
