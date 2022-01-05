@@ -41,12 +41,12 @@ public final class Constants {
         /**
          * Jack's XBOX port
          */
-        public static final int JACK_PORT = 0;
+        public static final int SABRINA_PORT = 0;
 
         /**
          * Suraj's XBOX port
          */
-        public static final int SURAJ_PORT = 1;
+        public static final int ALISHA_PORT = 1;
 
         public static final double SURAJ_LTRIGGER_THRESHOLD = 0.3;
         public static final double SURAJ_RTRIGGER_THRESHOLD = 0.3;

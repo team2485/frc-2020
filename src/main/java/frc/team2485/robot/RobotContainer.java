@@ -31,8 +31,8 @@ import java.util.function.DoubleSupplier;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 public class RobotContainer {
-    private WL_XboxController m_jack;
-    private WL_XboxController m_suraj;
+    private WL_XboxController m_sabrina;
+    private WL_XboxController m_alisha;
 
     private Drivetrain m_drivetrain;
     private LowMagazine m_lowMagazine;
@@ -56,8 +56,8 @@ public class RobotContainer {
 
     public RobotContainer() {
 
-        m_jack = new WL_XboxController(Constants.OI.JACK_PORT);
-        m_suraj = new WL_XboxController(Constants.OI.SURAJ_PORT);
+        m_sabrina = new WL_XboxController(Constants.OI.SABRINA_PORT);
+        m_alisha = new WL_XboxController(Constants.OI.ALISHA_PORT);
 
         m_drivetrain = new Drivetrain();
         m_lowMagazine = new LowMagazine();
@@ -103,58 +103,49 @@ public class RobotContainer {
         this.configureShootingCommands();
         this.configureIntakingCommands();
         this.configureClimberCommands();
+        this.configureTuning();
+
 
         // Toggle Limelight LED
-        m_suraj.getJoystickButton(XboxController.Button.kBack).whenPressed(new InstantCommand(() -> {
+        m_alisha.getJoystickButton(XboxController.Button.kBack).whenPressed(new InstantCommand(() -> {
             m_turret.getLimelight().toggleLed();
         }));
 
-        m_jack.getJoystickButton(XboxController.Button.kBack).whenPressed(new InstantCommand(() -> {
+
+        m_sabrina.getJoystickButton(XboxController.Button.kBack).whenPressed(new InstantCommand(() -> {
             m_turret.getLimelight().toggleLed();
         }));
-
-        //reset ball count
-        m_suraj.getJoystickButton(XboxController.Button.kStart).whenPressed(new InstantCommand(() -> {
-            m_flywheels.fullCount();
-        }));
-
-        m_suraj.getJoystickAxisButton(Axis.kLeftTrigger, 0.2).whenPressed(new InstantCommand(()->
-        {m_flywheels.zeroCount();}));
-
-
-
-        this.configureTuning();
     }
 
     public void configureDrivetrainCommands() {
+        //Differential drive motion, cubic scale applied
         m_drivetrain.setDefaultCommand(
                 new RunCommand(() -> {
                     m_drivetrain.curvatureDrive(
                             -Deadband.cubicScaledDeadband(
-                                    Constants.Drivetrain.THROTTLE_SCALE * (m_jack.getTriggerAxis(GenericHID.Hand.kRight) - m_jack.getTriggerAxis(GenericHID.Hand.kLeft)),
+                                    Constants.Drivetrain.THROTTLE_SCALE * (m_sabrina.getTriggerAxis(GenericHID.Hand.kRight) - m_sabrina.getTriggerAxis(GenericHID.Hand.kLeft)),
                                     Constants.OI.XBOX_DEADBAND),
                             -Deadband.cubicScaledDeadband(
-                                    ((m_jack.getX(GenericHID.Hand.kLeft) * Math.abs(m_jack.getX(GenericHID.Hand.kLeft)))),
+                                    ((m_sabrina.getX(GenericHID.Hand.kLeft) * Math.abs(m_sabrina.getX(GenericHID.Hand.kLeft)))),
                                     Constants.OI.XBOX_DEADBAND)
                                     * Constants.Drivetrain.STEERING_SCALE,
-                            m_jack.getXButton());
+                            m_sabrina.getXButton());
                 }, m_drivetrain)
-
         );
 }
 
     public void configureIntakingCommands() {
-
-        //Intake lowering (CONFIGURE CONSTANTS)
-        m_jack.getJoystickButton(XboxController.Button.kBumperRight)
+        //Raise intake
+        m_sabrina.getJoystickButton(XboxController.Button.kBumperRight)
                 .toggleWhenPressed(new IntakeArmMove(m_intakeArm, IntakeArmMove.IntakeArmPosition.TOP, Constants.IntakeArm.UP_SPEED)
                 );
 
-        m_jack.getJoystickButton(XboxController.Button.kBumperLeft)
+        //Lower intake
+        m_sabrina.getJoystickButton(XboxController.Button.kBumperLeft)
                 .toggleWhenPressed(new IntakeArmMove(m_intakeArm, IntakeArmMove.IntakeArmPosition.BOTTOM, Constants.IntakeArm.DOWN_SPEED));
 
-        // Increment high magazine
-        m_jack.getJoystickButton(XboxController.Button.kA).whileHeld(
+        // Increment high magazine while intaking to position balls appropriately
+        m_sabrina.getJoystickButton(XboxController.Button.kA).whileHeld(
                 new ConditionalCommand(
                         new IncrementHighMagazine(m_highMagazine, Constants.Magazine.HIGH_INDEX_BY_ONE_POS),
                         new InstantCommand(() -> {
@@ -170,20 +161,14 @@ public class RobotContainer {
                 }, m_highMagazine)
         );
 
-        // Run low magazine and intake
-        m_jack.getJoystickButton(XboxController.Button.kA).whileHeld(
+        // Run low magazine and intake inward to intake balls
+        m_sabrina.getJoystickButton(XboxController.Button.kA).whileHeld(
             new InstantCommand(()-> {
                 m_intake.setPWM(-0.5, -0.5);
             }).alongWith(
             new ConditionalCommand(
                 new InstantCommand(() -> {
                     m_lowMagazine.setPWM(Constants.Magazine.LOW_BELT_INTAKE_PWM);
-                    //m_highMagazine.setPWM(-0.2);
-                    //m_lowMagazine.runVelocityPID(Constants.Magazine.LOW_INTAKE_VELOCITY);
-                    // m_lowMagazine.setPWM(-0.4);
-                   // m_intake.runVelocityPID(Constants.Intake.X_VELOCITY, Constants.Intake.Z_VELOCITY);
-                    // m_intake.setPWM(-0.5, -0.5);
-    
                 }),
                 new InstantCommand(
                     ()-> {m_lowMagazine.setPWM(0);}
@@ -199,7 +184,8 @@ public class RobotContainer {
                 })
         );
 
-        m_jack.getJoystickButton(XboxController.Button.kB).whileHeld(
+        // Outtake (usually unused in competition)
+        m_sabrina.getJoystickButton(XboxController.Button.kB).whileHeld(
                 new RunCommand(() -> {
                     m_lowMagazine.setPWM(Constants.Magazine.OUTTAKE_PWM);
                     m_highMagazine.setPWM(Constants.Magazine.OUTTAKE_PWM);
@@ -217,7 +203,8 @@ public class RobotContainer {
                 })
         );
 
-        m_jack.getJoystickButton((XboxController.Button.kStart)).whileHeld(
+        // Outtake low magazine specifically
+        m_sabrina.getJoystickButton((XboxController.Button.kStart)).whileHeld(
                 new RunCommand(() -> {
                     m_lowMagazine.setPWM(Constants.Magazine.OUTTAKE_PWM);
                 })
@@ -229,17 +216,17 @@ public class RobotContainer {
     }
 
     public void configureShootingCommands() {
+        // // Feed directly to shooter (non-standard)
+        // m_alisha.getJoystickButton(XboxController.Button.kBumperRight).whenPressed(
+        //         new InstantCommand(() -> {
+        //             m_highMagazine.setPWM(-0.4);
+        //             m_feeder.setPWM(-0.9);
 
-        m_suraj.getJoystickButton(XboxController.Button.kBumperRight).whenPressed(
-                new InstantCommand(() -> {
-                    m_highMagazine.setPWM(-0.4);
-                    m_feeder.setPWM(-0.9);
+        //         })
+        // );
 
-                })
-        );
-
-
-        m_suraj.getJoystickButton(XboxController.Button.kStart).whileHeld(
+        // Run feeder directly (not common)
+        m_alisha.getJoystickButton(XboxController.Button.kStart).whileHeld(
                 new RunCommand(() -> {
                     m_feeder.setPWM(-0.9);
                 }, m_feeder)
@@ -249,63 +236,31 @@ public class RobotContainer {
                 }, m_feeder)
         );
 
-        m_suraj.getJoystickButton(XboxController.Button.kX).whileHeld(
+        // Turret auto-align to limelight target
+        m_alisha.getJoystickButton(XboxController.Button.kX).whileHeld(
             new TurretSetAngle(m_turret, () -> {
                 return m_turret.getEncoderPosition()
                         + m_turret.getLimelight().getTargetHorizontalOffset(0)
                         + Deadband.cubicScaledDeadband(
-                        m_suraj.getX(GenericHID.Hand.kRight),
+                        m_alisha.getX(GenericHID.Hand.kRight),
                         Constants.OI.XBOX_DEADBAND);
             })
          ).whenReleased(
             new InstantCommand(() -> m_turret.setPWM(0))
-        );    
-        
+        );        
 
-        // //Index and increment into shooter once
-        // m_suraj.getJoystickButton(XboxController.Button.kStickRight).whenPressed(
-        //     new SequentialCommandGroup( 
-        //         new ConditionalCommand(
-        //            // new InstantCommand(()->{//System.out.println("apple");}),
-        //             new SequentialCommandGroup(
-        //                 //This is where the indexing is applied 
-        //                 //Supposed to move the magaine up by enough to put every ball at the top
-        //                 //May need fiddling to get the numbers right (new constant)
-        //                 new IncrementHighMagazine(m_highMagazine, MathUtil.clamp(Constants.Magazine.HIGH_MAGAZINE_BALL_CAPACITY - m_flywheels.getBalls(), 0, Constants.Magazine.HIGH_MAGAZINE_BALL_CAPACITY) * Constants.Magazine.HIGH_INCREMENT_TOP),
-        //                 new InstantCommand(()->{m_flywheels.updateBallPosition(true);})
-        //                 //System.out.println("Banana: " + String.valueOf(Constants.Magazine.HIGH_MAGAZINE_BALL_CAPACITY - m_flywheels.getBalls())
-                        
-                        
-        //             ),
-        //             ()->{return m_flywheels.getBallPosition();}
-        //         ), 
-        //         new SequentialCommandGroup(
-        //             new WaitUntilCommand(() -> m_flywheels.atVelocitySetpoint()),
-        //             new InstantCommand(
-        //                     () -> {
-        //                         m_lowMagazine.setPWM(-0.5);
-        //                         m_feeder.setPWM(-0.9); //change
-        //                         m_flywheels.incrementBalls(false);
-        //                     }, m_lowMagazine, m_feeder
-        //             ),
-        //             new WaitCommand(0.5),
-        //             new IncrementHighMagazine(m_highMagazine, Constants.Magazine.PUSH_IN_INCREMENT)
-                    
-        // );
-
-            m_suraj.getJoystickButton(XboxController.Button.kStickLeft).whenPressed(
-                new InstantCommand(() -> {
-                    m_lowMagazine.setPWM(0);
-                    m_highMagazine.setPWM(0);
-                    m_feeder.setPWM(0);
-                    //m_ballCounter.setNumBallsLow(0);
-                    //m_ballCounter.setNumBallsHigh(0);
-                }, m_lowMagazine, m_highMagazine, m_feeder
-                )
-            );
+        //Stop magazine and feeder
+        m_alisha.getJoystickButton(XboxController.Button.kStickLeft).whenPressed(
+            new InstantCommand(() -> {
+                m_lowMagazine.setPWM(0);
+                m_highMagazine.setPWM(0);
+                m_feeder.setPWM(0);
+            }, m_lowMagazine, m_highMagazine, m_feeder
+            )
+        );
 
         // Increment/feed ball into shooter (this is for shooting all the balls one after another, generally,)
-        m_suraj.getJoystickButton(XboxController.Button.kBumperRight).whileHeld(
+        m_alisha.getJoystickButton(XboxController.Button.kBumperRight).whileHeld(
                      new ConditionalCommand(
                                 new InstantCommand(
                                         () -> {
@@ -336,22 +291,8 @@ public class RobotContainer {
                 )
         );
 
-        // DoubleSupplier flywheelsSetpoint = () -> { return m_flywheels.getSetpoint() }
-            // if (m_suraj.getYButton()) {
-            //     return Constants.Setpoints.INITIATION_LINE.RPM; // close
-            // } else if (m_suraj.getBButton()) {
-            //     return Constants.Setpoints.CLOSE_TRENCH.RPM;
-            // } else if (m_suraj.getAButton()) {
-            //     return  Constants.Setpoints.FAR.RPM; // far
-
-            // } else {
-            //     return Math.copySign(SmartDashboard.getNumber("Velocity RPM", -3000), -1);
-            // }
-
-        // };
-
-        // shoot left trigger
-        m_suraj.getJoystickAxisButton(Axis.kLeftTrigger, 0.2).whileHeld(
+        // Spin up flywheels to shoot
+        m_alisha.getJoystickAxisButton(Axis.kLeftTrigger, 0.2).whileHeld(
                 new SetFlywheels(m_flywheels, m_flywheels::getSetpoint)
         ).whenReleased(
                 new InstantCommand(
@@ -361,78 +302,63 @@ public class RobotContainer {
                 )
         );
         
-        //initiation line shot
-        m_suraj.getJoystickButton(XboxController.Button.kY).whenPressed(
+        // Set hood and preconfigure flywheels setpoint for initiation line shot
+        m_alisha.getJoystickButton(XboxController.Button.kY).whenPressed(
                 new ParallelCommandGroup(
-                        new SetHood(m_hood, () -> Constants.Setpoints.INITIATION_LINE.ANGLE),
-                        new InstantCommand(()-> m_flywheels.setSetpoint(Constants.Setpoints.INITIATION_LINE.RPM))
-                        //new SetFlywheels(m_flywheels, () -> Constants.Setpoints.INITIATION_LINE.RPM)
+                    new SetHood(m_hood, () -> Constants.Setpoints.INITIATION_LINE.ANGLE),
+                    new InstantCommand(()-> m_flywheels.setSetpoint(Constants.Setpoints.INITIATION_LINE.RPM))  
                 )
-                //new InstantCommand(() -> {
-                //     new SetHood(m_hood, () -> Constants.Setpoints.GREEN_ZONE.ANGLE)
-                // //})
         );
 
-        //mid shot
-        m_suraj.getJoystickButton(XboxController.Button.kB).whenPressed(
+        // Set hood and preconfigure flywheels setpoint for mid-range shot
+        m_alisha.getJoystickButton(XboxController.Button.kB).whenPressed(
             new ParallelCommandGroup(
                 new SetHood(m_hood, () -> Constants.Setpoints.CLOSE_TRENCH.ANGLE),
                 new InstantCommand(()-> m_flywheels.setSetpoint(Constants.Setpoints.CLOSE_TRENCH.RPM))
-               // new SetFlywheels(m_flywheels, () -> Constants.Setpoints.CLOSE_TRENCH.RPM)
         )
         );
 
-        //far shot
-        m_suraj.getJoystickButton(XboxController.Button.kA).whenPressed(
+        /// Set hood and preconfigure flywheels setpoint for far shot
+        m_alisha.getJoystickButton(XboxController.Button.kA).whenPressed(
             new ParallelCommandGroup(
                 new SetHood(m_hood, () -> Constants.Setpoints.FAR.ANGLE),
                 new InstantCommand(()-> m_flywheels.setSetpoint(Constants.Setpoints.FAR.RPM))
-               // new SetFlywheels(m_flywheels, () -> Constants.Setpoints.FAR.RPM)
         )
         );
 
-        //autoset hood+flywheels
-        m_suraj.getJoystickButton(XboxController.Button.kBumperLeft).whenPressed(
+        // Auto-set hood and flywheels (preconfigure setpoint) 
+        // -- interpolated between setpoints based on limelight vertical angle 
+        m_alisha.getJoystickButton(XboxController.Button.kBumperLeft).whenPressed(
             new Autoset(m_hood, m_flywheels, m_turret.getLimelight(), Constants.Setpoints.getPointsRPM(), Constants.Setpoints.getPointsAngle())
         );
 
     }
 
     public void configureTurretCommands() {
-        // m_turret.setDefaultCommand(
-        //     new TurretAlignToggle(m_turret, m_suraj, ()-> {return m_turretToggle;})
-        // );
-        m_turret.setDefaultCommand(new TurretWithController(m_turret, m_suraj));
-    
 
-        
-
-    //    m_suraj.getJoystickButton(XboxController.Button.kX).toggleWhenPressed(
-    //        new StartEndCommand(
-    //            () -> {m_turretToggle = true;},
-    //            () -> {m_turretToggle = false;}
-    //        ));
-
-        
-    
+        //  Move turret with left stick, fine adjustment with D-pad 
+        m_turret.setDefaultCommand(new TurretWithController(m_turret, m_alisha));
     }
 
     public void configureHoodCommands() {
+
+        // Move hood manually (not often used in comp, set setpoints instead)
         m_hood.setDefaultCommand(new RunCommand(
                 () -> {
                     m_hood.runVelocityPID(Constants.Hood.HOOD_MAX_VELOCITY
-                            * -Deadband.linearScaledDeadband(m_suraj.getY(GenericHID.Hand.kRight), Constants.OI.XBOX_DEADBAND));
+                            * -Deadband.linearScaledDeadband(m_alisha.getY(GenericHID.Hand.kRight), Constants.OI.XBOX_DEADBAND));
                 }, m_hood
         ));
     }
 
     public void configureFlywheelsCommands() {
-        
+
+        // Flywheel manual control (not often used in comp)
         m_flywheels.setDefaultCommand(
                 new RunCommand(() -> {
                     double output = 0;
-                    double pwmRight = Deadband.linearScaledDeadband(m_suraj.getTriggerAxis(GenericHID.Hand.kRight), Constants.OI.XBOX_DEADBAND);
-                    double pwmLeft = Deadband.linearScaledDeadband(m_suraj.getTriggerAxis(GenericHID.Hand.kLeft), Constants.OI.XBOX_DEADBAND);
+                    double pwmRight = Deadband.linearScaledDeadband(m_alisha.getTriggerAxis(GenericHID.Hand.kRight), Constants.OI.XBOX_DEADBAND);
+                    double pwmLeft = Deadband.linearScaledDeadband(m_alisha.getTriggerAxis(GenericHID.Hand.kLeft), Constants.OI.XBOX_DEADBAND);
 
                     if ( pwmRight != 0) {
                             output = -4000 - pwmRight* 1000;
@@ -452,7 +378,8 @@ public class RobotContainer {
 
     public void configureClimberCommands() {
 
-        m_jack.getJoystickButton(XboxController.Button.kY).whileHeld(
+        // Move turret out of the way, then climb
+        m_sabrina.getJoystickButton(XboxController.Button.kY).whileHeld(
                 new ParallelCommandGroup(
                         new ConditionalCommand(
                                 new TurretSetAngle(m_turret, 90, false),
@@ -471,66 +398,43 @@ public class RobotContainer {
         );
     }
     public Command getAutonomousCommand() {
-        m_autoCommand = new SequentialCommandGroup(
-                            new ParallelDeadlineGroup(
-                                new SequentialCommandGroup(
-                                new WaitCommand(3),
-                                new IncrementHighMagazine(m_highMagazine, Constants.Magazine.PUSH_IN_INCREMENT),
-                                new InstantCommand(
-                                    () -> m_highMagazine.setPWM(0), m_highMagazine
-                                ),
-                                new WaitCommand(2),
-                                new IncrementHighMagazine(m_highMagazine, Constants.Magazine.PUSH_IN_INCREMENT),
-                                new InstantCommand(
-                                    () -> m_highMagazine.setPWM(0), m_highMagazine
-                                ),
-                                new WaitCommand(2),
-                                new IncrementHighMagazine(m_highMagazine, Constants.Magazine.PUSH_IN_INCREMENT),
-                                new InstantCommand(
-                                    () -> m_highMagazine.setPWM(0), m_highMagazine
-                                ),
-                                new WaitCommand(2)
-                                ),
-                                new InstantCommand(()-> m_feeder.setPWM(-0.9)),
-                                new SetFlywheels(m_flywheels, () -> Constants.Setpoints.INITIATION_LINE.RPM),
-                                new SetHood(m_hood, ()-> Constants.Setpoints.INITIATION_LINE.ANGLE, true)
-                            ),
-                            new InstantCommand(() -> {
-                                m_lowMagazine.setPWM(0);
-                                m_highMagazine.setPWM(0);
-                                m_feeder.setPWM(0);
-                                m_flywheels.setPWM(0);
-                            }), 
-                            new RunCommand(()-> m_drivetrain.curvatureDrive(0.3, 0, false), m_drivetrain).withTimeout(1),
-                            new InstantCommand(() ->  m_drivetrain.curvatureDrive(0, 0, false))
-                            );
-                            return m_autoCommand;
 
-        // m_autoCommand = new SequentialCommandGroup(
-        //                     new ParallelCommandGroup(
-        //                         new SequentialCommandGroup(
-        //                             new WaitCommand(2),
-        //                             new InstantCommand(
-        //                                 () -> m_highMagazine.setPWM(-0.1)
-        //                             )
-        //                         ),
-        //                         new InstantCommand(
-        //                             () -> m_feeder.setPWM(-1)
-        //                         ),
-        //                         new SetFlywheels(m_flywheels, () -> Constants.Setpoints.INITIATION_LINE.RPM),
-        //                         new SetHood(m_hood, ()-> Constants.Setpoints.INITIATION_LINE.ANGLE, true)
-        //                     ).withTimeout(10),
-        //                     new InstantCommand(() -> {
-        //                         m_lowMagazine.setPWM(0);
-        //                         m_highMagazine.setPWM(0);
-        //                         m_feeder.setPWM(0);
-        //                         m_flywheels.setPWM(0);
-        //                     }), 
-        //                     new RunCommand(()-> m_drivetrain.curvatureDrive(0.3, 0, false), m_drivetrain).withTimeout(1),
-        //                     new InstantCommand(() ->  m_drivetrain.curvatureDrive(0, 0, false))
-        //                     );
-        //     return m_autoCommand;
-    
+        // Simple shoot and move-off-line autonomous
+        m_autoCommand = new SequentialCommandGroup(
+            new ParallelDeadlineGroup(
+                new SequentialCommandGroup(
+                new WaitCommand(3),
+                new IncrementHighMagazine(m_highMagazine, Constants.Magazine.PUSH_IN_INCREMENT),
+                new InstantCommand(
+                    () -> m_highMagazine.setPWM(0), m_highMagazine
+                ),
+                new WaitCommand(2),
+                new IncrementHighMagazine(m_highMagazine, Constants.Magazine.PUSH_IN_INCREMENT),
+                new InstantCommand(
+                    () -> m_highMagazine.setPWM(0), m_highMagazine
+                ),
+                new WaitCommand(2),
+                new IncrementHighMagazine(m_highMagazine, Constants.Magazine.PUSH_IN_INCREMENT),
+                new InstantCommand(
+                    () -> m_highMagazine.setPWM(0), m_highMagazine
+                ),
+                new WaitCommand(2)
+                ),
+                new InstantCommand(()-> m_feeder.setPWM(-0.9)),
+                new SetFlywheels(m_flywheels, () -> Constants.Setpoints.INITIATION_LINE.RPM),
+                new SetHood(m_hood, ()-> Constants.Setpoints.INITIATION_LINE.ANGLE, true)
+            ),
+            new InstantCommand(() -> {
+                m_lowMagazine.setPWM(0);
+                m_highMagazine.setPWM(0);
+                m_feeder.setPWM(0);
+                m_flywheels.setPWM(0);
+            }), 
+            new RunCommand(()-> m_drivetrain.curvatureDrive(0.3, 0, false), m_drivetrain).withTimeout(1),
+            new InstantCommand(() ->  m_drivetrain.curvatureDrive(0, 0, false))
+            );
+
+        return m_autoCommand;
     }
 
 
@@ -563,10 +467,10 @@ public class RobotContainer {
 
     public void testPeriodic() {
 
-        if(m_suraj.getAButton()){
+        if(m_alisha.getAButton()){
             m_flywheels.setVelocity(-5000);
         };
-        if(m_jack.getYButton()) {
+        if(m_sabrina.getYButton()) {
             m_climber.setPWM(-0.2);
         }
         if (SmartDashboard.getBoolean(Constants.RESET_PID_LABEL, false)) {
@@ -578,7 +482,7 @@ public class RobotContainer {
             if (SmartDashboard.getBoolean(Constants.PID_ENABLE_LABEL, false)) {
                 m_tuneChooser.getSelected().tunePeriodic((int) SmartDashboard.getNumber(Constants.TUNE_LAYER_LABEL, 0));
             } else {
-                m_tuneChooser.getSelected().setPWM(-getAxis(m_jack, Axis.kLeftY));
+                m_tuneChooser.getSelected().setPWM(-getAxis(m_sabrina, Axis.kLeftY));
             }
         } else {
 
@@ -599,7 +503,7 @@ public class RobotContainer {
             /**
              * Hood zeroing
              */
-            if (m_jack.getXButton()) {
+            if (m_sabrina.getXButton()) {
                 if (!m_hood.getForwardLimitSwitch()) {
                     m_hood.runUnclampedVelocityPID(500);
                 } else {
@@ -612,7 +516,7 @@ public class RobotContainer {
             /**
              * Turret zeroing
              */
-            if (m_jack.getAButton()) {
+            if (m_sabrina.getAButton()) {
                 if (!m_turret.getForwardLimitSwitch()) {
                     m_turret.runUnclampedVelocityPID(10);
                 } else {
@@ -627,7 +531,7 @@ public class RobotContainer {
     /**
      * Convenience function for getting a deadbanded axis
      *
-     * \
+     * 
      * @param controller which controller to poll from
      * @param axis       which axis to use
      * @return the value of the specified controller axis

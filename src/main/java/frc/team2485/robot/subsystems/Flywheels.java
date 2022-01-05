@@ -71,7 +71,6 @@ public class Flywheels extends SubsystemBase implements Tunable, Configurable {
         m_isShooting = false;
         m_numBalls = 0;
         m_ballsAtTop = false;
-        //m_exitAT = new ArmAndTrigger(Constants.Flywheels.VELOCITY_ARM, Constants.Flywheels.VELOCITY_TRIGGER, 0, false);
 
         m_setpoint = 0;
 
@@ -89,7 +88,6 @@ public class Flywheels extends SubsystemBase implements Tunable, Configurable {
         flywheels.addBoolean("At target?", this::atVelocitySetpoint);
         
         ShuffleboardTab indexing = Shuffleboard.getTab(Constants.Flywheels.INDEXING_TAB_NAME);
-        indexing.addNumber("Ball Count", this::getBalls);
         indexing.addBoolean("Entrance IR Has Ball?", this::entranceIRHasBall);
         indexing.addBoolean("Transfer IR Has Ball?", this::transferIRHasBall);
         indexing.addBoolean("Exit IR Has Ball?", this::exitIRHasBall);
@@ -174,18 +172,6 @@ public class Flywheels extends SubsystemBase implements Tunable, Configurable {
         return m_exitVal;
     }
 
-    public int getBalls() {
-        return m_numBalls/5;
-    }
-
-    public void zeroCount() {
-        m_numBalls = 0;
-    }
-
-    public void fullCount() {
-        m_numBalls = 3;
-    }
-
     public void incrementBalls(boolean pos) {
         m_numBalls = pos ? m_numBalls + 1 : m_numBalls - 1;
     }
@@ -207,21 +193,8 @@ public class Flywheels extends SubsystemBase implements Tunable, Configurable {
     }
     @Override
     public void periodic() {
-        // m_entranceVal = !m_entranceDebounce.getNextValue(m_entranceIR.get());
         m_transferVal = !m_transferIR.get();
         m_exitVal = !m_exitIR.get();
-
-        // if (!m_entranceVal && m_entranceLastVal) { //if ball passes entrance IR 
-        //     m_numBalls++;
-        // }
-
-        // m_entranceLastVal = m_entranceVal;
-
-        
-        // if(m_exitAT.getNextValue(((this.getLeftEncoderVelocity() + this.getRightEncoderVelocity()) / 2)
-        //  / ((m_sparkLeft.getSetpoint() + m_sparkRight.getSetpoint()) / 2))) { // if arm&trigger detects a dip
-        //     m_numBalls--;
-        // }
     }
 
     @Override
